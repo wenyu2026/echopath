@@ -1,6 +1,6 @@
-# 规则文档：证据分层 + 反类比（#15 实施前评审稿）
+# 规则文档：证据分层 + 反类比（#15 实施规则）
 
-> **状态：待 Damn4lee 审核。审核通过前不实现 `server/evidence/**` 与 `server/counter-analogy/**` 的映射逻辑。**
+> **状态：v1 已实现（纯模板/判定表，零 LLM）。修订记录见文末。**
 > 目的：把「未知信息处理」和「输出口径」写成可执行规则，避免模型把没有证据的内容写成事实。
 > 依据：Issue #15、`.agent/DecisionEpisode-Schema.md`、方案附录 B（模型只能在「解释」「重组」层发挥）。
 
@@ -17,7 +17,7 @@
 | `evidence[]` 中 `type = ai_inference` 的 `claim` | **ai_inferences** | 永不进 facts |
 | `reflection.self_comment` | **self_claims** | 本人后来的评价 |
 | `reflection.unknowns`、Situation 的 `unknowns` | **unknowns** | 原样透传 |
-| `outcomes.short_term` | **facts**（若该案例 evidence 能覆盖该时期）否则 **interpretations** | 结果链的短期段最接近史实 |
+| `outcomes.short_term` | **interpretations**（v1 保守） | 数据侧 outcomes 无来源绑定；等 #13 加 `evidence_ref` 后再分化到 facts |
 | `outcomes.mid_term` / `long_term` | **interpretations** | 「进入新文化阵营」「成为奠基人」是后人归纳与评价 |
 | 反类比模块产出的每一条 | **ai_inferences**（kind=era）或 why_different 对应层 | 见第二节 |
 
@@ -75,7 +75,7 @@
 - 锚定 A：差异可对应到 Situation / Episode 的具体结构字段值（如「用户 constraints 含『可能延毕』，案例 constraints 无对应项」）；
 - 锚定 B：差异可引用某条 evidence claim 的原文。
 
-unknown 条目格式：`【未知】无法判断 X 是否构成差异：案例数据未记录 Y（你可以在 What-if 中补充该信息）`。unknown 条目**计入 2 条的最少条数**（明确告知比编造强），但 demo 展示时 `kind=unknown` 与 `kind=era` 必须有视觉区分（前端 #16）。
+unknown 条目格式：`【未知】无法比较「X」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」…`。unknown 条目**不计入 2 条的最少条数**（2026-10-02 验收修订，原稿为计入：防止用两条 unknown 就凑齐「至少 2 条具体差异」的验收；具体差异不足时宁可少于 2 条并如实说明）。unknown 条目额外输出，`kind=unknown` 与 `kind=era` 在前端必须有视觉区分（前端 #16）。
 
 ### 2.4 数量与排序
 
@@ -106,7 +106,17 @@ unknown 条目格式：`【未知】无法判断 X 是否构成差异：案例�
 
 | # | 事项 | 建议 |
 |---|---|---|
-| 1 | `outcomes` 在数据 Schema 中无 source 绑定，中长期结果按规则进 interpretations —— 但「抽查关键事实能追溯」验收是否包含结果链？ | 验收口径限定为「evidence 与 facts 层可追溯」；同时给 fu6868 提建议：未来给 outcomes 加 `evidence_ref`（可选字段，不改现有结构） |
-| 2 | era 类反类比依赖模型外部知识（如「1906 年转行无现代门槛」），永远无法绑定 source | 按 2.3 归 ai_inference 并显著标注；是否接受「era 条目可能频繁出现」取决于 Demo 口味 —— 默认最多 1 条 |
-| 3 | `why_different_detail` 的 CHANGE_REQUEST 尚未获批 | 获批前阶段二先用 string[] + 前缀标签实现（【约束差异】【⚠️ AI 类比】【未知】），detail 字段后补序列化即可，两步兼容 |
-| 4 | LLM 拆句（1.2）与 LLM 表述（2.2-2）每案例各一次调用 | 3 案例 ≈ 6 次小调用，串行约 4-8s；加上 parser 3-4s 总计 8-12s，预算 30s 内。若超预算：拆句改纯规则（整句进 interpretations），表述合并为 1 次批量调用 |
+| 1 | `outcomes` 在数据 Schema 中无 source 绑定 —— 中长期结果按规则进 interpretations，「抽查可追溯」验收口径限定为「evidence 与 facts/self_claims 层」 | 给 fu6868 提建议：未来给 outcomes 加 `evidence_ref`（可选字段，不改现有结构），届时 short_term 可分化到 facts |
+| 2 | era 类反类比依赖模型外部知识，永远无法绑定 source | 按 2.3 归 ai_inference 并显著标注；上限 1 条（已实现） |
+| 3 | `why_different_detail` 的 CHANGE_REQUEST 尚未获批 | 实现已带 `why_different_detail` 字段（可选），前端 #16 可完全忽略；获批后并入正式 types 即可，无返工 |
+| 4 | LLM 拆句（1.2）与 LLM 表述（2.2-2）暂未启用 | v1 用「解释性关键词降级」替代拆句、用模板替代表述（零幻觉零延迟）；作为升级路径保留，接入前需重新评估延迟预算 |
+
+---
+
+## 修订记录
+
+- **2026-10-02 验收修订（依产品负责人验收发现）**：
+  1. §2.3 unknown 条目改为**不计入** 2 条底线（原稿：计入）——防止用 unknown 凑数达标；
+  2. §1.1 outcomes 全部保守归 interpretations（原稿：short_term 有证据覆盖时可进 facts）——数据侧无 per-outcome 来源绑定前不假装可追溯；
+  3. §2.2 v1 为纯模板生成（原稿：代码候选 + LLM 表述）——幻灯在构造上不可能发生，LLM 表述留作升级；
+  4. 新增口径黑名单 `对方没有|他没有|她没有`（把「没记录」写成「对方没有」= 实现级 bug，测试断言拦截）。

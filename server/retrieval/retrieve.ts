@@ -9,6 +9,8 @@
  */
 import type { DecisionEpisode, MatchResult, Situation } from '../../src/types/episode.ts';
 import { cosine, type Embedder } from '../embedding/embed.ts';
+import { writeEvidenceLayers } from '../evidence/evidence-writer.ts';
+import { buildCounterAnalogy, guardViolations, type CounterAnalogyItem } from '../counter-analogy/counter-analogy.ts';
 import {
   DIMENSION_WEIGHTS,
   explainSimilarity,
@@ -18,6 +20,11 @@ import {
   type DimensionInput,
 } from './dimensions.ts';
 import { metadataFilter, selectDiverse } from './diversity.ts';
+
+/** MatchResult + #15 阶段二新增的可选结构化字段（CHANGE_REQUEST 见 #17，获批后并入正式 types） */
+export interface MatchResultExtended extends MatchResult {
+  why_different_detail?: CounterAnalogyItem[];
+}
 
 /**
  * meta 的扩展字段（检索过程可视化需要，方案第 13 节）。
@@ -127,20 +134,24 @@ export async function retrieve(situation: Situation, opts: RetrieveOptions, deps
     console.error('[retrieval] ⚠️ 候选中 choice.type 不足 2 种，按分数返回');
   }
 
-  // 5. 组装 MatchResult（#15 阶段二填充 why_different / evidence_layers 的完整分层）
-  const matches: MatchResult[] = picked.map(({ episode, dimensions }) => ({
-    episode,
-    dimensions,
-    why_similar: explainSimilarity(situation, episode, dimensions),
-    why_different: [],
-    evidence_layers: {
-      facts: [],
-      self_claims: [],
-      interpretations: [],
-      ai_inferences: [],
-      unknowns: [...(episode.reflection.unknowns ?? [])],
-    },
-  }));
+  // 5. 组装 MatchResult：证据分层（#15，纯代码判定表）+ 反类比（#15，模板生成）
+  const matches: MatchResultExtended[] = picked.map(({ episode, dimensions }) => {
+    const layers = writeEvidenceLayers(episode);
+    const ca = buildCounterAnalogy(situation, episode);
+    const violations = guardViolations(ca.items.map((i) => i.text));
+    if (violations.length > 0) {
+      throw new Error(`反类比输出违反口径铁律: ${violations.join('; ')}`);
+    }
+    layers.ai_inferences = ca.items.filter((i) => i.kind === 'era').map((i) => i.text);
+    return {
+      episode,
+      dimensions,
+      why_similar: explainSimilarity(situation, episode, dimensions),
+      why_different: ca.items.map((i) => i.text),
+      why_different_detail: ca.items,
+      evidence_layers: layers,
+    };
+  });
 
   return {
     situation,

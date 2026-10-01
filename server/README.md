@@ -1,12 +1,13 @@
 # server/ —— AI/后端（Damn4lee 责任区）
 
-阶段一（#14 检索链路）已实现。阶段二（#15 反类比 + 证据分层）待规则文档审核后开工。
+阶段一（#14 检索链路）与阶段二（#15 反类比 + 证据分层，纯模板/判定表版）已实现。
 
 ## 运行（零第三方依赖，Node ≥ 24 原生跑 TS）
 
 ```bash
 node --env-file=.env server/api.ts        # 启动 API（默认 :3000）
-node --test "server/tests/*.test.ts"      # 离线单测（不需要网络和密钥）
+node --test "server/tests/*.test.ts"      # 离线单测（16 个，不需要网络和密钥）
+node --env-file=.env server/_bench/acceptance.ts   # 验收实证（问题1/3/4/5 的真实输出）
 ```
 
 ## API
@@ -35,6 +36,8 @@ server/
   retrieval/diversity.ts        # choice.type 多样性硬约束 + 元数据软过滤
   retrieval/retrieve.ts         # 编排：召回→过滤→重排→多样性
   retrieval/load-episodes.ts    # 只读 data/episodes.json
+  evidence/evidence-writer.ts   # 证据分层判定表（#15，纯代码，每条带来源标记）
+  counter-analogy/counter-analogy.ts  # 反类比模板生成（#15，structure/era/unknown + 口径守卫）
   fixtures/demo-inputs.json     # Demo 三问
   fixtures/demo-cache-1.json    # 断网兜底缓存（问题 1 已生成）
   fixtures/verify/              # 实际验证记录（输入 + 原始输出）
@@ -62,6 +65,8 @@ server/
 
 ## 已知边界
 
-- `why_different` / `evidence_layers` 目前为空结构 + unknowns 透传（#15 阶段二填充，规则见 `RULES-evidence-counter-analogy.md`）
-- `meta` 扩展字段（dropped_by_metadata / forced_diversity / weights）已提 CHANGE_REQUEST（#17）
+- 反类比 v1 为纯模板生成（零 LLM）：每条差异由结构字段对比得出并带依据，幻觉在构造上不可能发生；LLM 表述升级见 `RULES-evidence-counter-analogy.md` 修订记录
+- `why_different_detail` 为可选扩展字段（CHANGE_REQUEST 在 #17，获批后并入正式 types）
+- `meta` 扩展字段（dropped_by_metadata / forced_diversity / weights）同上
 - embedding 无磁盘缓存：每次启动重新索引，3 条案例约 1.2s；数据到 36 条后需要加缓存
+- 验收实证存档：`fixtures/verify/acceptance-2026-10-02.txt`（问题 1/3/4/5 的真实输出）
