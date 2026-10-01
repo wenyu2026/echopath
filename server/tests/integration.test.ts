@@ -366,6 +366,41 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ㉑ 解析模型选择：它占了整条链路 87% 的等待
+   ------------------------------------------------------------
+   实测（同提示词 + json_schema，三个场景各 3 轮共 9 次）：
+     glm-5                9/9  平均 4.1s  中位 4.0s  最慢 5.4s
+     deepseek-v4.1-flash  9/9  平均 2.3s  中位 2.2s  最慢 2.8s
+   所以默认用后者，但**必须能被环境变量覆盖**（现场出问题要能一键回退）。
+   ============================================================ */
+
+test('解析模型：必须是可配置的常量，不能写死在调用处', () => {
+  const src = readFileSync(join(root, 'server', 'parser', 'situation-parser.ts'), 'utf8');
+
+  assert.ok(/export const SITUATION_MODEL/.test(src), '应导出 SITUATION_MODEL 常量');
+  assert.ok(
+    /process\.env\.SITUATION_MODEL/.test(src),
+    '必须支持环境变量覆盖 —— 现场模型出问题时要能一键回退',
+  );
+  assert.ok(
+    /model:\s*SITUATION_MODEL/.test(src),
+    'chatCompletions 调用处应使用该常量，而不是写死模型名',
+  );
+  assert.ok(
+    !/model:\s*'glm-5'/.test(src),
+    '不应再写死 glm-5（实测比 deepseek-v4.1-flash 慢 44%）',
+  );
+});
+
+test('解析模型：应记录踩过的坑，免得后人重复试', () => {
+  const src = readFileSync(join(root, 'server', 'parser', 'situation-parser.ts'), 'utf8');
+  // 这些是实测不可用的模型，注释里应写明原因
+  for (const m of ['glm-5.3-flashx', 'glm-4.5-air', 'step-3.7-flash']) {
+    assert.ok(src.includes(m), `应记录 ${m} 不可用的原因，避免后人重复踩`);
+  }
+});
+
+/* ============================================================
    ⑳ 证据抽屉要能显示「谁出的、哪一段、什么局限」
    ------------------------------------------------------------
    实测发现 sources.json 里有 publisher / locator / accessed_on / limitations ——

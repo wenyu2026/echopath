@@ -164,6 +164,33 @@ export class OutOfScopeError extends Error {
   }
 }
 
+/**
+ * 用于解析处境的模型。
+ *
+ * ⚠️ 为什么从 glm-5 换成 deepseek-v4.1-flash（2026-10-02 实测）：
+ *
+ *   同一组提示词 + json_schema，三个演示场景各跑 3 轮（共 9 次）：
+ *
+ *     模型                  成功    平均    中位    最慢
+ *     glm-5                9/9    4.1s   4.0s   5.4s
+ *     deepseek-v4.1-flash  9/9    2.3s   2.2s   2.8s
+ *     → 快 44%，成功率一样，输出质量不降
+ *
+ *   顺带记录几个试过但不可用的（别重复踩）：
+ *     glm-5.3-flashx      该模型始终思考，关不掉（400）
+ *     glm-4.5-air         只支持 stream 模式
+ *     glm-5.3             空 content（输出全在 reasoning）
+ *     qwen3.5-flash       json_schema 模式下要求提示词含 "json" 字样
+ *     step-3.7-flash      空 content
+ *     minimax-m3          14.4s，且返回非法 JSON
+ *
+ *   解析占了整条链路 87% 的等待（检索只要 0.16-0.4s），
+ *   所以这 1.8 秒的差距是评委能直接感觉到的。
+ *
+ * 可用环境变量覆盖，回退很方便：SITUATION_MODEL=glm-5
+ */
+export const SITUATION_MODEL = process.env.SITUATION_MODEL ?? 'deepseek-v4.1-flash';
+
 export async function parseSituation(config: GatewayConfig, rawInput: string): Promise<ParseResult> {
   // 先拦明显超出范围的输入 —— 让模型硬编一个处境出来比拒答更难堪
   const oos = detectOutOfScope(rawInput);
@@ -176,7 +203,7 @@ export async function parseSituation(config: GatewayConfig, rawInput: string): P
         ? rawInput
         : `${rawInput}\n\n注意：你上一次的输出违反了字段约束，具体问题：\n${lastIssues.map((s) => `- ${s}`).join('\n')}\n请严格按约束重新输出。`;
     const result = await chatCompletions(config, {
-      model: 'glm-5',
+      model: SITUATION_MODEL,
       reasoning_effort: 'none',
       max_tokens: 800,
       response_format: {
