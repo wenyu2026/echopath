@@ -859,3 +859,26 @@ input:focus, textarea:focus, select:focus {
   h1 { font-size: 24px; }
   .slogan { display: none; }
 }
+
+/* ============================================================
+   What-if 条件调整
+   ------------------------------------------------------------
+   这是「证明结构匹配而非文本匹配」的地方，视觉上要够突出。
+   ============================================================ */
+.whatif {
+  border-left: 3px solid var(--now);
+}
+.whatif .option-chip {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 240px;
+  text-align: left;
+  line-height: 1.5;
+  padding: 10px 13px;
+}
+.whatif .option-chip .tiny {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.4;
+}

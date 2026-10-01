@@ -12,12 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
 import DimensionCard from '../components/DimensionCard';
 import CounterAnalogy from '../components/CounterAnalogy';
+import WhatIfPanel from '../components/WhatIfPanel';
 import { CHOICE_LABEL } from '../components/ForkMap';
 
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
 export default function P5Compare() {
-  const { result, situation, setReachable } = useApp();
+  const { result, situation, setReachable, retrieveWith } = useApp();
   const nav = useNavigate();
   const [openIdx, setOpenIdx] = useState(0);
 
@@ -95,6 +96,9 @@ export default function P5Compare() {
           </div>
         );
       })}
+
+      {/* What-if：改一个条件，看结构匹配是否真的在起作用 */}
+      {situation && <WhatIfPanel baseSituation={situation} baseResult={result} onRerun={retrieveWith} />}
 
       <div className="btn-row">
         <button className="btn btn-primary" onClick={() => { setReachable(5); nav('/reflect'); }}>

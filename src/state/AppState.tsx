@@ -43,6 +43,12 @@ type Ctx = {
   loadingRetrieval: boolean;
   runRetrieval: () => Promise<void>;
 
+  /**
+   * What-if 用：用一个「假设处境」重算，**不改动全局状态**。
+   * 后端不可用时返回 null（What-if 需要实时重算，不能拿快照糊弄）。
+   */
+  retrieveWith: (hypothetical: Situation) => Promise<RetrievalResponse | null>;
+
   /** 本次数据来自真实后端还是离线缓存 */
   mode: RunMode;
   /** 降级原因（给 UI 显示提示） */
@@ -150,6 +156,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
           fallback(`检索接口不可用（${(e as Error).message.slice(0, 60)}）`, 'retrieval');
         } finally {
           setLoadingRetrieval(false);
+        }
+      },
+
+      /**
+       * What-if 专用：故意**不走降级**。
+       * 理由：降级会返回一份固定的快照，那么「改条件 → 结果变化」就成了假的 ——
+       * 而 What-if 的全部意义就在于证明这个变化是真的。
+       * 所以后端不可用时直接返回 null，由 UI 明说「离线模式下无法演示 What-if」。
+       */
+      async retrieveWith(hypothetical: Situation) {
+        try {
+          return await postJson<RetrievalResponse>('/api/retrieve', {
+            situation: hypothetical,
+            narrative: buildNarrative(journey),
+          });
+        } catch (e) {
+          console.error('[what-if] 重算失败：', (e as Error).message);
+          return null;
         }
       },
 
