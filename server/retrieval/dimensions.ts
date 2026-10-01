@@ -157,7 +157,16 @@ export function explainSimilarity(situation: Situation, episode: DecisionEpisode
     { dim: 'dilemma_match', label: '困境结构', reason: `双方核心冲突同属「${u ? DILEMMA_CLASS_ZH[u] ?? u : '同构'}」型（对方当时的困境：${episode.decision_state.dilemma}）` },
     { dim: 'path_match', label: '来时路', reason: `此前的投入路径相似：对方曾 ${episode.prior_path[0] ?? '（无记录）'}` },
     { dim: 'goal_match', label: '目标', reason: `在意的目标有交集（对方的目标：${episode.decision_state.goals.join('、')}）` },
-    { dim: 'stage_match', label: '阶段', reason: `人生阶段接近（对方当时：${episode.time.stage}，${episode.time.age ?? '?'} 岁）` },
+    // ⚠️ 集成修复（#17）：#13 的 36 条数据里部分案例没有 time.age，
+    //    原来写 `?? '?'` 会输出「毕业后起步，? 岁」——演示时很显眼。
+    //    改成：没有年龄就不提年龄。
+    {
+      dim: 'stage_match',
+      label: '阶段',
+      reason: `人生阶段接近（对方当时：${episode.time.stage}${
+        typeof episode.time.age === 'number' ? `，${episode.time.age} 岁` : ''
+      }）`,
+    },
     { dim: 'reversibility_match', label: '可逆性', reason: `当时选择的可逆性与你相近（对方评估为「${LEVEL_ZH[episode.decision_state.reversibility]}」，你为「${LEVEL_ZH[situation.reversibility]}」）` },
     { dim: 'constraint_match', label: '约束', reason: `现实约束有重叠（对方的约束：${episode.decision_state.constraints.join('、')}）` },
   ];
