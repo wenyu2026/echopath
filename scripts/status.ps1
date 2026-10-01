@@ -53,8 +53,15 @@ foreach ($state in @('open','closed')) {
     foreach ($i in ($issues | Sort-Object number)) {
         $names = @($i.labels | ForEach-Object { $_.name })
 
-        # 成员：优先取 member-x 标签，其次从标题/正文里的 "负责人：member-x" 推断
-        $who = $names | Where-Object { $members -contains $_ } | Select-Object -First 1
+        # 成员：优先取 GitHub assignee（一人一号后这才是权威来源），
+        #       其次取 member-x 标签，最后从标题推断
+        $who = ''
+        if ($i.assignees -and @($i.assignees).Count -gt 0) {
+            $who = (@($i.assignees) | ForEach-Object { $_.login }) -join '+'
+        }
+        if (-not $who) {
+            $who = $names | Where-Object { $members -contains $_ } | Select-Object -First 1
+        }
         if (-not $who) {
             $m = [regex]::Match($i.title, 'member-[a-d]')
             if ($m.Success) { $who = $m.Value }
