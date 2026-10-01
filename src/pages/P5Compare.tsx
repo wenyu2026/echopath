@@ -80,9 +80,6 @@ export default function P5Compare() {
                 <span className="tiny muted">不是「相似度 87%」这种单一分数</span>
               </div>
               <DimensionCard dims={m.dimensions} />
-              <p className="tiny muted" style={{ marginTop: 16, marginBottom: 0 }}>
-                「差异惩罚」越高，说明时代 / 制度 / 资源差别越大 —— 照搬的风险也越大。
-              </p>
             </div>
 
             {/* 像与不像 */}
