@@ -20,7 +20,7 @@ const ARRAY_FIELDS: { key: keyof Situation; label: string }[] = [
 ];
 
 export default function P2Crossroads() {
-  const { situation, setSituation, runRetrieval, loading, setReachable } = useApp();
+  const { situation, setSituation, runRetrieval, loadingRetrieval, mode, offlineReason, setReachable } = useApp();
   const nav = useNavigate();
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
@@ -72,6 +72,15 @@ export default function P2Crossroads() {
         我们从你的回答里抽出了这些结构。
         <strong>如果哪里不对，直接改</strong> —— 你的处境由你定义，不是由系统定义。
       </p>
+
+      {mode === 'offline' && (
+        <div className="notice warn" style={{ marginBottom: 18 }}>
+          <strong>⚠️ 离线演示模式</strong>
+          <br />
+          后端接口暂时不可用{offlineReason ? `（${offlineReason}）` : ''}，
+          当前显示的是预生成的演示数据。**功能演示不受影响，但这不是实时计算结果。**
+        </div>
+      )}
 
       <div className="card">
         <div className="card-head">
@@ -247,8 +256,8 @@ export default function P2Crossroads() {
       </div>
 
       <div className="btn-row">
-        <button className="btn btn-primary" onClick={go} disabled={loading}>
-          {loading ? '正在检索相似的人生路口…' : '看看别人从这里去了哪里 →'}
+        <button className="btn btn-primary" onClick={go} disabled={loadingRetrieval}>
+          {loadingRetrieval ? '正在检索相似的人生路口…' : '看看别人从这里去了哪里 →'}
         </button>
         <button className="btn btn-ghost" onClick={() => nav('/')}>
           ← 回去修改来时路

@@ -1,0 +1,443 @@
+{
+  "situation": {
+    "constraints": [
+      "存款不多",
+      "无家庭负担",
+      "在意成长空间",
+      "在意长期竞争力"
+    ],
+    "dilemma": "大厂涨薪定岗 vs 小厂全能无路",
+    "goals": [
+      "保持成长速度",
+      "提升长期竞争力",
+      "获得晋升路径"
+    ],
+    "options": [
+      "跳槽去大厂",
+      "留守小公司",
+      "找第三家折中"
+    ],
+    "reversibility": "medium",
+    "risk": "medium",
+    "stage": "毕业两年",
+    "unknowns": [
+      "大厂窄方向的天花板",
+      "大厂内部转岗难度",
+      "小公司未来发展前景"
+    ]
+  },
+  "matches": [
+    {
+      "episode": {
+        "episode_id": "butterfield_2013_slack_pivot",
+        "person": {
+          "name": "斯图尔特·巴特菲尔德",
+          "tags": [
+            "大厂还是小公司/创业",
+            "失败后转产品"
+          ]
+        },
+        "time": {
+          "year": 2013,
+          "stage": "失败后转产品"
+        },
+        "prior_path": [
+          "Glitch 关闭后仍保有部分资金和小团队，曾内部使用沟通工具。"
+        ],
+        "decision_state": {
+          "dilemma": "退回剩余资金 vs 转做协作工具",
+          "options": [
+            "退回剩余资金",
+            "转做协作工具"
+          ],
+          "constraints": [
+            "团队已缩减",
+            "外部需求尚待验证"
+          ],
+          "goals": [
+            "重用已验证工具",
+            "寻找新市场"
+          ],
+          "risk": "high",
+          "reversibility": "medium"
+        },
+        "choice": {
+          "type": "explore_then_switch",
+          "actions": [
+            "把内部沟通工具发展为面向其他团队的 Slack。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "从内部使用进入对外产品验证。",
+          "mid_term": "逐渐取得企业客户，获得后续融资。",
+          "long_term": "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
+            "未核实本人对这次选择的直接评价；不补写励志语录。"
+          ]
+        },
+        "evidence": [
+          {
+            "source_id": "SB-INVESTOR",
+            "type": "biography",
+            "claim": "剩余团队和资金、客户与上市回顾。",
+            "url": "https://a16z.com/announcement/slack/"
+          },
+          {
+            "source_id": "SB-ORIGIN",
+            "type": "biography",
+            "claim": "Slack 起源于游戏团队内部沟通工具。",
+            "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work"
+          },
+          {
+            "source_id": "SB-LAUNCH",
+            "type": "biography",
+            "claim": "2013 年发布测试产品。",
+            "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。已有投资关系、现金与协作团队是特殊条件；不是零资源转行。"
+          }
+        ],
+        "retrieval_tags": [
+          "大厂还是小公司/创业",
+          "explore_then_switch"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.5,
+        "path_match": 0.1897097851879669,
+        "dilemma_match": 0.45145544764188655,
+        "constraint_match": 0.5,
+        "goal_match": 0.5,
+        "reversibility_match": 1,
+        "difference_penalty": 0.31
+      },
+      "why_similar": [
+        "【可逆性】当时选择的可逆性与你相近（对方评估为「中」，你为「中」）",
+        "【目标】在意的目标有交集（对方的目标：重用已验证工具、寻找新市场）"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "剩余团队和资金、客户与上市回顾。（SB-INVESTOR）",
+          "Slack 起源于游戏团队内部沟通工具。（SB-ORIGIN）",
+          "2013 年发布测试产品。（SB-LAUNCH）"
+        ],
+        "self_claims": [],
+        "interpretations": [
+          "从内部使用进入对外产品验证。（outcomes.short_term）",
+          "逐渐取得企业客户，获得后续融资。（outcomes.mid_term）",
+          "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。（outcomes.long_term）"
+        ],
+        "ai_inferences": [],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
+        ]
+      }
+    },
+    {
+      "episode": {
+        "episode_id": "kariko_2013_biontech",
+        "person": {
+          "name": "卡塔琳·考里科",
+          "tags": [
+            "大厂还是小公司/创业",
+            "学术转产业"
+          ]
+        },
+        "time": {
+          "year": 2013,
+          "stage": "学术转产业"
+        },
+        "prior_path": [
+          "多年从事 mRNA 研究，已有与 Weissman 的合作成果。"
+        ],
+        "decision_state": {
+          "dilemma": "继续原学术岗位 vs 加入生物技术公司",
+          "options": [
+            "继续原学术岗位",
+            "加入生物技术公司"
+          ],
+          "constraints": [
+            "研究转化需团队",
+            "工作地点发生变化"
+          ],
+          "goals": [
+            "推进技术应用",
+            "扩大研究协作"
+          ],
+          "risk": "medium",
+          "reversibility": "medium"
+        },
+        "choice": {
+          "type": "direct_switch",
+          "actions": [
+            "2013 年加入 BioNTech。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "进入公司研发团队；2014 年有联合论文发表。",
+          "mid_term": "未知：所用声明没有完整披露加入后数年的个人职位与生活成本。",
+          "long_term": "2022 年搬回宾夕法尼亚与家人生活，改任外部顾问。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "这是有长期专业成果的学术转产业案例，不等于应届生大小公司薪酬选择。",
+            "未核实本人对这次选择的直接评价；不补写励志语录。",
+            "未知：所用声明没有完整披露加入后数年的个人职位与生活成本。"
+          ]
+        },
+        "evidence": [
+          {
+            "source_id": "KK-ROCK",
+            "type": "biography",
+            "claim": "入职前研究与合作背景。",
+            "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/"
+          },
+          {
+            "source_id": "KK-BION",
+            "type": "biography",
+            "claim": "2013 入职、2014 论文、2022 外部顾问。",
+            "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是有长期专业成果的学术转产业案例，不等于应届生大小公司薪酬选择。"
+          }
+        ],
+        "retrieval_tags": [
+          "大厂还是小公司/创业",
+          "direct_switch"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.5,
+        "path_match": 0,
+        "dilemma_match": 0.43659454650276164,
+        "constraint_match": 0.5,
+        "goal_match": 0.5,
+        "reversibility_match": 1,
+        "difference_penalty": 0.31
+      },
+      "why_similar": [
+        "【可逆性】当时选择的可逆性与你相近（对方评估为「中」，你为「中」）",
+        "【目标】在意的目标有交集（对方的目标：推进技术应用、扩大研究协作）"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "入职前研究与合作背景。（KK-ROCK）",
+          "2013 入职、2014 论文、2022 外部顾问。（KK-BION）"
+        ],
+        "self_claims": [],
+        "interpretations": [
+          "进入公司研发团队；2014 年有联合论文发表。（outcomes.short_term）",
+          "未知：所用声明没有完整披露加入后数年的个人职位与生活成本。（outcomes.mid_term）",
+          "2022 年搬回宾夕法尼亚与家人生活，改任外部顾问。（outcomes.long_term）"
+        ],
+        "ai_inferences": [],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "这是有长期专业成果的学术转产业案例，不等于应届生大小公司薪酬选择。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：所用声明没有完整披露加入后数年的个人职位与生活成本。"
+        ]
+      }
+    },
+    {
+      "episode": {
+        "episode_id": "may_2006_resume_phd",
+        "person": {
+          "name": "布赖恩·梅",
+          "tags": [
+            "考研还是就业",
+            "重返研究"
+          ]
+        },
+        "time": {
+          "year": 2006,
+          "stage": "重返研究"
+        },
+        "prior_path": [
+          "博士研究已中断约三十年；仍从事音乐。"
+        ],
+        "decision_state": {
+          "dilemma": "继续仅做音乐 vs 恢复博士研究",
+          "options": [
+            "继续仅做音乐",
+            "恢复博士研究"
+          ],
+          "constraints": [
+            "需补读多年文献",
+            "既有工作仍在继续"
+          ],
+          "goals": [
+            "完成遗留研究",
+            "保持音乐活动"
+          ],
+          "risk": "medium",
+          "reversibility": "medium"
+        },
+        "choice": {
+          "type": "dual_track",
+          "actions": [
+            "2006 年恢复博士研究，整理旧资料并补读文献。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "2007 年提交论文并取得博士学位。",
+          "mid_term": "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+          "long_term": "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+            "未核实本人对这次选择的直接评价；不补写励志语录。",
+            "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+            "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+          ]
+        },
+        "evidence": [
+          {
+            "source_id": "BM-LJMU",
+            "type": "biography",
+            "claim": "2006 恢复和 2007 完成。",
+            "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
+          },
+          {
+            "source_id": "BM-IMPERIAL",
+            "type": "biography",
+            "claim": "旧研究材料、文献补读及论文提交。",
+            "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。"
+          }
+        ],
+        "retrieval_tags": [
+          "考研还是就业",
+          "dual_track"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.5,
+        "path_match": 0.07000055613392282,
+        "dilemma_match": 0.3759236532124121,
+        "constraint_match": 0.5,
+        "goal_match": 0.5,
+        "reversibility_match": 1,
+        "difference_penalty": 0.31
+      },
+      "why_similar": [
+        "【可逆性】当时选择的可逆性与你相近（对方评估为「中」，你为「中」）",
+        "【目标】在意的目标有交集（对方的目标：完成遗留研究、保持音乐活动）"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂窄方向的天花板」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "2006 恢复和 2007 完成。（BM-LJMU）",
+          "旧研究材料、文献补读及论文提交。（BM-IMPERIAL）"
+        ],
+        "self_claims": [],
+        "interpretations": [
+          "2007 年提交论文并取得博士学位。（outcomes.short_term）",
+          "未知：所用来源没有系统评估取得学位后数年的机会成本。（outcomes.mid_term）",
+          "未知：不能从取得博士学位推断长远收入、幸福或研究影响。（outcomes.long_term）"
+        ],
+        "ai_inferences": [],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+          "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "candidates_recalled": 36,
+    "after_metadata_filter": 32,
+    "after_rerank": 3,
+    "dropped_by_metadata": 4,
+    "forced_diversity": false,
+    "elapsed_ms": 157,
+    "weights": {
+      "stage_match": 0.15,
+      "path_match": 0.2,
+      "dilemma_match": 0.25,
+      "constraint_match": 0.2,
+      "goal_match": 0.15,
+      "reversibility_match": 0.05
+    },
+    "parser_elapsed_ms": 3196,
+    "parser_tokens": 525
+  }
+}
