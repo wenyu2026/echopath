@@ -336,6 +336,28 @@ check(
   check('README 里的命令与 package.json 一致', issues.length === 0, issues.slice(0, 3).join(' / '));
 }
 
+/* ---------- 8b. README 里写的自检项数要与实际一致 ---------- */
+// 我写完这项检查后自己就踩了一次：README 写「16 项」，实际是 17 项。
+// 数字对不上的说明文档在慢慢腐烂 —— 顺手一起查。
+{
+  let detail = '';
+  try {
+    const readme = readFileSync(join(root, 'README.md'), 'utf8');
+    const m = readme.match(/上台前自检\*\*（(\d+)\s*项/);
+    const declared = m ? Number(m[1]) : null;
+    // 此刻 results 里已有 10 项，本项是第 11 项；后面还有 注册后未跑的几项。
+    // 与其自己算，不如数脚本里的 check( 调用总数 —— 那是唯一事实来源。
+    const selfSrc = readFileSync(join(root, 'scripts', 'preflight.mjs'), 'utf8');
+    const totalChecks = (selfSrc.match(/^\s*check\(/gm) ?? []).length;
+    if (declared !== null && declared !== totalChecks) {
+      detail = `README 写「${declared} 项」，脚本里实际有 ${totalChecks} 项`;
+    }
+  } catch {
+    /* README 读不到就算了，上面那条已经会报 */
+  }
+  check('README 的自检项数与实际一致', detail === '', detail);
+}
+
 /* ---------- 9. 静态资源不能还留着脚手架自带的痕迹 ---------- */
 // 踩过两次：
 //   ① public/favicon.svg 一直是 create-vite 自带的紫色 logo（#863bff）
@@ -444,6 +466,28 @@ if (keyOk) {
   healthDetail = '无密钥，跳过（前端会走离线兜底，也能演示）';
 }
 check('后端 /api/health 可达', serverOk, healthDetail, false);
+
+/* ---------- 10. 前端能不能真的渲染出来（真实浏览器） ---------- */
+// ⚠️ 这是 preflight 之前最大的盲区：
+//   前面那些检查查的都是「文件在不在、命令跑不跑得通」——
+//   **它们根本不知道页面有没有渲染**。
+//   一个 JS 运行时错误可以让「构建通过 + 单测全绿 + 快照齐备」同时为真，
+//   而评委看到的是白屏。
+//
+// 只在**后端在跑**时才做（冒烟要调 /api/consult 种真实数据）。
+// 后端没起的话前端本来就走离线兜底，此时冒烟测的是另一条路径，容易误报。
+if (serverOk) {
+  const smoke = run('node', ['scripts/smoke.mjs'], { timeout: 150_000 });
+  const lines = smoke.out
+    .split('\n')
+    .filter((l) => /路由|种入|❌/.test(l))
+    .slice(-4)
+    .map((l) => l.replace(/\x1b\[[0-9;]*m/g, '').trim())
+    .join(' / ');
+  check('前端 6 条路由渲染正常（真实浏览器）', smoke.ok, smoke.ok ? '' : lines.slice(0, 320));
+} else {
+  check('前端 6 条路由渲染正常（真实浏览器）', true, '后端没起，跳过（冒烟需要后端提供真实数据）', false);
+}
 
 /* ---------- 输出 ---------- */
 console.log('');

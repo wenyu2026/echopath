@@ -123,7 +123,8 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 | 命令 | 作用 |
 |---|---|
 | **`npm start`** | **一条命令拉起前后端**（后端 :3000 + 前端 :5173）—— 演示用这个 |
-| **`npm run preflight`** | **上台前自检**（13 项，30 秒），给明确的「可以上台 / 阻塞项」 |
+| **`npm run preflight`** | **上台前自检**（18 项，约 1 分钟），给明确的「可以上台 / 阻塞项」 |
+| **`npm run smoke`** | **前端冒烟**（真实 Chrome 打开 6 条路由，验证真的渲染出来了、控制台无报错） |
 | `npm run dev` | 只启前端（5173）。**不带后端**，接口会走离线兜底 |
 | `npm run server` | 只启后端（3000） |
 | `npm run build` | 构建（含 TS 类型检查） |
