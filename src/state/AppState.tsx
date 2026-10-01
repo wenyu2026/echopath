@@ -249,8 +249,11 @@ function buildNarrative(journey: Journey): string {
  * 输入超范围时后端返回 422 OUT_OF_SCOPE。
  * 这不是「接口挂了」，而是**明确的业务答复** ——
  * 所以绝不能走离线兜底（那会拿别人的处境糊弄用户）。
+ *
+ * 只在 AppState 内部使用，不导出 —— 导出会让 oxlint 报
+ * only-export-components（Fast Refresh 相关），而它本来也不需要跨文件用。
  */
-export class OutOfScopeError extends Error {
+class OutOfScopeError extends Error {
   hint: string;
   constructor(reason: string, hint: string) {
     super(reason);
