@@ -243,6 +243,16 @@ const server = createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.error(`[api] EchoPath 检索链路已启动: http://localhost:${PORT}（key_configured=${Boolean(API_KEY)}）`);
+
+  // 启动后立刻预热索引。
+  //
+  // 为什么：索引是懒加载的，第一次调用才建。实测服务刚起时第一次
+  // /api/retrieve 要 2.6s，之后就降到 0.16s。
+  // 演示时你刚 npm start 就上台，第一次点 What-if 正好撞上这 2.6 秒 ——
+  // 观众看到的是"卡住了"。预热后这段时间被挪到启动阶段（那时没人在看）。
+  void deps()
+    .then((d) => console.error(`[api] 预热完成：${d.episodes.length} 条案例已就绪，可以开始演示`))
+    .catch((e) => console.error('[api] ⚠️ 预热失败（不影响启动，首次请求会重试）:', (e as Error).message));
 });
 
 for (const sig of ['SIGINT', 'SIGTERM'] as const) {
