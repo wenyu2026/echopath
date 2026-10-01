@@ -128,8 +128,50 @@ check(
   );
 }
 
-/* ---------- 5. 构建能过 ---------- */
-const buildRes = buildCheck();
+/* ---------- 5. 来源链接完整性（离线检查，不发网络请求） ---------- */
+// 只查「引用是否悬空」——真发请求的链接体检是 npm run check:sources，
+// 那个要几十秒，不适合放进 30 秒自检。
+{
+  let dangling = 0;
+  let noUrl = 0;
+  let total = 0;
+  try {
+    const srcs = JSON.parse(readFileSync(join(root, 'data', 'sources.json'), 'utf8'));
+    const list = Array.isArray(srcs) ? srcs : srcs.sources;
+    const ids = new Map(list.map((s) => [s.source_id, s.url]));
+    for (const s of list) if (!s.url) noUrl++;
+
+    const eps = JSON.parse(readFileSync(join(root, 'data', 'episodes.json'), 'utf8'));
+    const arr = Array.isArray(eps) ? eps : eps.episodes;
+    // 归一化：null / undefined / '' 视为同一个「无 url」——
+    // 否则 AI 推断类的 evidence（两侧都没有 url）会被误报成不一致
+    const norm = (u) => (u == null ? '' : String(u).trim());
+    for (const e of arr) {
+      for (const ev of e.evidence ?? []) {
+        total++;
+        if (!ev.source_id) continue;
+        if (!ids.has(ev.source_id)) dangling++;
+        else if (norm(ids.get(ev.source_id)) !== norm(ev.url)) dangling++;
+      }
+    }
+  } catch (e) {
+    dangling = -1;
+  }
+
+  check(
+    `来源引用完整（${total} 条 evidence）`,
+    dangling === 0,
+    dangling === -1
+      ? '读取 data/sources.json 或 data/episodes.json 失败'
+      : dangling > 0
+        ? `有 ${dangling} 条 evidence 的 source_id 或 url 与 sources.json 不一致 —— 跑 npm run validate:data 看详情`
+        : noUrl > 0
+          ? `（有 ${noUrl} 条来源没有 url，属正常：AI 推断类不需要）`
+          : '',
+  );
+}
+
+/* ---------- 6. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */
@@ -142,7 +184,17 @@ check(`后端单测 ${passN} 通过 / ${failN} 失败`, failN === 0 && passN > 0
 
 /* ---------- 6. 数据校验 ---------- */
 const validRes = run('node', ['scripts/validate-data.mjs'], { timeout: 60_000 });
-check('数据校验通过', validRes.out.includes('PASS'), validRes.out.includes('WARNING') ? '（结构通过，人类来源审查仍未完成）' : '');
+// 注意：validator 只要出现 ERROR 就是失败；有 WARNING 仍算通过（只是提醒人工审查未完成）
+const validOk = validRes.out.includes('PASS') && !validRes.out.includes('ERROR');
+check(
+  '数据校验通过',
+  validOk,
+  !validOk
+    ? validRes.out.split('\n').filter((l) => l.includes('ERROR')).slice(0, 3).join(' / ')
+    : validRes.out.includes('WARNING')
+      ? '（结构通过；人类来源审查仍未完成，见 data/REVIEW.md）'
+      : '',
+);
 
 /* ---------- 7. 后端能不能起 ---------- */
 let serverOk = false;

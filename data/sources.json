@@ -49,12 +49,12 @@
       "source_id": "LX-MUSEUM",
       "title": "鲁迅生平陈列：画出国人的魂灵",
       "publisher": "上海鲁迅纪念馆",
-      "url": "https://www.luxunmuseum.cn/lxcl/index/id/5.html",
+      "url": "https://www.luxunmuseum.cn/",
       "type": "biography",
       "locator": "1918—1922 年十四篇小说",
       "accessed_on": "2026-10-02",
       "access_method": "search_index",
-      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**原深链（/lxcl/index/id/5.html）2026-10-02 实测 404（官网改版），已改为站点首页；具体展览页需到馆内检索，未能定位到对应条目。**"
     },
     {
       "source_id": "AL-INTERVIEW",
@@ -329,7 +329,7 @@
       "locator": "1997 WebEx、2007 Cisco、June 2011 Zoom",
       "accessed_on": "2026-10-02",
       "access_method": "search_index",
-      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**该域名（investors.zoom.us）有 Akamai 反爬，自动化工具与无头浏览器均被拒（返回 403 或超时），无法用工具确认深链是否仍存在。**人工核查路径：浏览器打开 investors.zoom.us → Governance → Board of Directors；交叉核对：https://en.wikipedia.org/wiki/Eric_Yuan （二手来源，仅用于交叉验证履历年份）。"
     },
     {
       "source_id": "EY-2023",

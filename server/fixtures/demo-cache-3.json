@@ -6,22 +6,22 @@
       "小公司无晋升路径",
       "大厂岗位方向窄"
     ],
-    "dilemma": "留小公司求全 vs 去大厂做螺丝钉",
+    "dilemma": "小厂全能成长 vs 大厂平台定岗",
     "goals": [
-      "提升成长空间",
-      "保持长期竞争力",
-      "薪资增长"
+      "提升长期竞争力",
+      "拓展成长空间",
+      "追求职业晋升"
     ],
     "options": [
-      "留任小公司",
-      "接受大厂offer",
-      "寻找第三选项"
+      "留小公司积累",
+      "跳槽大厂定岗",
+      "继续观望机会"
     ],
     "reversibility": "medium",
     "risk": "medium",
     "stage": "毕业两年/职业成长期",
     "unknowns": [
-      "大厂内部转岗机会",
+      "大厂内部转岗可能性",
       "窄方向的市场需求度",
       "小公司未来发展上限"
     ]
@@ -105,8 +105,8 @@
       },
       "dimensions": {
         "stage_match": 0.5,
-        "path_match": 0.021935334764493497,
-        "dilemma_match": 0.4959366038345685,
+        "path_match": 0.02207122800737376,
+        "dilemma_match": 0.4955283858046487,
         "constraint_match": 0.25,
         "goal_match": 0.25,
         "reversibility_match": 1,
@@ -151,141 +151,6 @@
         "unknowns": [
           "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
           "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
-          "未核实本人对这次选择的直接评价；不补写励志语录。"
-        ]
-      }
-    },
-    {
-      "episode": {
-        "episode_id": "kariko_1995_persist_cost",
-        "person": {
-          "name": "卡塔琳·考里科",
-          "tags": [
-            "考研还是就业",
-            "科研职位受挫"
-          ]
-        },
-        "time": {
-          "year": 1995,
-          "stage": "科研职位受挫"
-        },
-        "prior_path": [
-          "在宾夕法尼亚大学从事 mRNA 研究。"
-        ],
-        "decision_state": {
-          "dilemma": "接受降职留研 vs 离开研究岗位",
-          "options": [
-            "接受降职留研",
-            "离开研究岗位"
-          ],
-          "constraints": [
-            "晋升与经费受限",
-            "已有专业积累"
-          ],
-          "goals": [
-            "继续验证研究",
-            "维持科研岗位"
-          ],
-          "risk": "high",
-          "reversibility": "medium"
-        },
-        "choice": {
-          "type": "persist",
-          "actions": [
-            "1995 年接受较低职位，继续 mRNA 研究。"
-          ]
-        },
-        "outcomes": {
-          "short_term": "研究得以继续，但职位处境下降。",
-          "mid_term": "1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。",
-          "long_term": "据传记转述她的回忆，2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职位损失。"
-        },
-        "reflection": {
-          "unknowns": [
-            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-            "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
-            "未核实本人对这次选择的直接评价；不补写励志语录。"
-          ]
-        },
-        "evidence": [
-          {
-            "source_id": "KK-ROCK",
-            "type": "biography",
-            "claim": "1995 降职、1997 合作；传记转述本人关于 2009 年恢复职位请求被拒的回忆。",
-            "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/"
-          },
-          {
-            "source_id": "MODEL-V1",
-            "type": "ai_inference",
-            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。"
-          }
-        ],
-        "retrieval_tags": [
-          "考研还是就业",
-          "persist",
-          "坚持但长期受损"
-        ],
-        "next_episode_ids": [
-          "kariko_2013_biontech"
-        ]
-      },
-      "dimensions": {
-        "stage_match": 0.5,
-        "path_match": 0.02870199367618176,
-        "dilemma_match": 0.4669367003308805,
-        "constraint_match": 0.4,
-        "goal_match": 0.4,
-        "reversibility_match": 1,
-        "difference_penalty": 0.55
-      },
-      "why_similar": [
-        "【阶段】人生阶段接近（对方当时：科研职位受挫）",
-        "【约束】现实约束有具体重叠：「存款不多」「小公司无晋升路径」（对方的约束：晋升与经费受限、已有专业积累）"
-      ],
-      "why_different": [
-        "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-        "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-        "【未知】无法比较「大厂内部转岗机会」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-      ],
-      "why_different_detail": [
-        {
-          "text": "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-          "kind": "structure",
-          "basis": "constraints 对比",
-          "refs": [
-            "decision_state.constraints"
-          ]
-        },
-        {
-          "text": "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-          "kind": "era",
-          "basis": "ai_inference（模型外部知识）",
-          "refs": [
-            "time.year"
-          ]
-        },
-        {
-          "text": "【未知】无法比较「大厂内部转岗机会」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-          "kind": "unknown",
-          "basis": "数据缺失（episode 无对应字段）"
-        }
-      ],
-      "evidence_layers": {
-        "facts": [
-          "1995 降职、1997 合作；传记转述本人关于 2009 年恢复职位请求被拒的回忆。（KK-ROCK）"
-        ],
-        "self_claims": [],
-        "interpretations": [
-          "研究得以继续，但职位处境下降。（outcomes.short_term）",
-          "1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。（outcomes.mid_term）",
-          "据传记转述她的回忆，2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职位损失。（outcomes.long_term）"
-        ],
-        "ai_inferences": [
-          "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
-        ],
-        "unknowns": [
-          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-          "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
           "未核实本人对这次选择的直接评价；不补写励志语录。"
         ]
       }
@@ -374,8 +239,8 @@
       },
       "dimensions": {
         "stage_match": 0.5,
-        "path_match": 0.18929522540333635,
-        "dilemma_match": 0.47811138178422014,
+        "path_match": 0.189841401660814,
+        "dilemma_match": 0.4572422425881724,
         "constraint_match": 0.15,
         "goal_match": 0.15,
         "reversibility_match": 1,
@@ -387,7 +252,7 @@
       ],
       "why_different": [
         "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-        "【未知】无法比较「大厂内部转岗机会」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+        "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
       ],
       "why_different_detail": [
         {
@@ -399,7 +264,7 @@
           ]
         },
         {
-          "text": "【未知】无法比较「大厂内部转岗机会」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "text": "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
           "kind": "unknown",
           "basis": "数据缺失（episode 无对应字段）"
         }
@@ -423,6 +288,150 @@
           "未核实本人对这次选择的直接评价；不补写励志语录。"
         ]
       }
+    },
+    {
+      "episode": {
+        "episode_id": "murakami_1978_bar_and_writing",
+        "person": {
+          "name": "村上春树",
+          "tags": [
+            "大厂还是小公司/创业",
+            "经营与创作"
+          ]
+        },
+        "time": {
+          "year": 1978,
+          "stage": "经营与创作"
+        },
+        "prior_path": [
+          "与妻子经营爵士酒吧。"
+        ],
+        "decision_state": {
+          "dilemma": "维持经营 vs 营业外写作",
+          "options": [
+            "维持经营",
+            "营业外写作"
+          ],
+          "constraints": [
+            "店务占用时间",
+            "文学能力尚待验证"
+          ],
+          "goals": [
+            "保持现金来源",
+            "试做新的创作"
+          ],
+          "risk": "medium",
+          "reversibility": "medium"
+        },
+        "choice": {
+          "type": "dual_track",
+          "actions": [
+            "在继续经营酒吧期间开始写小说。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "利用营业结束后的时间完成第一部小说。",
+          "mid_term": "1979 年首作获新人奖；1981 年卖店转为专职写作。",
+          "long_term": "此后写作《寻羊冒险记》；首轮尝试不是预先排定的三年转型计划。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
+            "首作带来的收入及具体离店日期未知。"
+          ],
+          "self_comment": "他在回忆中把 1978 年的一场棒球赛视为开始写小说的契机。"
+        },
+        "evidence": [
+          {
+            "source_id": "HM-SELF",
+            "type": "self_writing",
+            "claim": "1978 开始写作、1979 首作获奖，之后卖店及继续创作。",
+            "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/"
+          },
+          {
+            "source_id": "HM-1981",
+            "type": "biography",
+            "claim": "卖店转向职业写作的年份为 1981 年。",
+            "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。"
+          }
+        ],
+        "retrieval_tags": [
+          "大厂还是小公司/创业",
+          "dual_track"
+        ],
+        "next_episode_ids": [
+          "murakami_1981_fulltime_writing"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.5,
+        "path_match": 0,
+        "dilemma_match": 0.45533035557626517,
+        "constraint_match": 0.4,
+        "goal_match": 0.15,
+        "reversibility_match": 1,
+        "difference_penalty": 0.75
+      },
+      "why_similar": [
+        "【阶段】人生阶段接近（对方当时：经营与创作）",
+        "【约束】现实约束有重叠（对方的约束：店务占用时间、文学能力尚待验证）"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+        "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+          "kind": "era",
+          "basis": "ai_inference（模型外部知识）",
+          "refs": [
+            "time.year"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "卖店转向职业写作的年份为 1981 年。（HM-1981）"
+        ],
+        "self_claims": [
+          "1978 开始写作、1979 首作获奖，之后卖店及继续创作。（HM-SELF）",
+          "他在回忆中把 1978 年的一场棒球赛视为开始写小说的契机。（reflection.self_comment，本人自述）"
+        ],
+        "interpretations": [
+          "利用营业结束后的时间完成第一部小说。（outcomes.short_term）",
+          "1979 年首作获新人奖；1981 年卖店转为专职写作。（outcomes.mid_term）",
+          "此后写作《寻羊冒险记》；首轮尝试不是预先排定的三年转型计划。（outcomes.long_term）"
+        ],
+        "ai_inferences": [
+          "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
+        ],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
+          "首作带来的收入及具体离店日期未知。"
+        ]
+      }
     }
   ],
   "meta": {
@@ -431,7 +440,7 @@
     "after_rerank": 3,
     "dropped_by_metadata": 5,
     "forced_diversity": false,
-    "elapsed_ms": 237,
+    "elapsed_ms": 223,
     "weights": {
       "stage_match": 0.15,
       "path_match": 0.2,
@@ -440,7 +449,7 @@
       "goal_match": 0.15,
       "reversibility_match": 0.05
     },
-    "parser_elapsed_ms": 2515,
-    "parser_tokens": 530
+    "parser_elapsed_ms": 3989,
+    "parser_tokens": 531
   }
 }
