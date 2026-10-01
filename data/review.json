@@ -1,0 +1,591 @@
+{
+  "version": 1,
+  "release_stage": "initial",
+  "human_review": "pending",
+  "episodes": [
+    {
+      "episode_id": "lu_xun_1906_medicine_to_literature",
+      "demo_questions": [
+        "转专业"
+      ],
+      "analogy_boundary": "晚清留日制度、文艺运动与现代校内转专业不同；不能据文学成就推断退学收益。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "time.year": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "prior_path.0": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "choice.actions.0": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "outcomes.short_term": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "outcomes.mid_term": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "outcomes.long_term": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ],
+        "reflection.self_comment": [
+          "LX-SENDAI",
+          "LX-TOHOKU",
+          "LX-PREFACE",
+          "LX-MUSEUM"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "ang_lee_1984_six_years_persist",
+      "demo_questions": [
+        "考研还是就业"
+      ],
+      "analogy_boundary": "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "time.year": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "prior_path.0": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "choice.actions.0": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "outcomes.short_term": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "outcomes.mid_term": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "outcomes.long_term": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "murakami_1978_bar_and_writing",
+      "demo_questions": [
+        "大厂还是小公司/创业"
+      ],
+      "analogy_boundary": "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "time.year": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "prior_path.0": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "choice.actions.0": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "outcomes.short_term": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "outcomes.mid_term": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "outcomes.long_term": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "reflection.self_comment": [
+          "HM-SELF",
+          "HM-1981"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "darwin_1825_medicine_trial",
+      "demo_questions": [
+        "转专业"
+      ],
+      "analogy_boundary": "无现代麻醉的手术环境与今天医学院差异很大；不能把不适归结为固定人格。",
+      "negative_case": "转向后不适合",
+      "negative_basis": "对解剖课程缺乏兴趣，观看手术给他强烈不适。；1827 年停止医学学习，1828 年进入剑桥。；1831 年又接受贝格尔号航行机会；没有成为医生。",
+      "field_sources": {
+        "person.name": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "time.year": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "prior_path.0": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "choice.actions.0": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "outcomes.short_term": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "outcomes.mid_term": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ],
+        "outcomes.long_term": [
+          "CD-STUDY",
+          "CD-BEAGLE"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "darwin_1828_cambridge",
+      "demo_questions": [
+        "转专业"
+      ],
+      "analogy_boundary": "当时英国教会职位、家庭资助与现代转专业的资格和成本不同。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "time.year": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "prior_path.0": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "choice.actions.0": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "outcomes.short_term": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "outcomes.mid_term": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ],
+        "outcomes.long_term": [
+          "CD-STUDY",
+          "CD-CHURCH",
+          "CD-BEAGLE"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "jobs_1972_reed_dropout",
+      "demo_questions": [
+        "转专业"
+      ],
+      "analogy_boundary": "个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "time.year": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "prior_path.0": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "choice.actions.0": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "outcomes.short_term": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "outcomes.mid_term": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "outcomes.long_term": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "reflection.self_comment": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "bezos_1994_leave_finance",
+      "demo_questions": [
+        "大厂还是小公司/创业"
+      ],
+      "analogy_boundary": "已有金融职业与家庭支持不同于应届毕业生；这是高资源创业样本。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "JB-SPEECH"
+        ],
+        "time.year": [
+          "JB-SPEECH"
+        ],
+        "prior_path.0": [
+          "JB-SPEECH"
+        ],
+        "choice.actions.0": [
+          "JB-SPEECH"
+        ],
+        "outcomes.short_term": [
+          "JB-SPEECH"
+        ],
+        "outcomes.long_term": [
+          "JB-SPEECH"
+        ],
+        "reflection.self_comment": [
+          "JB-SPEECH"
+        ]
+      },
+      "unknown_fields": [
+        "outcomes.mid_term"
+      ],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "may_1974_pause_phd",
+      "demo_questions": [
+        "考研还是就业"
+      ],
+      "analogy_boundary": "后来的知名度、财务条件与论文恢复机会属于特殊资源，不能假设所有延期读研者都能复制。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "BM-LJMU"
+        ],
+        "time.year": [
+          "BM-LJMU"
+        ],
+        "prior_path.0": [
+          "BM-LJMU"
+        ],
+        "choice.actions.0": [
+          "BM-LJMU"
+        ],
+        "outcomes.short_term": [
+          "BM-LJMU"
+        ],
+        "outcomes.long_term": [
+          "BM-LJMU"
+        ]
+      },
+      "unknown_fields": [
+        "outcomes.mid_term"
+      ],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "may_2006_resume_phd",
+      "demo_questions": [
+        "考研还是就业"
+      ],
+      "analogy_boundary": "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "BM-LJMU",
+          "BM-IMPERIAL"
+        ],
+        "time.year": [
+          "BM-LJMU",
+          "BM-IMPERIAL"
+        ],
+        "prior_path.0": [
+          "BM-LJMU",
+          "BM-IMPERIAL"
+        ],
+        "choice.actions.0": [
+          "BM-LJMU",
+          "BM-IMPERIAL"
+        ],
+        "outcomes.short_term": [
+          "BM-LJMU",
+          "BM-IMPERIAL"
+        ]
+      },
+      "unknown_fields": [
+        "outcomes.mid_term",
+        "outcomes.long_term"
+      ],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "kariko_1995_persist_cost",
+      "demo_questions": [
+        "考研还是就业"
+      ],
+      "analogy_boundary": "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
+      "negative_case": "坚持但长期受损",
+      "negative_basis": "研究得以继续，但职位处境下降。；1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。；2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职业损失。",
+      "field_sources": {
+        "person.name": [
+          "KK-ROCK"
+        ],
+        "time.year": [
+          "KK-ROCK"
+        ],
+        "prior_path.0": [
+          "KK-ROCK"
+        ],
+        "choice.actions.0": [
+          "KK-ROCK"
+        ],
+        "outcomes.short_term": [
+          "KK-ROCK"
+        ],
+        "outcomes.mid_term": [
+          "KK-ROCK"
+        ],
+        "outcomes.long_term": [
+          "KK-ROCK"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "dyson_2019_abandon_ev",
+      "demo_questions": [
+        "大厂还是小公司/创业"
+      ],
+      "analogy_boundary": "这是成熟公司内部项目退出，不是普通求职者辞职；安置承诺不写成已实现的结果。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "JD-CLOSE"
+        ],
+        "time.year": [
+          "JD-CLOSE"
+        ],
+        "prior_path.0": [
+          "JD-CLOSE"
+        ],
+        "choice.actions.0": [
+          "JD-CLOSE"
+        ],
+        "outcomes.short_term": [
+          "JD-CLOSE"
+        ]
+      },
+      "unknown_fields": [
+        "outcomes.mid_term",
+        "outcomes.long_term"
+      ],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    },
+    {
+      "episode_id": "nusslein_1962_test_medicine",
+      "demo_questions": [
+        "转专业"
+      ],
+      "analogy_boundary": "短期护理体验不覆盖全部医学职业；德国当时学制不同于现代中国转专业。",
+      "negative_case": "none",
+      "negative_basis": "",
+      "field_sources": {
+        "person.name": [
+          "CN-AUTO"
+        ],
+        "time.year": [
+          "CN-AUTO"
+        ],
+        "prior_path.0": [
+          "CN-AUTO"
+        ],
+        "choice.actions.0": [
+          "CN-AUTO"
+        ],
+        "outcomes.short_term": [
+          "CN-AUTO"
+        ],
+        "outcomes.mid_term": [
+          "CN-AUTO"
+        ],
+        "outcomes.long_term": [
+          "CN-AUTO"
+        ],
+        "reflection.self_comment": [
+          "CN-AUTO"
+        ]
+      },
+      "unknown_fields": [],
+      "inference_fields": [
+        "decision_state",
+        "choice.type",
+        "time.stage",
+        "person.tags",
+        "retrieval_tags"
+      ],
+      "source_review": "ai_source_checked",
+      "human_review": "pending"
+    }
+  ]
+}

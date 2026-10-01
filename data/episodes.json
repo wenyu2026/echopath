@@ -1,167 +1,912 @@
 {
-  "_schema": "DecisionEpisode v1 —— 见 .agent/DecisionEpisode-Schema.md",
-  "_warning": "本文件中的 3 条为【种子样例】，用于给数据负责人定模板。每条都必须核实 source 真实性后才能用于演示。",
+  "_schema": "DecisionEpisode v1 — src/types/episode.ts",
+  "_warning": "公开资料核验的案例草稿；处境与分类为 AI 建模；人类审查待完成。不是代表性样本，不得推算成功概率。",
   "episodes": [
     {
       "episode_id": "lu_xun_1906_medicine_to_literature",
       "person": {
         "name": "鲁迅（周树人）",
-        "birth_year": 1881,
-        "tags": ["文学", "转向", "青年", "留学"]
+        "tags": [
+          "转专业",
+          "留学期间"
+        ]
       },
       "time": {
         "year": 1906,
-        "age": 25,
-        "stage": "留日期间"
+        "stage": "留学期间"
       },
       "prior_path": [
-        "1902 年公费赴日本留学",
-        "1904 年入仙台医学专门学校学医",
-        "受日俄战争幻灯片事件刺激"
+        "1904 年进入仙台医学专门学校。"
       ],
       "decision_state": {
-        "dilemma": "继续学医 vs 弃医从文",
-        "options": ["继续学医", "立即弃医从文", "先完成学业再转"],
-        "constraints": ["公费留学身份", "家庭期望", "时代环境"],
-        "goals": ["改变国民精神", "找到真正价值"],
+        "dilemma": "继续学医 vs 转向文学",
+        "options": [
+          "继续学医",
+          "转向文学"
+        ],
+        "constraints": [
+          "已投入医学学习",
+          "跨领域需重新积累"
+        ],
+        "goals": [
+          "探索表达方式",
+          "寻找社会作用"
+        ],
         "risk": "high",
         "reversibility": "low"
       },
       "choice": {
         "type": "direct_switch",
-        "actions": ["从仙台医专退学", "回东京从事文艺翻译与写作"]
+        "actions": [
+          "结束仙台医学学习，转向文艺活动。"
+        ]
       },
       "outcomes": {
-        "short_term": "失去医学学位路径，经济拮据，与家人关系紧张",
-        "mid_term": "进入新文化阵营，逐步确立文学地位",
-        "long_term": "成为中国现代文学奠基者之一"
+        "short_term": "1906 年离开仙台；没有完成该校医学课程。",
+        "mid_term": "据后来自述，筹办《新生》因人手和资金退出而未能出版。",
+        "long_term": "1918—1922 年创作的十四篇小说后来收入《呐喊》。"
       },
       "reflection": {
-        "self_comment": "在《呐喊》自序中自述：医学并非一件紧要事，改变精神才是第一要著",
-        "unknowns": ["当时具体心理活动的直接记录", "退学决定的确切日期"]
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "晚清留日制度、文艺运动与现代校内转专业不同；不能据文学成就推断退学收益。",
+          "退学具体日期、即时收入与家庭反应未核实。"
+        ],
+        "self_comment": "在《呐喊》自序中，他把转向文艺解释为希望改变人的精神；这是后来的自我解释。"
       },
       "evidence": [
         {
-          "source_id": "LX-S1",
-          "type": "self_writing",
-          "claim": "《呐喊》自序记述了幻灯片事件与弃医从文的动机"
-        },
-        {
-          "source_id": "LX-S2",
-          "type": "self_writing",
-          "claim": "《藤野先生》记述了在仙台医专的经历与离开"
-        },
-        {
-          "source_id": "LX-S3",
+          "source_id": "LX-SENDAI",
           "type": "biography",
-          "claim": "1906 年从仙台医学专门学校退学"
+          "claim": "在仙台学习为 1904—1906 年。",
+          "url": "https://www.tohoku.ac.jp/en/news/university_news/sakura_exchange_program.html"
+        },
+        {
+          "source_id": "LX-TOHOKU",
+          "type": "biography",
+          "claim": "第二学年离校，医学训练未完成。",
+          "url": "https://www.archives.tohoku.ac.jp/luxun/cn/story/"
+        },
+        {
+          "source_id": "LX-PREFACE",
+          "type": "self_writing",
+          "claim": "自述从医学转向文艺，筹刊失败。",
+          "url": "https://zh.wikisource.org/wiki/吶喊"
+        },
+        {
+          "source_id": "LX-MUSEUM",
+          "type": "biography",
+          "claim": "后来的小说写作时间范围与结集。",
+          "url": "https://www.luxunmuseum.cn/lxcl/index/id/5.html"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。晚清留日制度、文艺运动与现代校内转专业不同；不能据文学成就推断退学收益。"
         }
       ],
-      "retrieval_tags": ["沉没成本", "换方向", "高不确定性", "理想驱动", "低可逆性"]
+      "retrieval_tags": [
+        "转专业",
+        "direct_switch"
+      ]
     },
     {
       "episode_id": "ang_lee_1984_six_years_persist",
       "person": {
         "name": "李安",
-        "birth_year": 1954,
-        "tags": ["电影", "坚持", "中年", "创作"]
+        "tags": [
+          "考研还是就业",
+          "毕业后起步"
+        ]
       },
       "time": {
         "year": 1984,
-        "age": 30,
-        "stage": "职业起步期"
+        "stage": "毕业后起步"
       },
       "prior_path": [
-        "1978 年赴美就读伊利诺伊大学",
-        "1984 年获纽约大学电影制作硕士",
-        "毕业作品获关注但无商业机会"
+        "1984 年获得纽约大学电影制作硕士学位。"
       ],
       "decision_state": {
-        "dilemma": "坚持电影梦 vs 转行谋生",
-        "options": ["继续坚持写剧本", "转行做稳定工作", "回国发展"],
-        "constraints": ["经济依赖配偶收入", "行业门槛高", "年龄增长"],
-        "goals": ["拍出属于自己的电影", "不放弃创作"],
+        "dilemma": "继续电影创作 vs 转入其他工作",
+        "options": [
+          "继续电影创作",
+          "转入其他工作"
+        ],
+        "constraints": [
+          "首部长片机会不足",
+          "创作回报延迟"
+        ],
+        "goals": [
+          "争取执导机会",
+          "维持创作积累"
+        ],
         "risk": "high",
         "reversibility": "medium"
       },
       "choice": {
         "type": "persist",
-        "actions": ["持续写剧本", "在家承担家务与育儿", "等待机会"]
+        "actions": [
+          "继续写剧本并寻找电影制作机会。"
+        ]
       },
       "outcomes": {
-        "short_term": "六年无正式工作，家庭经济由配偶承担，承受外界质疑",
-        "mid_term": "1990 年剧本获奖，获得执导机会",
-        "long_term": "成为国际知名导演，多次获奥斯卡奖"
+        "short_term": "毕业后起初未能获得长片执导机会。",
+        "mid_term": "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。",
+        "long_term": "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。"
       },
       "reflection": {
-        "self_comment": "在多次访谈中提到配偶的支持是关键，也提到那段时期的自我怀疑",
-        "unknowns": ["六年间的具体经济数字", "是否曾认真考虑过放弃"]
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
+          "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
+        ]
       },
       "evidence": [
         {
-          "source_id": "AL-S1",
-          "type": "interview",
-          "claim": "李安在访谈中多次谈及毕业后的六年蛰伏期与配偶支持"
+          "source_id": "AL-NYU",
+          "type": "biography",
+          "claim": "1984 年电影 MFA；后续导演履历。",
+          "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html"
         },
         {
-          "source_id": "AL-S2",
-          "type": "biography",
-          "claim": "1984 年纽约大学电影制作硕士毕业，1990 年剧本获奖"
+          "source_id": "AL-INTERVIEW",
+          "type": "interview",
+          "claim": "毕业后六年筹片、1990 年比赛和随后拍片。",
+          "url": "https://m.thepaper.cn/newsDetail_forward_27605082"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。"
         }
       ],
-      "retrieval_tags": ["坚持", "沉没成本", "经济约束", "家庭支持", "高不确定性"]
+      "retrieval_tags": [
+        "考研还是就业",
+        "persist"
+      ]
     },
     {
       "episode_id": "murakami_1978_bar_and_writing",
       "person": {
         "name": "村上春树",
-        "birth_year": 1949,
-        "tags": ["文学", "双轨", "青年", "创业"]
+        "tags": [
+          "大厂还是小公司/创业",
+          "经营与创作"
+        ]
       },
       "time": {
         "year": 1978,
-        "age": 29,
-        "stage": "职业早期"
+        "stage": "经营与创作"
       },
       "prior_path": [
-        "1974 年开设爵士酒吧 Peter Cat",
-        "长期经营酒吧，负债经营",
-        "几乎无写作经验"
+        "与妻子经营爵士酒吧。"
       ],
       "decision_state": {
-        "dilemma": "继续经营酒吧 vs 转向写作",
-        "options": ["维持现状", "立即关店写作", "边经营边写作"],
-        "constraints": ["酒吧有债务", "无文学圈资源", "收入依赖店铺"],
-        "goals": ["尝试写作", "保留经济安全垫"],
+        "dilemma": "维持经营 vs 营业外写作",
+        "options": [
+          "维持经营",
+          "营业外写作"
+        ],
+        "constraints": [
+          "店务占用时间",
+          "文学能力尚待验证"
+        ],
+        "goals": [
+          "保持现金来源",
+          "试做新的创作"
+        ],
         "risk": "medium",
-        "reversibility": "high"
+        "reversibility": "medium"
       },
       "choice": {
         "type": "dual_track",
-        "actions": ["继续经营酒吧", "利用深夜时间写作", "三年后再决定是否全职"]
+        "actions": [
+          "在继续经营酒吧期间开始写小说。"
+        ]
       },
       "outcomes": {
-        "short_term": "极度疲惫，睡眠不足，但经济未断",
-        "mid_term": "1979 年处女作获新人奖，1981 年卖掉酒吧专职写作",
-        "long_term": "成为国际知名作家"
+        "short_term": "利用营业结束后的时间完成第一部小说。",
+        "mid_term": "1979 年首作获新人奖；1981 年卖店转为专职写作。",
+        "long_term": "此后写作《寻羊冒险记》；首轮尝试不是预先排定的三年转型计划。"
       },
       "reflection": {
-        "self_comment": "在《我的职业是小说家》中回顾：先保留退路，等验证可行再全力投入",
-        "unknowns": ["1978 年决定写作时的具体触发细节"]
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
+          "首作带来的收入及具体离店日期未知。"
+        ],
+        "self_comment": "他在回忆中把 1978 年的一场棒球赛视为开始写小说的契机。"
       },
       "evidence": [
         {
-          "source_id": "MH-S1",
+          "source_id": "HM-SELF",
           "type": "self_writing",
-          "claim": "《我的职业是小说家》记述了经营酒吧期间开始写作的经历"
+          "claim": "1978 开始写作、1979 首作获奖，之后卖店及继续创作。",
+          "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/"
         },
         {
-          "source_id": "MH-S2",
-          "type": "interview",
-          "claim": "访谈中提到 1978 年看棒球赛时产生写小说的念头"
+          "source_id": "HM-1981",
+          "type": "biography",
+          "claim": "卖店转向职业写作的年份为 1981 年。",
+          "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。"
         }
       ],
-      "retrieval_tags": ["双轨并行", "低风险试探", "高可逆性", "经济约束", "副业转主业"]
+      "retrieval_tags": [
+        "大厂还是小公司/创业",
+        "dual_track"
+      ]
+    },
+    {
+      "episode_id": "darwin_1825_medicine_trial",
+      "person": {
+        "name": "查尔斯·达尔文",
+        "tags": [
+          "转专业",
+          "大学初期"
+        ]
+      },
+      "time": {
+        "year": 1825,
+        "stage": "大学初期"
+      },
+      "prior_path": [
+        "1825 年赴爱丁堡，与兄长一起学习医学。"
+      ],
+      "decision_state": {
+        "dilemma": "进入医学训练 vs 选择其他学科",
+        "options": [
+          "进入医学训练",
+          "选择其他学科"
+        ],
+        "constraints": [
+          "职业预期来自家庭",
+          "尚未经历临床训练"
+        ],
+        "goals": [
+          "探索职业方向",
+          "判断学习适配"
+        ],
+        "risk": "medium",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "direct_switch",
+        "actions": [
+          "开始医学课程并接触临床观察。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "对解剖课程缺乏兴趣，观看手术给他强烈不适。",
+        "mid_term": "1827 年停止医学学习，1828 年进入剑桥。",
+        "long_term": "1831 年又接受贝格尔号航行机会；没有成为医生。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "无现代麻醉的手术环境与今天医学院差异很大；不能把不适归结为固定人格。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "CD-STUDY",
+          "type": "biography",
+          "claim": "1825 入学、临床不适、1827 停学、1828 入剑桥。",
+          "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist"
+        },
+        {
+          "source_id": "CD-BEAGLE",
+          "type": "biography",
+          "claim": "1831 年接受航行机会。",
+          "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。无现代麻醉的手术环境与今天医学院差异很大；不能把不适归结为固定人格。"
+        }
+      ],
+      "retrieval_tags": [
+        "转专业",
+        "direct_switch",
+        "转向后不适合"
+      ],
+      "next_episode_ids": [
+        "darwin_1828_cambridge"
+      ]
+    },
+    {
+      "episode_id": "darwin_1828_cambridge",
+      "person": {
+        "name": "查尔斯·达尔文",
+        "tags": [
+          "转专业",
+          "重新入学"
+        ]
+      },
+      "time": {
+        "year": 1828,
+        "stage": "重新入学"
+      },
+      "prior_path": [
+        "1827 年放弃在爱丁堡继续学医。"
+      ],
+      "decision_state": {
+        "dilemma": "继续医学 vs 转入剑桥",
+        "options": [
+          "继续医学",
+          "转入剑桥"
+        ],
+        "constraints": [
+          "需要新的职业路径",
+          "学位与教职资格关联"
+        ],
+        "goals": [
+          "保留职业出口",
+          "继续自然兴趣"
+        ],
+        "risk": "medium",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "direct_switch",
+        "actions": [
+          "1828 年进入剑桥，为可能的教会职业准备学位。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "接受剑桥课程训练。",
+        "mid_term": "1831 年接受贝格尔号机会，未按原设想直接走向教职。",
+        "long_term": "1836 年结束航行，继续自然研究。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "当时英国教会职位、家庭资助与现代转专业的资格和成本不同。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "CD-STUDY",
+          "type": "biography",
+          "claim": "1827 停医与 1828 年剑桥入学。",
+          "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist"
+        },
+        {
+          "source_id": "CD-CHURCH",
+          "type": "biography",
+          "claim": "学位与牧师职业的原有联系。",
+          "url": "https://www.darwinproject.ac.uk/commentary/religion/darwin-and-church"
+        },
+        {
+          "source_id": "CD-BEAGLE",
+          "type": "biography",
+          "claim": "1831—1836 航行。",
+          "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。当时英国教会职位、家庭资助与现代转专业的资格和成本不同。"
+        }
+      ],
+      "retrieval_tags": [
+        "转专业",
+        "direct_switch"
+      ]
+    },
+    {
+      "episode_id": "jobs_1972_reed_dropout",
+      "person": {
+        "name": "史蒂夫·乔布斯",
+        "tags": [
+          "转专业",
+          "大学初期"
+        ]
+      },
+      "time": {
+        "year": 1972,
+        "stage": "大学初期"
+      },
+      "prior_path": [
+        "1972 年秋进入里德学院。"
+      ],
+      "decision_state": {
+        "dilemma": "按学位课程读完 vs 退出正式学籍",
+        "options": [
+          "按学位课程读完",
+          "退出正式学籍"
+        ],
+        "constraints": [
+          "教育费用压力",
+          "对必修课程存疑"
+        ],
+        "goals": [
+          "探索兴趣",
+          "减少正式学费投入"
+        ],
+        "risk": "high",
+        "reversibility": "low"
+      },
+      "choice": {
+        "type": "abandon",
+        "actions": [
+          "读一个学期后退学，仍留校旁听感兴趣的课程。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "不再沿原学位路径学习；自述借住朋友宿舍并节省食宿费用。",
+        "mid_term": "继续旁听，包括书法课程；没有取得里德学位。",
+        "long_term": "2005 年演讲中回顾书法学习与后来计算机字体设计的联系。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。",
+          "源头分别使用“一学期”与“六个月”；1972 为入学及退学阶段锚点，不断言退学精确月份。"
+        ],
+        "self_comment": "他在 2005 年演讲中说当时不清楚大学如何帮助自己，后来才赋予旁听经历意义。"
+      },
+      "evidence": [
+        {
+          "source_id": "SJ-REED",
+          "type": "biography",
+          "claim": "1972 年秋入学，一学期后退学并旁听。",
+          "url": "https://www.reed.edu/about/steve-jobs.html"
+        },
+        {
+          "source_id": "SJ-SPEECH",
+          "type": "self_writing",
+          "claim": "退学后的生活、自述动机及事后解释。",
+          "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。"
+        }
+      ],
+      "retrieval_tags": [
+        "转专业",
+        "abandon"
+      ]
+    },
+    {
+      "episode_id": "bezos_1994_leave_finance",
+      "person": {
+        "name": "杰夫·贝索斯",
+        "tags": [
+          "大厂还是小公司/创业",
+          "职业转型"
+        ]
+      },
+      "time": {
+        "year": 1994,
+        "stage": "职业转型"
+      },
+      "prior_path": [
+        "在纽约金融公司工作，已有配偶。"
+      ],
+      "decision_state": {
+        "dilemma": "留在金融公司 vs 创建网上书店",
+        "options": [
+          "留在金融公司",
+          "创建网上书店"
+        ],
+        "constraints": [
+          "已有职位机会成本",
+          "新业务需求未验证"
+        ],
+        "goals": [
+          "尝试互联网业务",
+          "承担自主决策"
+        ],
+        "risk": "high",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "direct_switch",
+        "actions": [
+          "1994 年辞去工作，开始网上书店创业。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "离开已有职位，进入创业过程；演讲未列首年收入。",
+        "mid_term": "未知：该演讲没有逐年披露创业早期现金流与个人生活变化。",
+        "long_term": "2010 年他以 Amazon 创始人身份回顾这一选择；不能据此推算未创业的结局。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "已有金融职业与家庭支持不同于应届毕业生；这是高资源创业样本。",
+          "未知：该演讲没有逐年披露创业早期现金流与个人生活变化。"
+        ],
+        "self_comment": "他回忆自己更难接受从未尝试的遗憾；这是本人价值取向，不是通用准则。"
+      },
+      "evidence": [
+        {
+          "source_id": "JB-SPEECH",
+          "type": "self_writing",
+          "claim": "2010 演讲回顾 16 年前离职、妻子支持及老板建议再考虑。",
+          "url": "https://www.princeton.edu/news/2010/05/30/2010-baccalaureate-remarks"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。已有金融职业与家庭支持不同于应届毕业生；这是高资源创业样本。"
+        }
+      ],
+      "retrieval_tags": [
+        "大厂还是小公司/创业",
+        "direct_switch"
+      ]
+    },
+    {
+      "episode_id": "may_1974_pause_phd",
+      "person": {
+        "name": "布赖恩·梅",
+        "tags": [
+          "考研还是就业",
+          "博士与音乐"
+        ]
+      },
+      "time": {
+        "year": 1974,
+        "stage": "博士与音乐"
+      },
+      "prior_path": [
+        "已经开展天体物理博士研究，同时参与 Queen 乐队。"
+      ],
+      "decision_state": {
+        "dilemma": "继续博士研究 vs 投入音乐事业",
+        "options": [
+          "继续博士研究",
+          "投入音乐事业"
+        ],
+        "constraints": [
+          "科研与演出争夺时间",
+          "学位尚未完成"
+        ],
+        "goals": [
+          "集中职业投入",
+          "保留研究兴趣"
+        ],
+        "risk": "high",
+        "reversibility": "low"
+      },
+      "choice": {
+        "type": "direct_switch",
+        "actions": [
+          "1974 年中断博士研究，投入音乐事业。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "研究学位未按原计划完成。",
+        "mid_term": "未知：所用大学简介未列中断后最初数年的个人收入与学业影响。",
+        "long_term": "2006 年重新注册，2007 年完成博士。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "后来的知名度、财务条件与论文恢复机会属于特殊资源，不能假设所有延期读研者都能复制。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：所用大学简介未列中断后最初数年的个人收入与学业影响。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "BM-LJMU",
+          "type": "biography",
+          "claim": "1974 中断研究、2006 恢复、2007 完成。",
+          "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。后来的知名度、财务条件与论文恢复机会属于特殊资源，不能假设所有延期读研者都能复制。"
+        }
+      ],
+      "retrieval_tags": [
+        "考研还是就业",
+        "direct_switch"
+      ],
+      "next_episode_ids": [
+        "may_2006_resume_phd"
+      ]
+    },
+    {
+      "episode_id": "may_2006_resume_phd",
+      "person": {
+        "name": "布赖恩·梅",
+        "tags": [
+          "考研还是就业",
+          "重返研究"
+        ]
+      },
+      "time": {
+        "year": 2006,
+        "stage": "重返研究"
+      },
+      "prior_path": [
+        "博士研究已中断约三十年；仍从事音乐。"
+      ],
+      "decision_state": {
+        "dilemma": "继续仅做音乐 vs 恢复博士研究",
+        "options": [
+          "继续仅做音乐",
+          "恢复博士研究"
+        ],
+        "constraints": [
+          "需补读多年文献",
+          "既有工作仍在继续"
+        ],
+        "goals": [
+          "完成遗留研究",
+          "保持音乐活动"
+        ],
+        "risk": "medium",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "dual_track",
+        "actions": [
+          "2006 年恢复博士研究，整理旧资料并补读文献。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "2007 年提交论文并取得博士学位。",
+        "mid_term": "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+        "long_term": "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+          "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "BM-LJMU",
+          "type": "biography",
+          "claim": "2006 恢复和 2007 完成。",
+          "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
+        },
+        {
+          "source_id": "BM-IMPERIAL",
+          "type": "biography",
+          "claim": "旧研究材料、文献补读及论文提交。",
+          "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。"
+        }
+      ],
+      "retrieval_tags": [
+        "考研还是就业",
+        "dual_track"
+      ]
+    },
+    {
+      "episode_id": "kariko_1995_persist_cost",
+      "person": {
+        "name": "卡塔琳·考里科",
+        "tags": [
+          "考研还是就业",
+          "科研职位受挫"
+        ]
+      },
+      "time": {
+        "year": 1995,
+        "stage": "科研职位受挫"
+      },
+      "prior_path": [
+        "在宾夕法尼亚大学从事 mRNA 研究。"
+      ],
+      "decision_state": {
+        "dilemma": "接受降职留研 vs 离开研究岗位",
+        "options": [
+          "接受降职留研",
+          "离开研究岗位"
+        ],
+        "constraints": [
+          "晋升与经费受限",
+          "已有专业积累"
+        ],
+        "goals": [
+          "继续验证研究",
+          "维持科研岗位"
+        ],
+        "risk": "high",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "persist",
+        "actions": [
+          "1995 年接受较低职位，继续 mRNA 研究。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "研究得以继续，但职位处境下降。",
+        "mid_term": "1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。",
+        "long_term": "2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职业损失。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "KK-ROCK",
+          "type": "biography",
+          "claim": "1995 降职、1997 合作及 2009 年恢复职位请求被拒。",
+          "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。"
+        }
+      ],
+      "retrieval_tags": [
+        "考研还是就业",
+        "persist",
+        "坚持但长期受损"
+      ]
+    },
+    {
+      "episode_id": "dyson_2019_abandon_ev",
+      "person": {
+        "name": "詹姆斯·戴森",
+        "tags": [
+          "大厂还是小公司/创业",
+          "项目退出"
+        ]
+      },
+      "time": {
+        "year": 2019,
+        "stage": "项目退出"
+      },
+      "prior_path": [
+        "Dyson 已投入电动车项目。"
+      ],
+      "decision_state": {
+        "dilemma": "继续整车项目 vs 停止并重配资源",
+        "options": [
+          "继续整车项目",
+          "停止并重配资源"
+        ],
+        "constraints": [
+          "商业可行性不足",
+          "未找到项目买方"
+        ],
+        "goals": [
+          "限制追加投入",
+          "保留其他技术方向"
+        ],
+        "risk": "high",
+        "reversibility": "low"
+      },
+      "choice": {
+        "type": "abandon",
+        "actions": [
+          "2019 年宣布停止电动车项目。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "项目关闭；员工信提出争取内部安置。",
+        "mid_term": "未知：本来源没有证明所有受影响员工实际获得安置。",
+        "long_term": "未知：停止整车项目相对继续投入的长期净收益没有对照数据。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "这是成熟公司内部项目退出，不是普通求职者辞职；安置承诺不写成已实现的结果。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：本来源没有证明所有受影响员工实际获得安置。",
+          "未知：停止整车项目相对继续投入的长期净收益没有对照数据。"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "JD-CLOSE",
+          "type": "self_writing",
+          "claim": "2019 员工信说明商业不可行、寻找买方失败及停止项目。",
+          "url": "https://www.dyson.com/automotive"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是成熟公司内部项目退出，不是普通求职者辞职；安置承诺不写成已实现的结果。"
+        }
+      ],
+      "retrieval_tags": [
+        "大厂还是小公司/创业",
+        "abandon"
+      ]
+    },
+    {
+      "episode_id": "nusslein_1962_test_medicine",
+      "person": {
+        "name": "克里斯蒂安妮·纽斯莱因-福尔哈德",
+        "tags": [
+          "转专业",
+          "入学前探索"
+        ]
+      },
+      "time": {
+        "year": 1962,
+        "stage": "入学前探索"
+      },
+      "prior_path": [
+        "中学毕业时倾向生物学，也短暂考虑医学。"
+      ],
+      "decision_state": {
+        "dilemma": "继续生物方向 vs 转入医学方向",
+        "options": [
+          "继续生物方向",
+          "转入医学方向"
+        ],
+        "constraints": [
+          "职业体验不足",
+          "入学方向待确认"
+        ],
+        "goals": [
+          "检验工作适配",
+          "减少盲目选择"
+        ],
+        "risk": "medium",
+        "reversibility": "medium"
+      },
+      "choice": {
+        "type": "explore_then_persist",
+        "actions": [
+          "在医院做约一个月护理体验，随后仍选择生物学。"
+        ]
+      },
+      "outcomes": {
+        "short_term": "据自述，这段体验令她排除了医生职业。",
+        "mid_term": "1964 年又转向生物化学课程，原方向不是终身锁定。",
+        "long_term": "1969 年取得文凭，1973 年完成博士。"
+      },
+      "reflection": {
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "短期护理体验不覆盖全部医学职业；德国当时学制不同于现代中国转专业。"
+        ],
+        "self_comment": "她在自传中说医院体验让她确认不想成为医生。"
+      },
+      "evidence": [
+        {
+          "source_id": "CN-AUTO",
+          "type": "self_writing",
+          "claim": "1962 医院体验、1964 生化、1969 文凭、1973 博士。",
+          "url": "https://www.nobelprize.org/prizes/medicine/1995/nusslein-volhard/biographical/"
+        },
+        {
+          "source_id": "MODEL-V1",
+          "type": "ai_inference",
+          "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。短期护理体验不覆盖全部医学职业；德国当时学制不同于现代中国转专业。"
+        }
+      ],
+      "retrieval_tags": [
+        "转专业",
+        "explore_then_persist"
+      ]
     }
   ]
 }
