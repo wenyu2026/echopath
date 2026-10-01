@@ -178,8 +178,10 @@ async function postJson<T>(path: string, payload: unknown, timeoutMs = REQUEST_T
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  // 首次挂载时恢复上次会话（刷新不丢进度）
-  const restored = useMemo(loadSession, []);
+  // 首次挂载时恢复上次会话（刷新不丢进度）。
+  // ⚠️ 必须包成内联箭头函数：直接传 loadSession 会让 React Compiler
+  //    跳过这个组件的优化（oxlint use-memo 警告）。
+  const restored = useMemo(() => loadSession(), []);
 
   const [journey, setJourney] = useState<Journey>(restored?.journey ?? {});
   const [situation, setSituation] = useState<Situation | null>(restored?.situation ?? null);

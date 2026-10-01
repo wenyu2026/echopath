@@ -1533,7 +1533,8 @@ export const demoScenarios: CachedScenario[] = [
 /** 字符 bigram 重叠率 —— 词汇对不上时也能判断"问的是不是同一类事" */
 function bigramOverlap(a: string, b: string): number {
   const grams = (s: string): Set<string> => {
-    const clean = s.replace(/[\s，,。.、；;：:！!？?—\-]/g, '');
+    // 字符类里的 - 放在末尾就不需要转义（放在中间才需要）
+    const clean = s.replace(/[\s，,。.、；;：:！!？?—-]/g, '');
     const set = new Set<string>();
     for (let i = 0; i < clean.length - 1; i++) set.add(clean.slice(i, i + 2));
     return set;

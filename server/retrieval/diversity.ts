@@ -18,12 +18,29 @@ export interface Ranked {
   total: number;
 }
 
-/** 同一人物只留一条 —— 取分最高的那条 */
+/**
+ * 同一人物只留一条 —— 取分最高的那条。
+ *
+ * ⚠️ 必须容忍形状不完整的条目：
+ *   这不是过度防御 —— 实测 server/_bench/acceptance.ts 会传进
+ *   episode 为 undefined 的条目（手工拼的合成榜），
+ *   而旧版 selectDiverse 只读 choice.type，所以一直没暴露。
+ *   我加的去重读了 person.name，一跑就崩 —— 属于自己引入的回归。
+ *   取不到人名时**不参与去重**（原样保留），而不是抛错。
+ */
 function dedupeByPerson(ranked: Ranked[]): Ranked[] {
   const seen = new Set<string>();
   const out: Ranked[] = [];
   for (const r of ranked) {
+    if (!r || !r.episode || !r.episode.person) {
+      out.push(r); // 形状不全的条目原样保留，交给后续逻辑
+      continue;
+    }
     const key = r.episode.person.name;
+    if (!key) {
+      out.push(r);
+      continue;
+    }
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(r);
@@ -31,9 +48,14 @@ function dedupeByPerson(ranked: Ranked[]): Ranked[] {
   return out;
 }
 
+/** 取 choice.type，形状不全时返回空串（不抛错） */
+function typeOf(r: Ranked | undefined): string {
+  return r?.episode?.choice?.type ?? '';
+}
+
 export function selectDiverse(ranked: Ranked[], k = 3): { picked: Ranked[]; forcedDiversity: boolean } {
   // 先按人去掉重复，再谈多样性
-  const unique = dedupeByPerson([...ranked].sort((a, b) => b.total - a.total));
+  const unique = dedupeByPerson([...(ranked ?? [])].sort((a, b) => (b?.total ?? 0) - (a?.total ?? 0)));
 
   if (unique.length <= k) {
     return { picked: unique, forcedDiversity: false };
@@ -46,14 +68,14 @@ export function selectDiverse(ranked: Ranked[], k = 3): { picked: Ranked[]; forc
   // 逐名额贪心：优先取「类型没出现过」的最高分者；
   // 若所有剩余候选的类型都出现过，才退回纯按分取（保证不会空名额）。
   while (picked.length < k && pool.length > 0) {
-    const fresh = pool.find((c) => !usedTypes.has(c.episode.choice.type));
+    const fresh = pool.find((c) => !usedTypes.has(typeOf(c)));
     const chosen = fresh ?? pool[0];
     picked.push(chosen);
-    usedTypes.add(chosen.episode.choice.type);
+    usedTypes.add(typeOf(chosen));
     pool.splice(pool.indexOf(chosen), 1);
   }
 
-  const distinct = new Set(picked.map((p) => p.episode.choice.type)).size;
+  const distinct = new Set(picked.map((p) => typeOf(p))).size;
   return { picked, forcedDiversity: distinct < 2 && unique.length >= 2 };
 }
 

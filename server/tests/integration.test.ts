@@ -60,6 +60,30 @@ test('多样性：候选不足 k 个时不报错、原样返回', () => {
   assert.equal(picked.length, 2);
 });
 
+test('多样性：形状不全的条目不得抛错（实测 acceptance.ts 会传这种）', () => {
+  // 我加的去重读了 person.name，而旧实现只读 choice.type ——
+  // 于是 acceptance.ts 里 episode 为 undefined 的条目一跑就崩。
+  // 这是自己引入的回归，用测试钉住。
+  const shapeVariants = [
+    [{ episode: undefined, total: 5 }],
+    [{ episode: { person: undefined }, total: 4 }],
+    [{ episode: { person: { name: '' } }, total: 3 }],
+    [{ episode: { person: { name: 'A' } }, total: 2 }],
+    [],
+  ] as unknown as { episode: never; total: number }[][];
+
+  for (const ranked of shapeVariants) {
+    assert.doesNotThrow(
+      () => selectDiverse(ranked as never, 3),
+      `形状不全的候选不该抛错：${JSON.stringify(ranked)}`,
+    );
+  }
+
+  // 空数组要返回空，不能崩
+  const empty = selectDiverse([], 3);
+  assert.deepEqual(empty.picked, []);
+});
+
 /* ============================================================
    ② 维度分辨力：两个曾经"空转"的维度必须有区分度
    ============================================================ */

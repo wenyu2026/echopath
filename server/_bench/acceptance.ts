@@ -9,9 +9,9 @@ import { dirname, join } from 'node:path';
 import type { DecisionEpisode, Situation } from '../src/types/episode.ts';
 import { realEmbedder, cosine } from '../embedding/embed.ts';
 import { loadEpisodes } from '../retrieval/load-episodes.ts';
-import { scoreDimensions, totalScore, differencePenalty } from '../retrieval/dimensions.ts';
+import { scoreDimensions, totalScore } from '../retrieval/dimensions.ts';
 import { metadataFilter, selectDiverse } from '../retrieval/diversity.ts';
-import { recallTextOf, situationRecallText, buildEpisodeIndex } from '../retrieval/retrieve.ts';
+import { situationRecallText, buildEpisodeIndex } from '../retrieval/retrieve.ts';
 import { writeEvidenceLayers, traceabilityIssues } from '../evidence/evidence-writer.ts';
 import { buildCounterAnalogy, guardViolations } from '../counter-analogy/counter-analogy.ts';
 
