@@ -41,6 +41,10 @@ export default function P3ForkMap() {
       <p className="muted" style={{ marginTop: 8, marginBottom: 22 }}>
         下面是 <strong>三条真实有人走过的路</strong>。不是排名，也不是推荐 ——
         颜色只区分方向，不区分好坏。
+        <br />
+        <span className="small">
+          顺序是<strong>刻意打散</strong>的：三条路按各自的方向排开，谁都不是「第一条」。
+        </span>
       </p>
 
       {mode === 'offline' && (

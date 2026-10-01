@@ -33,28 +33,25 @@ export const demoScenarios: CachedScenario[] = [
       "constraints": [
         "已投入两年沉没成本",
         "新方向仅了解两个月",
-        "家庭期望别太高",
-        "可接受延毕"
+        "可接受延毕",
+        "家庭期望别太高"
       ],
-      "dilemma": "坚持原专业 vs 转换新方向",
+      "dilemma": "坚持本专业 vs 转向新方向",
       "goals": [
-        "追求个人兴趣",
-        "实现个人成长",
-        "减少不适合感"
+        "追求兴趣",
+        "个人成长"
       ],
       "options": [
-        "继续读完原专业",
+        "继续读完本专业",
         "申请转专业",
-        "辅修或双学位",
-        "跨专业考研"
+        "辅修新方向"
       ],
       "reversibility": "medium",
-      "risk": "high",
-      "stage": "大二/大三阶段",
+      "risk": "medium",
+      "stage": "大二/大三",
       "unknowns": [
-        "新方向真实能力匹配度",
-        "转专业或跨考成功率",
-        "新方向行业前景"
+        "新方向能力匹配度",
+        "转专业成功率"
       ]
     },
     "retrieval": {
@@ -62,131 +59,138 @@ export const demoScenarios: CachedScenario[] = [
         "constraints": [
           "已投入两年沉没成本",
           "新方向仅了解两个月",
-          "家庭期望别太高",
-          "可接受延毕"
+          "可接受延毕",
+          "家庭期望别太高"
         ],
-        "dilemma": "坚持原专业 vs 转换新方向",
+        "dilemma": "坚持本专业 vs 转向新方向",
         "goals": [
-          "追求个人兴趣",
-          "实现个人成长",
-          "减少不适合感"
+          "追求兴趣",
+          "个人成长"
         ],
         "options": [
-          "继续读完原专业",
+          "继续读完本专业",
           "申请转专业",
-          "辅修或双学位",
-          "跨专业考研"
+          "辅修新方向"
         ],
         "reversibility": "medium",
-        "risk": "high",
-        "stage": "大二/大三阶段",
+        "risk": "medium",
+        "stage": "大二/大三",
         "unknowns": [
-          "新方向真实能力匹配度",
-          "转专业或跨考成功率",
-          "新方向行业前景"
+          "新方向能力匹配度",
+          "转专业成功率"
         ]
       },
       "matches": [
         {
           "episode": {
-            "episode_id": "ramakrishnan_1976_biology_training",
+            "episode_id": "ang_lee_1984_six_years_persist",
             "person": {
-              "name": "文卡特拉曼·拉马克里希南",
+              "name": "李安",
               "tags": [
-                "转专业",
-                "博士后转学科"
+                "考研还是就业",
+                "毕业后起步"
               ]
             },
             "time": {
-              "year": 1976,
-              "stage": "博士后转学科"
+              "year": 1984,
+              "stage": "毕业后起步"
             },
             "prior_path": [
-              "已完成物理学博士。"
+              "1984 年获得纽约大学电影制作硕士学位。"
             ],
             "decision_state": {
-              "dilemma": "直接找研究岗位 vs 补读生物课程",
+              "dilemma": "继续电影创作 vs 转入其他工作",
               "options": [
-                "直接找研究岗位",
-                "补读生物课程"
+                "继续电影创作",
+                "转入其他工作"
               ],
               "constraints": [
-                "缺少生物学基础",
-                "已有家庭责任"
+                "首部长片机会不足",
+                "创作回报延迟"
               ],
               "goals": [
-                "补齐新领域训练",
-                "寻找研究兴趣"
+                "争取执导机会",
+                "维持创作积累"
               ],
-              "risk": "medium",
+              "risk": "high",
               "reversibility": "medium"
             },
             "choice": {
-              "type": "direct_switch",
+              "type": "persist",
               "actions": [
-                "进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。"
+                "继续写剧本并寻找电影制作机会。"
               ]
             },
             "outcomes": {
-              "short_term": "重新接受跨学科基础训练。",
-              "mid_term": "两年后进入 Yale 从事博士后研究，没有再完成第二个博士。",
-              "long_term": "后来持续从事核糖体研究；不能证明所有跨学科者都需要同样路径。"
+              "short_term": "毕业后起初未能获得长片执导机会。",
+              "mid_term": "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。",
+              "long_term": "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。"
             },
             "reflection": {
               "unknowns": [
                 "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "博士后的知识与资助条件不同于本科转专业；不是普通转学手续。",
+                "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
+                "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
                 "未核实本人对这次选择的直接评价；不补写励志语录。"
               ]
             },
             "evidence": [
               {
-                "source_id": "VR-AUTO",
-                "type": "self_writing",
-                "claim": "1976 转生物训练，随后 Yale 博后。",
-                "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/"
+                "source_id": "AL-NYU",
+                "type": "biography",
+                "claim": "1984 年电影 MFA；后续导演履历。",
+                "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html"
               },
               {
-                "source_id": "VR-BIO",
-                "type": "biography",
-                "claim": "1976 物理博士、两年生物训练及后续研究。",
-                "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/"
+                "source_id": "AL-INTERVIEW",
+                "type": "interview",
+                "claim": "毕业后六年筹片、1990 年比赛和随后拍片。",
+                "url": "https://m.thepaper.cn/newsDetail_forward_27605082"
               },
               {
                 "source_id": "MODEL-V1",
                 "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士后的知识与资助条件不同于本科转专业；不是普通转学手续。"
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。"
               }
             ],
             "retrieval_tags": [
-              "转专业",
-              "direct_switch"
+              "考研还是就业",
+              "persist"
             ],
             "next_episode_ids": [
-              "ramakrishnan_1978_yale_postdoc"
+              "ang_lee_1990_script_competition"
             ]
           },
           "dimensions": {
-            "stage_match": 0.5,
-            "path_match": 0.12647376335332575,
-            "dilemma_match": 0.541336876365444,
-            "constraint_match": 0.5714285714285715,
-            "goal_match": 0.6666666666666666,
+            "stage_match": 0.6,
+            "path_match": 0.16456672253944862,
+            "dilemma_match": 0.7237823226144418,
+            "constraint_match": 0.15,
+            "goal_match": 0.4,
             "reversibility_match": 1,
-            "difference_penalty": 0.55
+            "difference_penalty": 0.65
           },
           "why_similar": [
-            "【目标】在意的目标有具体交集：「追求个人兴趣」（对方的目标：补齐新领域训练、寻找研究兴趣）",
-            "【约束】现实约束有具体重叠：「家庭期望别太高」（对方的约束：缺少生物学基础、已有家庭责任）"
+            "【困境结构】双方核心冲突同属「坚持 vs 转向」型（对方当时的困境：继续电影创作 vs 转入其他工作）",
+            "【阶段】人生阶段接近（对方当时：毕业后起步）"
           ],
           "why_different": [
-            "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
-            "【⚠️ AI 类比·时代制度】案例发生在 1976 年（约 50 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「家庭」类约束（家庭期望别太高）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+            "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+            "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【约束差异】你面对「家庭」类约束（家庭期望别太高）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "kind": "structure",
+              "basis": "constraints 对比",
+              "refs": [
+                "decision_state.constraints"
+              ]
+            },
+            {
+              "text": "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -195,7 +199,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【⚠️ AI 类比·时代制度】案例发生在 1976 年（约 50 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+              "text": "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
               "kind": "era",
               "basis": "ai_inference（模型外部知识）",
               "refs": [
@@ -203,29 +207,29 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
           ],
           "evidence_layers": {
             "facts": [
-              "1976 物理博士、两年生物训练及后续研究。（VR-BIO）"
+              "1984 年电影 MFA；后续导演履历。（AL-NYU）",
+              "毕业后六年筹片、1990 年比赛和随后拍片。（AL-INTERVIEW）"
             ],
-            "self_claims": [
-              "1976 转生物训练，随后 Yale 博后。（VR-AUTO）"
-            ],
+            "self_claims": [],
             "interpretations": [
-              "重新接受跨学科基础训练。（outcomes.short_term）",
-              "两年后进入 Yale 从事博士后研究，没有再完成第二个博士。（outcomes.mid_term）",
-              "后来持续从事核糖体研究；不能证明所有跨学科者都需要同样路径。（outcomes.long_term）"
+              "毕业后起初未能获得长片执导机会。（outcomes.short_term）",
+              "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。（outcomes.mid_term）",
+              "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。（outcomes.long_term）"
             ],
             "ai_inferences": [
-              "【⚠️ AI 类比·时代制度】案例发生在 1976 年（约 50 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
+              "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
             ],
             "unknowns": [
               "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "博士后的知识与资助条件不同于本科转专业；不是普通转学手续。",
+              "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
+              "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
               "未核实本人对这次选择的直接评价；不补写励志语录。"
             ]
           }
@@ -305,9 +309,9 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.6208029287466176,
-            "dilemma_match": 0.850749767757899,
-            "constraint_match": 0.259,
+            "path_match": 0.6206338102586396,
+            "dilemma_match": 0.8437882470201572,
+            "constraint_match": 0.25918367346938775,
             "goal_match": 0.15,
             "reversibility_match": 1,
             "difference_penalty": 0.8999999999999999
@@ -319,7 +323,7 @@ export const demoScenarios: CachedScenario[] = [
           "why_different": [
             "【约束差异】你面对「时间与沉没投入」类约束（已投入两年沉没成本、可接受延毕）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1962 年（约 64 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
@@ -339,7 +343,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -364,240 +368,6 @@ export const demoScenarios: CachedScenario[] = [
             ]
           }
         },
-        {
-          "episode": {
-            "episode_id": "ang_lee_1984_six_years_persist",
-            "person": {
-              "name": "李安",
-              "tags": [
-                "考研还是就业",
-                "毕业后起步"
-              ]
-            },
-            "time": {
-              "year": 1984,
-              "stage": "毕业后起步"
-            },
-            "prior_path": [
-              "1984 年获得纽约大学电影制作硕士学位。"
-            ],
-            "decision_state": {
-              "dilemma": "继续电影创作 vs 转入其他工作",
-              "options": [
-                "继续电影创作",
-                "转入其他工作"
-              ],
-              "constraints": [
-                "首部长片机会不足",
-                "创作回报延迟"
-              ],
-              "goals": [
-                "争取执导机会",
-                "维持创作积累"
-              ],
-              "risk": "high",
-              "reversibility": "medium"
-            },
-            "choice": {
-              "type": "persist",
-              "actions": [
-                "继续写剧本并寻找电影制作机会。"
-              ]
-            },
-            "outcomes": {
-              "short_term": "毕业后起初未能获得长片执导机会。",
-              "mid_term": "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。",
-              "long_term": "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。"
-            },
-            "reflection": {
-              "unknowns": [
-                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
-                "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
-                "未核实本人对这次选择的直接评价；不补写励志语录。"
-              ]
-            },
-            "evidence": [
-              {
-                "source_id": "AL-NYU",
-                "type": "biography",
-                "claim": "1984 年电影 MFA；后续导演履历。",
-                "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html"
-              },
-              {
-                "source_id": "AL-INTERVIEW",
-                "type": "interview",
-                "claim": "毕业后六年筹片、1990 年比赛和随后拍片。",
-                "url": "https://m.thepaper.cn/newsDetail_forward_27605082"
-              },
-              {
-                "source_id": "MODEL-V1",
-                "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。"
-              }
-            ],
-            "retrieval_tags": [
-              "考研还是就业",
-              "persist"
-            ],
-            "next_episode_ids": [
-              "ang_lee_1990_script_competition"
-            ]
-          },
-          "dimensions": {
-            "stage_match": 0.6,
-            "path_match": 0.16458772585959663,
-            "dilemma_match": 0.7151776480932821,
-            "constraint_match": 0.15,
-            "goal_match": 0.4,
-            "reversibility_match": 1,
-            "difference_penalty": 0.65
-          },
-          "why_similar": [
-            "【困境结构】双方核心冲突同属「坚持 vs 转向」型（对方当时的困境：继续电影创作 vs 转入其他工作）",
-            "【阶段】人生阶段接近（对方当时：毕业后起步）"
-          ],
-          "why_different": [
-            "【约束差异】你面对「家庭」类约束（家庭期望别太高）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
-            "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-          ],
-          "why_different_detail": [
-            {
-              "text": "【约束差异】你面对「家庭」类约束（家庭期望别太高）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-              "kind": "structure",
-              "basis": "constraints 对比",
-              "refs": [
-                "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
-              "kind": "structure",
-              "basis": "options × choice.actions 对比",
-              "refs": [
-                "options",
-                "choice.actions"
-              ]
-            },
-            {
-              "text": "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-              "kind": "era",
-              "basis": "ai_inference（模型外部知识）",
-              "refs": [
-                "time.year"
-              ]
-            },
-            {
-              "text": "【未知】无法比较「新方向真实能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-              "kind": "unknown",
-              "basis": "数据缺失（episode 无对应字段）"
-            }
-          ],
-          "evidence_layers": {
-            "facts": [
-              "1984 年电影 MFA；后续导演履历。（AL-NYU）",
-              "毕业后六年筹片、1990 年比赛和随后拍片。（AL-INTERVIEW）"
-            ],
-            "self_claims": [],
-            "interpretations": [
-              "毕业后起初未能获得长片执导机会。（outcomes.short_term）",
-              "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。（outcomes.mid_term）",
-              "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。（outcomes.long_term）"
-            ],
-            "ai_inferences": [
-              "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
-            ],
-            "unknowns": [
-              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
-              "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
-              "未核实本人对这次选择的直接评价；不补写励志语录。"
-            ]
-          }
-        }
-      ],
-      "meta": {
-        "candidates_recalled": 36,
-        "after_metadata_filter": 31,
-        "after_rerank": 3,
-        "dropped_by_metadata": 5,
-        "forced_diversity": false,
-        "elapsed_ms": 298,
-        "weights": {
-          "stage_match": 0.15,
-          "path_match": 0.2,
-          "dilemma_match": 0.25,
-          "constraint_match": 0.2,
-          "goal_match": 0.15,
-          "reversibility_match": 0.05
-        },
-        "parser_elapsed_ms": 2336,
-        "parser_tokens": 520
-      }
-    }
-  },
-  {
-    "id": 2,
-    "name": "考研还是就业（延迟收益 vs 即时确定）",
-    "raw_input": "大三了，家里人都劝我考研，说学历高点以后好走。但我手上有两个实习机会，转正概率不小。我担心考研三年出来还不如现在积累的工作经验，又怕不考研以后天花板太低。补充：成绩中等，考研把握一般；实习是喜欢的方向；家里能支持我读研，但我有点不好意思继续花家里的钱。",
-    "situation": {
-      "constraints": [
-        "大三关键节点",
-        "成绩中等，考研把握一般",
-        "家庭经济支持但不愿啃老"
-      ],
-      "dilemma": "直接就业 vs 考研深造",
-      "goals": [
-        "职业长远发展",
-        "经济独立",
-        "从事喜欢方向"
-      ],
-      "options": [
-        "全力备战考研",
-        "接受实习争取转正",
-        "边实习边考研"
-      ],
-      "reversibility": "low",
-      "risk": "high",
-      "stage": "大三关键期",
-      "unknowns": [
-        "研究生毕业时的就业行情",
-        "行业经验与学历的长期回报对比",
-        "考研失败后的退路",
-        "实习转正的最终成功率"
-      ]
-    },
-    "retrieval": {
-      "situation": {
-        "constraints": [
-          "大三关键节点",
-          "成绩中等，考研把握一般",
-          "家庭经济支持但不愿啃老"
-        ],
-        "dilemma": "直接就业 vs 考研深造",
-        "goals": [
-          "职业长远发展",
-          "经济独立",
-          "从事喜欢方向"
-        ],
-        "options": [
-          "全力备战考研",
-          "接受实习争取转正",
-          "边实习边考研"
-        ],
-        "reversibility": "low",
-        "risk": "high",
-        "stage": "大三关键期",
-        "unknowns": [
-          "研究生毕业时的就业行情",
-          "行业经验与学历的长期回报对比",
-          "考研失败后的退路",
-          "实习转正的最终成功率"
-        ]
-      },
-      "matches": [
         {
           "episode": {
             "episode_id": "ramakrishnan_1976_biology_training",
@@ -679,34 +449,25 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.042175377166058285,
-            "dilemma_match": 0.44714831438124375,
-            "constraint_match": 0.6,
-            "goal_match": 1,
-            "reversibility_match": 0.75,
-            "difference_penalty": 0.7000000000000001
+            "path_match": 0.12622334733642476,
+            "dilemma_match": 0.5269568234396341,
+            "constraint_match": 0.5714285714285715,
+            "goal_match": 0.6666666666666666,
+            "reversibility_match": 1,
+            "difference_penalty": 0.55
           },
           "why_similar": [
-            "【目标】在意的目标有具体交集：「从事喜欢方向」（对方的目标：补齐新领域训练、寻找研究兴趣）",
-            "【约束】现实约束有具体重叠：「家庭经济支持但不愿啃老」（对方的约束：缺少生物学基础、已有家庭责任）"
+            "【目标】在意的目标有具体交集：「追求兴趣」（对方的目标：补齐新领域训练、寻找研究兴趣）",
+            "【约束】现实约束有具体重叠：「家庭期望别太高」（对方的约束：缺少生物学基础、已有家庭责任）"
           ],
           "why_different": [
-            "【约束差异】你面对「门槛与资格」类约束（成绩中等，考研把握一般）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+            "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1976 年（约 50 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「行业经验与学历的长期回报对比」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「门槛与资格」类约束（成绩中等，考研把握一般）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-              "kind": "structure",
-              "basis": "constraints 对比",
-              "refs": [
-                "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -723,7 +484,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「行业经验与学历的长期回报对比」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -749,7 +510,591 @@ export const demoScenarios: CachedScenario[] = [
               "未核实本人对这次选择的直接评价；不补写励志语录。"
             ]
           }
+        }
+      ],
+      "meta": {
+        "candidates_recalled": 36,
+        "after_metadata_filter": 31,
+        "after_rerank": 3,
+        "dropped_by_metadata": 5,
+        "forced_diversity": false,
+        "elapsed_ms": 644,
+        "weights": {
+          "stage_match": 0.15,
+          "path_match": 0.2,
+          "dilemma_match": 0.25,
+          "constraint_match": 0.2,
+          "goal_match": 0.15,
+          "reversibility_match": 0.05
         },
+        "parser_elapsed_ms": 1739,
+        "parser_tokens": 471
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "考研还是就业（延迟收益 vs 即时确定）",
+    "raw_input": "大三了，家里人都劝我考研，说学历高点以后好走。但我手上有两个实习机会，转正概率不小。我担心考研三年出来还不如现在积累的工作经验，又怕不考研以后天花板太低。补充：成绩中等，考研把握一般；实习是喜欢的方向；家里能支持我读研，但我有点不好意思继续花家里的钱。",
+    "situation": {
+      "constraints": [
+        "大三时间节点",
+        "家庭支持读研",
+        "实习转正概率大",
+        "成绩中等考研难",
+        "不好意思花家里钱"
+      ],
+      "dilemma": "考研提升学历 vs 实习积累经验",
+      "goals": [
+        "未来职业发展好",
+        "打破学历天花板",
+        "早日经济独立"
+      ],
+      "options": [
+        "全力备考研究生",
+        "接受实习转正",
+        "边实习边备考"
+      ],
+      "reversibility": "medium",
+      "risk": "high",
+      "stage": "大三/就业抉择期",
+      "unknowns": [
+        "三年后研究生就业行情",
+        "研究生学历溢价幅度",
+        "实习转正后成长空间",
+        "备考实际成功率"
+      ]
+    },
+    "retrieval": {
+      "situation": {
+        "constraints": [
+          "大三时间节点",
+          "家庭支持读研",
+          "实习转正概率大",
+          "成绩中等考研难",
+          "不好意思花家里钱"
+        ],
+        "dilemma": "考研提升学历 vs 实习积累经验",
+        "goals": [
+          "未来职业发展好",
+          "打破学历天花板",
+          "早日经济独立"
+        ],
+        "options": [
+          "全力备考研究生",
+          "接受实习转正",
+          "边实习边备考"
+        ],
+        "reversibility": "medium",
+        "risk": "high",
+        "stage": "大三/就业抉择期",
+        "unknowns": [
+          "三年后研究生就业行情",
+          "研究生学历溢价幅度",
+          "实习转正后成长空间",
+          "备考实际成功率"
+        ]
+      },
+      "matches": [
+        {
+          "episode": {
+            "episode_id": "kariko_1995_persist_cost",
+            "person": {
+              "name": "卡塔琳·考里科",
+              "tags": [
+                "考研还是就业",
+                "科研职位受挫"
+              ]
+            },
+            "time": {
+              "year": 1995,
+              "stage": "科研职位受挫"
+            },
+            "prior_path": [
+              "在宾夕法尼亚大学从事 mRNA 研究。"
+            ],
+            "decision_state": {
+              "dilemma": "接受降职留研 vs 离开研究岗位",
+              "options": [
+                "接受降职留研",
+                "离开研究岗位"
+              ],
+              "constraints": [
+                "晋升与经费受限",
+                "已有专业积累"
+              ],
+              "goals": [
+                "继续验证研究",
+                "维持科研岗位"
+              ],
+              "risk": "high",
+              "reversibility": "medium"
+            },
+            "choice": {
+              "type": "persist",
+              "actions": [
+                "1995 年接受较低职位，继续 mRNA 研究。"
+              ]
+            },
+            "outcomes": {
+              "short_term": "研究得以继续，但职位处境下降。",
+              "mid_term": "1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。",
+              "long_term": "据传记转述她的回忆，2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职位损失。"
+            },
+            "reflection": {
+              "unknowns": [
+                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+                "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。"
+              ]
+            },
+            "evidence": [
+              {
+                "source_id": "KK-ROCK",
+                "type": "biography",
+                "claim": "1995 降职、1997 合作；传记转述本人关于 2009 年恢复职位请求被拒的回忆。",
+                "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/"
+              },
+              {
+                "source_id": "MODEL-V1",
+                "type": "ai_inference",
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。"
+              }
+            ],
+            "retrieval_tags": [
+              "考研还是就业",
+              "persist",
+              "坚持但长期受损"
+            ],
+            "next_episode_ids": [
+              "kariko_2013_biontech"
+            ]
+          },
+          "dimensions": {
+            "stage_match": 0.5,
+            "path_match": 0.03953813068056168,
+            "dilemma_match": 0.5467571305598252,
+            "constraint_match": 0.6,
+            "goal_match": 0.25,
+            "reversibility_match": 1,
+            "difference_penalty": 0.75
+          },
+          "why_similar": [
+            "【约束】现实约束有具体重叠：「不好意思花家里钱」（对方的约束：晋升与经费受限、已有专业积累）",
+            "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
+          ],
+          "why_different": [
+            "【约束差异】你面对「时间与沉没投入」类约束（大三时间节点）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+            "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+          ],
+          "why_different_detail": [
+            {
+              "text": "【约束差异】你面对「时间与沉没投入」类约束（大三时间节点）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "kind": "structure",
+              "basis": "constraints 对比",
+              "refs": [
+                "decision_state.constraints"
+              ]
+            },
+            {
+              "text": "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+              "kind": "structure",
+              "basis": "options × choice.actions 对比",
+              "refs": [
+                "options",
+                "choice.actions"
+              ]
+            },
+            {
+              "text": "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+              "kind": "era",
+              "basis": "ai_inference（模型外部知识）",
+              "refs": [
+                "time.year"
+              ]
+            },
+            {
+              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "kind": "unknown",
+              "basis": "数据缺失（episode 无对应字段）"
+            }
+          ],
+          "evidence_layers": {
+            "facts": [
+              "1995 降职、1997 合作；传记转述本人关于 2009 年恢复职位请求被拒的回忆。（KK-ROCK）"
+            ],
+            "self_claims": [],
+            "interpretations": [
+              "研究得以继续，但职位处境下降。（outcomes.short_term）",
+              "1997 年开始与 Weissman 合作；学术职位困境没有随合作立即消失。（outcomes.mid_term）",
+              "据传记转述她的回忆，2005、2008 年有研究进展后，2009 年仍未获恢复原职位；后来成就不抹去这段长期职位损失。（outcomes.long_term）"
+            ],
+            "ai_inferences": [
+              "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
+            ],
+            "unknowns": [
+              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+              "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
+              "未核实本人对这次选择的直接评价；不补写励志语录。"
+            ]
+          }
+        },
+        {
+          "episode": {
+            "episode_id": "dyson_2014_ev_entry",
+            "person": {
+              "name": "詹姆斯·戴森",
+              "tags": [
+                "大厂还是小公司/创业",
+                "企业跨行业"
+              ]
+            },
+            "time": {
+              "year": 2014,
+              "stage": "企业跨行业"
+            },
+            "prior_path": [
+              "已建立消费电器业务。"
+            ],
+            "decision_state": {
+              "dilemma": "集中原有业务 vs 增加整车研发",
+              "options": [
+                "集中原有业务",
+                "增加整车研发"
+              ],
+              "constraints": [
+                "跨行业能力待建立",
+                "商业化投入很大"
+              ],
+              "goals": [
+                "探索新产品",
+                "寻找技术应用"
+              ],
+              "risk": "high",
+              "reversibility": "low"
+            },
+            "choice": {
+              "type": "direct_switch",
+              "actions": [
+                "启动电动车项目。"
+              ]
+            },
+            "outcomes": {
+              "short_term": "进入整车研发方向；本来源未提供首年独立经营结果。",
+              "mid_term": "项目继续推进，但最终没有形成可行的商业方案。",
+              "long_term": "2019 年宣布停止项目，寻找买方也未成功。"
+            },
+            "reflection": {
+              "unknowns": [
+                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+                "成熟公司的跨行业研发与个人创业资源差异很大；技术可造与商业可行要分开。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。"
+              ]
+            },
+            "evidence": [
+              {
+                "source_id": "JD-BIO",
+                "type": "biography",
+                "claim": "2014 年启动电动车计划。",
+                "url": "https://www.dyson.com/james-dyson"
+              },
+              {
+                "source_id": "JD-CLOSE",
+                "type": "self_writing",
+                "claim": "2019 商业不可行及终止项目。",
+                "url": "https://www.dyson.com/automotive"
+              },
+              {
+                "source_id": "MODEL-V1",
+                "type": "ai_inference",
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。成熟公司的跨行业研发与个人创业资源差异很大；技术可造与商业可行要分开。"
+              }
+            ],
+            "retrieval_tags": [
+              "大厂还是小公司/创业",
+              "direct_switch",
+              "转向后不适合"
+            ],
+            "next_episode_ids": [
+              "dyson_2019_abandon_ev"
+            ]
+          },
+          "dimensions": {
+            "stage_match": 0.5,
+            "path_match": 0,
+            "dilemma_match": 0.4256108183492653,
+            "constraint_match": 0.4,
+            "goal_match": 0.25,
+            "reversibility_match": 0.75,
+            "difference_penalty": 0.49999999999999994
+          },
+          "why_similar": [
+            "【阶段】人生阶段接近（对方当时：企业跨行业）",
+            "【约束】现实约束有具体重叠：「大三时间节点」（对方的约束：跨行业能力待建立、商业化投入很大）"
+          ],
+          "why_different": [
+            "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+          ],
+          "why_different_detail": [
+            {
+              "text": "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "kind": "structure",
+              "basis": "constraints 对比",
+              "refs": [
+                "decision_state.constraints"
+              ]
+            },
+            {
+              "text": "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+              "kind": "structure",
+              "basis": "options × choice.actions 对比",
+              "refs": [
+                "options",
+                "choice.actions"
+              ]
+            },
+            {
+              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "kind": "unknown",
+              "basis": "数据缺失（episode 无对应字段）"
+            }
+          ],
+          "evidence_layers": {
+            "facts": [
+              "2014 年启动电动车计划。（JD-BIO）"
+            ],
+            "self_claims": [
+              "2019 商业不可行及终止项目。（JD-CLOSE）"
+            ],
+            "interpretations": [
+              "进入整车研发方向；本来源未提供首年独立经营结果。（outcomes.short_term）",
+              "项目继续推进，但最终没有形成可行的商业方案。（outcomes.mid_term）",
+              "2019 年宣布停止项目，寻找买方也未成功。（outcomes.long_term）"
+            ],
+            "ai_inferences": [],
+            "unknowns": [
+              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+              "成熟公司的跨行业研发与个人创业资源差异很大；技术可造与商业可行要分开。",
+              "未核实本人对这次选择的直接评价；不补写励志语录。"
+            ]
+          }
+        },
+        {
+          "episode": {
+            "episode_id": "arnold_1987_caltech_faculty",
+            "person": {
+              "name": "弗朗西丝·阿诺德",
+              "tags": [
+                "考研还是就业",
+                "博士后结束"
+              ]
+            },
+            "time": {
+              "year": 1987,
+              "stage": "博士后结束"
+            },
+            "prior_path": [
+              "完成博士及博士后训练，逐渐倾向学术工作。"
+            ],
+            "decision_state": {
+              "dilemma": "进入产业职位 vs 转为独立教职",
+              "options": [
+                "进入产业职位",
+                "转为独立教职"
+              ],
+              "constraints": [
+                "需独立建立课题",
+                "岗位选择具有地域差异"
+              ],
+              "goals": [
+                "保持研究自主",
+                "保留产业联系"
+              ],
+              "risk": "medium",
+              "reversibility": "medium"
+            },
+            "choice": {
+              "type": "explore_then_switch",
+              "actions": [
+                "1987 年进入 Caltech 教师队伍。"
+              ]
+            },
+            "outcomes": {
+              "short_term": "由训练岗位进入独立学术职位。",
+              "mid_term": "未知：本集未单独核实其起步数年的经费、教学与生活负担。",
+              "long_term": "2018 年以诺贝尔奖得主身份回顾研究历程；奖项不能代替职业成本评价。"
+            },
+            "reflection": {
+              "unknowns": [
+                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+                "博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。",
+                "未知：本集未单独核实其起步数年的经费、教学与生活负担。"
+              ]
+            },
+            "evidence": [
+              {
+                "source_id": "FA-AUTO",
+                "type": "self_writing",
+                "claim": "博士后经历、1987 教职及获奖时的自述。",
+                "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/"
+              },
+              {
+                "source_id": "MODEL-V1",
+                "type": "ai_inference",
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。"
+              }
+            ],
+            "retrieval_tags": [
+              "考研还是就业",
+              "explore_then_switch"
+            ]
+          },
+          "dimensions": {
+            "stage_match": 0.5,
+            "path_match": 0.37641697267193597,
+            "dilemma_match": 0.5537042093414904,
+            "constraint_match": 0.25,
+            "goal_match": 0.25,
+            "reversibility_match": 1,
+            "difference_penalty": 0.75
+          },
+          "why_similar": [
+            "【困境结构】两边的取舍都落在「放弃一边、换另一边」这一结构上（对方当时的困境：进入产业职位 vs 转为独立教职）",
+            "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
+          ],
+          "why_different": [
+            "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+          ],
+          "why_different_detail": [
+            {
+              "text": "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "kind": "structure",
+              "basis": "constraints 对比",
+              "refs": [
+                "decision_state.constraints"
+              ]
+            },
+            {
+              "text": "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+              "kind": "era",
+              "basis": "ai_inference（模型外部知识）",
+              "refs": [
+                "time.year"
+              ]
+            },
+            {
+              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "kind": "unknown",
+              "basis": "数据缺失（episode 无对应字段）"
+            }
+          ],
+          "evidence_layers": {
+            "facts": [],
+            "self_claims": [
+              "博士后经历、1987 教职及获奖时的自述。（FA-AUTO）"
+            ],
+            "interpretations": [
+              "由训练岗位进入独立学术职位。（outcomes.short_term）",
+              "未知：本集未单独核实其起步数年的经费、教学与生活负担。（outcomes.mid_term）",
+              "2018 年以诺贝尔奖得主身份回顾研究历程；奖项不能代替职业成本评价。（outcomes.long_term）"
+            ],
+            "ai_inferences": [
+              "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
+            ],
+            "unknowns": [
+              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+              "博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。",
+              "未核实本人对这次选择的直接评价；不补写励志语录。",
+              "未知：本集未单独核实其起步数年的经费、教学与生活负担。"
+            ]
+          }
+        }
+      ],
+      "meta": {
+        "candidates_recalled": 36,
+        "after_metadata_filter": 31,
+        "after_rerank": 3,
+        "dropped_by_metadata": 5,
+        "forced_diversity": false,
+        "elapsed_ms": 456,
+        "weights": {
+          "stage_match": 0.15,
+          "path_match": 0.2,
+          "dilemma_match": 0.25,
+          "constraint_match": 0.2,
+          "goal_match": 0.15,
+          "reversibility_match": 0.05
+        },
+        "parser_elapsed_ms": 2340,
+        "parser_tokens": 717
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "大厂还是小公司/创业（稳定 vs 成长空间）",
+    "raw_input": "毕业两年了，在一家小公司做产品，学得快但看不到晋升路径。拿到了一个大厂的 offer，薪资涨三成，但岗位方向比较窄。我很纠结要不要去，怕自己变成螺丝钉，又怕留下来错过平台机会。补充：目前存款不多；无家庭负担；最在意成长空间和长期竞争力。",
+    "situation": {
+      "constraints": [
+        "存款不多",
+        "无家庭负担",
+        "小公司晋升路径缺失",
+        "大厂岗位方向过窄"
+      ],
+      "dilemma": "留小公司全栈 vs 去大厂做螺丝钉",
+      "goals": [
+        "提升成长空间",
+        "增强长期竞争力",
+        "获得平台背书"
+      ],
+      "options": [
+        "留原公司积累",
+        "接受大厂offer",
+        "寻找中型平台机会"
+      ],
+      "reversibility": "medium",
+      "risk": "medium",
+      "stage": "毕业两年/职场起步期",
+      "unknowns": [
+        "大厂内部转岗或跳槽难度",
+        "窄方向未来的市场需求"
+      ]
+    },
+    "retrieval": {
+      "situation": {
+        "constraints": [
+          "存款不多",
+          "无家庭负担",
+          "小公司晋升路径缺失",
+          "大厂岗位方向过窄"
+        ],
+        "dilemma": "留小公司全栈 vs 去大厂做螺丝钉",
+        "goals": [
+          "提升成长空间",
+          "增强长期竞争力",
+          "获得平台背书"
+        ],
+        "options": [
+          "留原公司积累",
+          "接受大厂offer",
+          "寻找中型平台机会"
+        ],
+        "reversibility": "medium",
+        "risk": "medium",
+        "stage": "毕业两年/职场起步期",
+        "unknowns": [
+          "大厂内部转岗或跳槽难度",
+          "窄方向未来的市场需求"
+        ]
+      },
+      "matches": [
         {
           "episode": {
             "episode_id": "ang_lee_1984_six_years_persist",
@@ -831,40 +1176,30 @@ export const demoScenarios: CachedScenario[] = [
             ]
           },
           "dimensions": {
-            "stage_match": 0.6,
-            "path_match": 0.06777657408773036,
-            "dilemma_match": 0.5256666564050999,
-            "constraint_match": 0.4444444444444445,
-            "goal_match": 0.5,
-            "reversibility_match": 0.75,
-            "difference_penalty": 0.8
+            "stage_match": 0.9,
+            "path_match": 0,
+            "dilemma_match": 0.3880970716447333,
+            "constraint_match": 0.22222222222222224,
+            "goal_match": 0.4,
+            "reversibility_match": 1,
+            "difference_penalty": 0.65
           },
           "why_similar": [
             "【阶段】人生阶段接近（对方当时：毕业后起步）",
             "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
           ],
           "why_different": [
-            "【约束差异】你面对「经济」类约束（家庭经济支持但不愿啃老）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+            "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「行业经验与学历的长期回报对比」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「经济」类约束（家庭经济支持但不愿啃老）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
                 "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
-              "kind": "structure",
-              "basis": "options × choice.actions 对比",
-              "refs": [
-                "options",
-                "choice.actions"
               ]
             },
             {
@@ -876,7 +1211,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「行业经验与学历的长期回报对比」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -905,398 +1240,34 @@ export const demoScenarios: CachedScenario[] = [
         },
         {
           "episode": {
-            "episode_id": "jobs_1972_reed_dropout",
+            "episode_id": "ramakrishnan_1999_lmb",
             "person": {
-              "name": "史蒂夫·乔布斯",
-              "tags": [
-                "转专业",
-                "大学初期"
-              ]
-            },
-            "time": {
-              "year": 1972,
-              "stage": "大学初期"
-            },
-            "prior_path": [
-              "1972 年秋进入里德学院。"
-            ],
-            "decision_state": {
-              "dilemma": "按学位课程读完 vs 退出正式学籍",
-              "options": [
-                "按学位课程读完",
-                "退出正式学籍"
-              ],
-              "constraints": [
-                "教育费用压力",
-                "对必修课程存疑"
-              ],
-              "goals": [
-                "探索兴趣",
-                "减少正式学费投入"
-              ],
-              "risk": "high",
-              "reversibility": "low"
-            },
-            "choice": {
-              "type": "abandon",
-              "actions": [
-                "读一个学期后退学，仍留校旁听感兴趣的课程。"
-              ]
-            },
-            "outcomes": {
-              "short_term": "不再沿原学位路径学习；自述借住朋友宿舍并节省食宿费用。",
-              "mid_term": "继续旁听，包括书法课程；没有取得里德学位。",
-              "long_term": "2005 年演讲中回顾书法学习与后来计算机字体设计的联系。"
-            },
-            "reflection": {
-              "unknowns": [
-                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。",
-                "源头分别使用“一学期”与“六个月”；1972 为入学及退学阶段锚点，不断言退学精确月份。"
-              ],
-              "self_comment": "他在 2005 年演讲中说当时不清楚大学如何帮助自己，后来才赋予旁听经历意义。"
-            },
-            "evidence": [
-              {
-                "source_id": "SJ-REED",
-                "type": "biography",
-                "claim": "1972 年秋入学，一学期后退学并旁听。",
-                "url": "https://www.reed.edu/about/steve-jobs.html"
-              },
-              {
-                "source_id": "SJ-SPEECH",
-                "type": "self_writing",
-                "claim": "退学后的生活、自述动机及事后解释。",
-                "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says"
-              },
-              {
-                "source_id": "MODEL-V1",
-                "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。"
-              }
-            ],
-            "retrieval_tags": [
-              "转专业",
-              "abandon"
-            ],
-            "next_episode_ids": [
-              "jobs_1985_restart"
-            ]
-          },
-          "dimensions": {
-            "stage_match": 0.9,
-            "path_match": 0.07007262395349856,
-            "dilemma_match": 0.4574292122553888,
-            "constraint_match": 0.22222222222222224,
-            "goal_match": 0.6666666666666666,
-            "reversibility_match": 1,
-            "difference_penalty": 0.8999999999999999
-          },
-          "why_similar": [
-            "【阶段】人生阶段接近（对方当时：大学初期）",
-            "【目标】在意的目标有具体交集：「从事喜欢方向」（对方的目标：探索兴趣、减少正式学费投入）"
-          ],
-          "why_different": [
-            "【约束差异】你面对「家庭」类约束（家庭经济支持但不愿啃老）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是读一个学期后退学，仍留校旁听感兴趣的课程。，没有试探类动作的记录——这是「先验证再决定」与「退出」的结构差异（依据：options 与 choice.actions 对比）",
-            "【⚠️ AI 类比·时代制度】案例发生在 1972 年（约 54 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「研究生毕业时的就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-          ],
-          "why_different_detail": [
-            {
-              "text": "【约束差异】你面对「家庭」类约束（家庭经济支持但不愿啃老）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-              "kind": "structure",
-              "basis": "constraints 对比",
-              "refs": [
-                "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【路径差异】你的可选路径里有「接受实习争取转正」这类低成本试探；案例里对方的实际动作是读一个学期后退学，仍留校旁听感兴趣的课程。，没有试探类动作的记录——这是「先验证再决定」与「退出」的结构差异（依据：options 与 choice.actions 对比）",
-              "kind": "structure",
-              "basis": "options × choice.actions 对比",
-              "refs": [
-                "options",
-                "choice.actions"
-              ]
-            },
-            {
-              "text": "【⚠️ AI 类比·时代制度】案例发生在 1972 年（约 54 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-              "kind": "era",
-              "basis": "ai_inference（模型外部知识）",
-              "refs": [
-                "time.year"
-              ]
-            },
-            {
-              "text": "【未知】无法比较「研究生毕业时的就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-              "kind": "unknown",
-              "basis": "数据缺失（episode 无对应字段）"
-            }
-          ],
-          "evidence_layers": {
-            "facts": [
-              "1972 年秋入学，一学期后退学并旁听。（SJ-REED）"
-            ],
-            "self_claims": [
-              "退学后的生活、自述动机及事后解释。（SJ-SPEECH）",
-              "他在 2005 年演讲中说当时不清楚大学如何帮助自己，后来才赋予旁听经历意义。（reflection.self_comment，本人自述）"
-            ],
-            "interpretations": [
-              "不再沿原学位路径学习；自述借住朋友宿舍并节省食宿费用。（outcomes.short_term）",
-              "继续旁听，包括书法课程；没有取得里德学位。（outcomes.mid_term）",
-              "2005 年演讲中回顾书法学习与后来计算机字体设计的联系。（outcomes.long_term）"
-            ],
-            "ai_inferences": [
-              "【⚠️ AI 类比·时代制度】案例发生在 1972 年（约 54 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
-            ],
-            "unknowns": [
-              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。",
-              "源头分别使用“一学期”与“六个月”；1972 为入学及退学阶段锚点，不断言退学精确月份。"
-            ]
-          }
-        }
-      ],
-      "meta": {
-        "candidates_recalled": 36,
-        "after_metadata_filter": 31,
-        "after_rerank": 3,
-        "dropped_by_metadata": 5,
-        "forced_diversity": false,
-        "elapsed_ms": 172,
-        "weights": {
-          "stage_match": 0.15,
-          "path_match": 0.2,
-          "dilemma_match": 0.25,
-          "constraint_match": 0.2,
-          "goal_match": 0.15,
-          "reversibility_match": 0.05
-        },
-        "parser_elapsed_ms": 2685,
-        "parser_tokens": 540
-      }
-    }
-  },
-  {
-    "id": 3,
-    "name": "大厂还是小公司/创业（稳定 vs 成长空间）",
-    "raw_input": "毕业两年了，在一家小公司做产品，学得快但看不到晋升路径。拿到了一个大厂的 offer，薪资涨三成，但岗位方向比较窄。我很纠结要不要去，怕自己变成螺丝钉，又怕留下来错过平台机会。补充：目前存款不多；无家庭负担；最在意成长空间和长期竞争力。",
-    "situation": {
-      "constraints": [
-        "毕业两年，需积累平台背书",
-        "存款不多，抗风险能力弱",
-        "无家庭负担",
-        "小公司无晋升路径"
-      ],
-      "dilemma": "留小厂博全能 vs 去大厂做专才",
-      "goals": [
-        "成长空间",
-        "长期竞争力",
-        "薪资提升"
-      ],
-      "options": [
-        "跳槽去大厂",
-        "留守小公司",
-        "继续看其他机会"
-      ],
-      "reversibility": "medium",
-      "risk": "medium",
-      "stage": "职业探索期",
-      "unknowns": [
-        "大厂转岗或拓宽业务的难度",
-        "小公司未来业务发展前景"
-      ]
-    },
-    "retrieval": {
-      "situation": {
-        "constraints": [
-          "毕业两年，需积累平台背书",
-          "存款不多，抗风险能力弱",
-          "无家庭负担",
-          "小公司无晋升路径"
-        ],
-        "dilemma": "留小厂博全能 vs 去大厂做专才",
-        "goals": [
-          "成长空间",
-          "长期竞争力",
-          "薪资提升"
-        ],
-        "options": [
-          "跳槽去大厂",
-          "留守小公司",
-          "继续看其他机会"
-        ],
-        "reversibility": "medium",
-        "risk": "medium",
-        "stage": "职业探索期",
-        "unknowns": [
-          "大厂转岗或拓宽业务的难度",
-          "小公司未来业务发展前景"
-        ]
-      },
-      "matches": [
-        {
-          "episode": {
-            "episode_id": "may_2006_resume_phd",
-            "person": {
-              "name": "布赖恩·梅",
-              "tags": [
-                "考研还是就业",
-                "重返研究"
-              ]
-            },
-            "time": {
-              "year": 2006,
-              "stage": "重返研究"
-            },
-            "prior_path": [
-              "博士研究已中断约三十年；仍从事音乐。"
-            ],
-            "decision_state": {
-              "dilemma": "继续仅做音乐 vs 恢复博士研究",
-              "options": [
-                "继续仅做音乐",
-                "恢复博士研究"
-              ],
-              "constraints": [
-                "需补读多年文献",
-                "既有工作仍在继续"
-              ],
-              "goals": [
-                "完成遗留研究",
-                "保持音乐活动"
-              ],
-              "risk": "medium",
-              "reversibility": "medium"
-            },
-            "choice": {
-              "type": "dual_track",
-              "actions": [
-                "2006 年恢复博士研究，整理旧资料并补读文献。"
-              ]
-            },
-            "outcomes": {
-              "short_term": "2007 年提交论文并取得博士学位。",
-              "mid_term": "未知：所用来源没有系统评估取得学位后数年的机会成本。",
-              "long_term": "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
-            },
-            "reflection": {
-              "unknowns": [
-                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
-                "未核实本人对这次选择的直接评价；不补写励志语录。",
-                "未知：所用来源没有系统评估取得学位后数年的机会成本。",
-                "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
-              ]
-            },
-            "evidence": [
-              {
-                "source_id": "BM-LJMU",
-                "type": "biography",
-                "claim": "2006 恢复和 2007 完成。",
-                "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
-              },
-              {
-                "source_id": "BM-IMPERIAL",
-                "type": "biography",
-                "claim": "旧研究材料、文献补读及论文提交。",
-                "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/"
-              },
-              {
-                "source_id": "MODEL-V1",
-                "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。"
-              }
-            ],
-            "retrieval_tags": [
-              "考研还是就业",
-              "dual_track"
-            ]
-          },
-          "dimensions": {
-            "stage_match": 0.5,
-            "path_match": 0.06974638597258476,
-            "dilemma_match": 0.38005811179700244,
-            "constraint_match": 0.5454545454545454,
-            "goal_match": 0.15,
-            "reversibility_match": 1,
-            "difference_penalty": 0.44999999999999996
-          },
-          "why_similar": [
-            "【约束】现实约束有具体重叠：「毕业两年，需积累平台背书」「存款不多，抗风险能力弱」（对方的约束：需补读多年文献、既有工作仍在继续）",
-            "【阶段】人生阶段接近（对方当时：重返研究）"
-          ],
-          "why_different": [
-            "【约束差异】你面对「经济」类约束（存款不多，抗风险能力弱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-          ],
-          "why_different_detail": [
-            {
-              "text": "【约束差异】你面对「经济」类约束（存款不多，抗风险能力弱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-              "kind": "structure",
-              "basis": "constraints 对比",
-              "refs": [
-                "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-              "kind": "unknown",
-              "basis": "数据缺失（episode 无对应字段）"
-            }
-          ],
-          "evidence_layers": {
-            "facts": [
-              "2006 恢复和 2007 完成。（BM-LJMU）",
-              "旧研究材料、文献补读及论文提交。（BM-IMPERIAL）"
-            ],
-            "self_claims": [],
-            "interpretations": [
-              "2007 年提交论文并取得博士学位。（outcomes.short_term）",
-              "未知：所用来源没有系统评估取得学位后数年的机会成本。（outcomes.mid_term）",
-              "未知：不能从取得博士学位推断长远收入、幸福或研究影响。（outcomes.long_term）"
-            ],
-            "ai_inferences": [],
-            "unknowns": [
-              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
-              "未核实本人对这次选择的直接评价；不补写励志语录。",
-              "未知：所用来源没有系统评估取得学位后数年的机会成本。",
-              "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
-            ]
-          }
-        },
-        {
-          "episode": {
-            "episode_id": "yuan_2011_zoom",
-            "person": {
-              "name": "袁征",
+              "name": "文卡特拉曼·拉马克里希南",
               "tags": [
                 "大厂还是小公司/创业",
-                "大公司转创业"
+                "科研机构转换"
               ]
             },
             "time": {
-              "year": 2011,
-              "stage": "大公司转创业"
+              "year": 1999,
+              "stage": "科研机构转换"
             },
             "prior_path": [
-              "1997 年进入 WebEx，2007 年随收购进入 Cisco，任工程管理职务。"
+              "在美国 Utah 开展核糖体研究。"
             ],
             "decision_state": {
-              "dilemma": "留在 Cisco vs 另建通信产品",
+              "dilemma": "留在原机构 vs 迁往英国 LMB",
               "options": [
-                "留在 Cisco",
-                "另建通信产品"
+                "留在原机构",
+                "迁往英国 LMB"
               ],
               "constraints": [
-                "需另组团队",
-                "已有职业机会成本"
+                "涉及家庭迁移",
+                "新团队资源需重建"
               ],
               "goals": [
-                "自主做产品",
-                "建立新的组织"
+                "加强科研协作",
+                "集中研究投入"
               ],
               "risk": "high",
               "reversibility": "medium"
@@ -1304,39 +1275,38 @@ export const demoScenarios: CachedScenario[] = [
             "choice": {
               "type": "direct_switch",
               "actions": [
-                "2011 年创办 Zoom。"
+                "1999 年转至英国 LMB。"
               ]
             },
             "outcomes": {
-              "short_term": "从大公司工程管理转为新公司创办者。",
-              "mid_term": "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。",
-              "long_term": "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。"
+              "short_term": "据自述，接受约四成减薪并迁移研究生活。",
+              "mid_term": "2000 年取得核糖体亚基结构研究进展。",
+              "long_term": "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。"
             },
             "reflection": {
               "unknowns": [
                 "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
-                "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
-              ],
-              "self_comment": "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。"
+                "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。"
+              ]
             },
             "evidence": [
               {
-                "source_id": "EY-BIO",
-                "type": "biography",
-                "claim": "WebEx/Cisco 履历和 2011 年创办 Zoom。",
-                "url": "https://investors.zoom.us/board-member-management/eric-yuan"
+                "source_id": "VR-AUTO",
+                "type": "self_writing",
+                "claim": "1999 迁移与约 40% 薪酬下降的自述。",
+                "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/"
               },
               {
-                "source_id": "EY-2023",
-                "type": "self_writing",
-                "claim": "2023 裁员及 CEO 对过快扩张的反思。",
-                "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/"
+                "source_id": "VR-BIO",
+                "type": "biography",
+                "claim": "2000 结构工作及 2009 奖项。",
+                "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/"
               },
               {
                 "source_id": "MODEL-V1",
                 "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。"
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。"
               }
             ],
             "retrieval_tags": [
@@ -1346,24 +1316,24 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.13197103824534726,
-            "dilemma_match": 0.5306316995658023,
-            "constraint_match": 0.2222222222222222,
-            "goal_match": 0.15,
+            "path_match": 0.021959828518286994,
+            "dilemma_match": 0.5075522680497617,
+            "constraint_match": 0.25,
+            "goal_match": 0.25,
             "reversibility_match": 1,
-            "difference_penalty": 0.44999999999999996
+            "difference_penalty": 0.35
           },
           "why_similar": [
-            "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：留在 Cisco vs 另建通信产品）",
-            "【阶段】人生阶段接近（对方当时：大公司转创业）"
+            "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：留在原机构 vs 迁往英国 LMB）",
+            "【阶段】人生阶段接近（对方当时：科研机构转换）"
           ],
           "why_different": [
-            "【约束差异】你面对「经济」类约束（存款不多，抗风险能力弱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「ceiling」类约束（小公司晋升路径缺失）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【未知】无法比较「窄方向未来的市场需求」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「经济」类约束（存款不多，抗风险能力弱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「ceiling」类约束（小公司晋升路径缺失）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -1371,29 +1341,28 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「窄方向未来的市场需求」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
           ],
           "evidence_layers": {
             "facts": [
-              "WebEx/Cisco 履历和 2011 年创办 Zoom。（EY-BIO）"
+              "2000 结构工作及 2009 奖项。（VR-BIO）"
             ],
             "self_claims": [
-              "2023 裁员及 CEO 对过快扩张的反思。（EY-2023）",
-              "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。（reflection.self_comment，本人自述）"
+              "1999 迁移与约 40% 薪酬下降的自述。（VR-AUTO）"
             ],
             "interpretations": [
-              "从大公司工程管理转为新公司创办者。（outcomes.short_term）",
-              "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。（outcomes.mid_term）",
-              "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。（outcomes.long_term）"
+              "据自述，接受约四成减薪并迁移研究生活。（outcomes.short_term）",
+              "2000 年取得核糖体亚基结构研究进展。（outcomes.mid_term）",
+              "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。（outcomes.long_term）"
             ],
             "ai_inferences": [],
             "unknowns": [
               "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
-              "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
+              "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
+              "未核实本人对这次选择的直接评价；不补写励志语录。"
             ]
           }
         },
@@ -1481,8 +1450,8 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.18955471108958577,
-            "dilemma_match": 0.4590188388513506,
+            "path_match": 0.1894172630662273,
+            "dilemma_match": 0.49158856656112315,
             "constraint_match": 0.15,
             "goal_match": 0.15,
             "reversibility_match": 1,
@@ -1493,12 +1462,12 @@ export const demoScenarios: CachedScenario[] = [
             "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：退回剩余资金 vs 转做协作工具）"
           ],
           "why_different": [
-            "【约束差异】你面对「时间与沉没投入」类约束（毕业两年，需积累平台背书）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「时间与沉没投入」类约束（毕业两年，需积累平台背书）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -1506,7 +1475,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「大厂转岗或拓宽业务的难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -1534,11 +1503,11 @@ export const demoScenarios: CachedScenario[] = [
       ],
       "meta": {
         "candidates_recalled": 36,
-        "after_metadata_filter": 36,
+        "after_metadata_filter": 31,
         "after_rerank": 3,
-        "dropped_by_metadata": 0,
+        "dropped_by_metadata": 5,
         "forced_diversity": false,
-        "elapsed_ms": 417,
+        "elapsed_ms": 278,
         "weights": {
           "stage_match": 0.15,
           "path_match": 0.2,
@@ -1547,8 +1516,8 @@ export const demoScenarios: CachedScenario[] = [
           "goal_match": 0.15,
           "reversibility_match": 0.05
         },
-        "parser_elapsed_ms": 3320,
-        "parser_tokens": 530
+        "parser_elapsed_ms": 3474,
+        "parser_tokens": 531
       }
     }
   }

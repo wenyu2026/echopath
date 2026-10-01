@@ -366,6 +366,74 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ⑰ 三条路的展示顺序不能是排名
+   ------------------------------------------------------------
+   前端把三条标成 路径 A / B / C，A 在最上面、配色最靠前。
+   而 picked 是按分数降序的 —— 实测三个场景里 A **永远是**最高分那条。
+   页面嘴上说「不是排名，也不是推荐」，版式却在排。
+   ============================================================ */
+
+test('展示顺序：路径 A 不该永远是最高分（版式在暗示排名）', async () => {
+  const episodes = loadEpisodes();
+  const { retrieve, buildEpisodeIndex } = await import('../retrieval/retrieve.ts');
+  const { mockEmbedder } = await import('../embedding/embed.ts');
+
+  const deps = { embedder: mockEmbedder(), episodes };
+  await buildEpisodeIndex(deps);
+
+  const situations = [
+    { stage: '大三', dilemma: '坚持 vs 转向', options: ['a', 'b'], constraints: ['已投入两年', '门槛高'], goals: ['兴趣', '成长'], risk: 'medium' as const, reversibility: 'medium' as const, unknowns: ['x', 'y'] },
+    { stage: '工作五年', dilemma: '稳定 vs 冒险', options: ['留下', '跳槽'], constraints: ['存款不多', '无家庭负担'], goals: ['成长', '收入'], risk: 'high' as const, reversibility: 'low' as const, unknowns: ['适配度', '前景'] },
+    { stage: '中年', dilemma: '探索 vs 专注', options: ['继续', '转向'], constraints: ['要顾家', '机会成本'], goals: ['意义', '稳定'], risk: 'medium' as const, reversibility: 'medium' as const, unknowns: ['方向', '可行性'] },
+  ];
+
+  const topPositions: number[] = [];
+  for (const s of situations) {
+    const r = await retrieve(s, {}, deps as never);
+    // 复算总分，找出最高分在第几位
+    const w: Record<string, number> = {
+      stage_match: 0.15, path_match: 0.2, dilemma_match: 0.25,
+      constraint_match: 0.2, goal_match: 0.15, reversibility_match: 0.05,
+    };
+    const totals = r.matches.map((m) => {
+      const d = m.dimensions as unknown as Record<string, number>;
+      return Object.entries(w).reduce((acc, [k, ww]) => acc + ww * d[k], 0) - 0.3 * d.difference_penalty;
+    });
+    topPositions.push(totals.indexOf(Math.max(...totals)));
+  }
+
+  // 三种处境里，最高分不该永远落在同一个位置
+  assert.ok(
+    new Set(topPositions).size > 1,
+    `最高分在所有处境里都落在第 ${topPositions[0] + 1} 位 —— 展示顺序其实是个排名，`
+      + `而页面声称「不是排名」。打散逻辑可能失效了。`,
+  );
+});
+
+test('展示顺序：打散必须确定性（同一输入每次顺序一致）', async () => {
+  const episodes = loadEpisodes();
+  const { retrieve, buildEpisodeIndex } = await import('../retrieval/retrieve.ts');
+  const { mockEmbedder } = await import('../embedding/embed.ts');
+
+  const deps = { embedder: mockEmbedder(), episodes };
+  await buildEpisodeIndex(deps);
+
+  const s = {
+    stage: '大三', dilemma: '坚持 vs 转向', options: ['a', 'b'],
+    constraints: ['已投入两年', '门槛高'], goals: ['兴趣', '成长'],
+    risk: 'medium' as const, reversibility: 'medium' as const, unknowns: ['x', 'y'],
+  };
+
+  const a = await retrieve(s, {}, deps as never);
+  const b = await retrieve(s, {}, deps as never);
+  assert.deepEqual(
+    a.matches.map((m) => m.episode.episode_id),
+    b.matches.map((m) => m.episode.episode_id),
+    '同一处境两次检索的顺序必须一致 —— 否则演示无法复现',
+  );
+});
+
+/* ============================================================
    ⑯ 维度卡的「差异惩罚」方向必须和其他六维一致
    ------------------------------------------------------------
    前六维：分数越高越像 → 条越长 = 越好

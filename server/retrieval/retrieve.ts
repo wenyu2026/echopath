@@ -60,6 +60,19 @@ export interface RetrieveDeps {
   index?: EpisodeIndexEntry[];
 }
 
+/**
+ * 稳定哈希：同一字符串永远得到同一个数。
+ * 用它打散展示顺序 —— 与分数无关，但可复现（同一处境每次顺序一致）。
+ */
+function stableHash(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h;
+}
+
 export function recallTextOf(ep: DecisionEpisode): string {
   return `来时路：${ep.prior_path.join('，')}。困境：${ep.decision_state.dilemma}。约束：${ep.decision_state.constraints.join('，')}。标签：${ep.retrieval_tags.join('，')}`;
 }
@@ -134,8 +147,26 @@ export async function retrieve(situation: Situation, opts: RetrieveOptions, deps
     console.error('[retrieval] ⚠️ 候选中 choice.type 不足 2 种，按分数返回');
   }
 
+  /**
+   * ⚠️ 打散展示顺序：不让「分数最高的那条」永远排在第一位。
+   *
+   * 为什么：前端把三条路标成 路径 A / B / C，A 在最上面、配色最靠前。
+   * 而 picked 是按分数降序的，实测三个场景里 A **永远是**最高分那条 ——
+   * 页面嘴上说「不是排名，也不是推荐」，版式却在排。
+   *
+   * 变换方式：按 episode_id 的稳定哈希排序。
+   *   · 确定性 —— 同一处境每次跑结果一样，方便演示与复现
+   *   · 与分数无关 —— A 不再系统性地是"最好的那条"
+   * 分数本身不丢，仍随 dimensions 一起返回，需要时随时能看。
+   */
+  const displayOrder = [...picked].sort((a, b) => {
+    const ha = stableHash(a.episode.episode_id);
+    const hb = stableHash(b.episode.episode_id);
+    return ha - hb || a.episode.episode_id.localeCompare(b.episode.episode_id);
+  });
+
   // 5. 组装 MatchResult：证据分层（#15，纯代码判定表）+ 反类比（#15，模板生成）
-  const matches: MatchResultExtended[] = picked.map(({ episode, dimensions }) => {
+  const matches: MatchResultExtended[] = displayOrder.map(({ episode, dimensions }) => {
     const layers = writeEvidenceLayers(episode);
     const ca = buildCounterAnalogy(situation, episode);
     const violations = guardViolations(ca.items.map((i) => i.text));
