@@ -10,10 +10,10 @@
  * 忘了起后端、密钥过期、数据没同步、缓存是旧的这类小事。
  * 这些都能在 30 秒内查完，但不查就要在评委面前查。
  */
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { basename, dirname, join } from 'node:path';
+import { basename, dirname, join, relative } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -194,7 +194,59 @@ check(
   );
 }
 
-/* ---------- 6. 构建能过 ---------- */const buildRes = buildCheck();
+/* ---------- 6. 中文文件有没有被写成乱码 ---------- */
+// 踩过一次：用 PowerShell 的 Get-Content -Raw（按 GBK 读）+ WriteAllText（按 UTF-8 写）
+// 改中文 Markdown，整份文件变成「楠屾敹鎶ュ憡」这种乱码，而且**已经提交进去了**。
+// 这类损坏是静默的：文件仍是合法 UTF-8，工具不报错，只有人看才发现。
+// 所以在自检里加一道扫描。
+{
+  const MARKERS = ['锛', '鐨', '涓€', '鏄', '鍜', '锟斤拷', '鎴戜', '鏂囦', '鈥', '楠屾'];
+  const SCAN_EXT = ['.md', '.ts', '.tsx', '.mjs', '.json', '.html', '.css'];
+  const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', '.vite']);
+  // 本文件自己含这些特征字符（就是上面这行字面量）—— 必须跳过，否则自检永远不过
+  const SELF = relative(root, fileURLToPath(import.meta.url)).replace(/\\/g, '/');
+  const offenders = [];
+
+  const walk = (dir, depth = 0) => {
+    if (depth > 6) return;
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      if (e.isDirectory()) {
+        if (!SKIP_DIRS.has(e.name)) walk(join(dir, e.name), depth + 1);
+        continue;
+      }
+      if (!SCAN_EXT.some((x) => e.name.endsWith(x))) continue;
+      const p = join(dir, e.name);
+      const rel = relative(root, p).replace(/\\/g, '/');
+      if (rel === SELF) continue; // 跳过自己（含特征字符字面量）
+      let text;
+      try {
+        text = readFileSync(p, 'utf8');
+      } catch {
+        offenders.push(`${rel}（不是合法 UTF-8）`);
+        continue;
+      }
+      const hits = MARKERS.reduce((n, m) => n + text.split(m).length - 1, 0);
+      if (hits >= 3) offenders.push(`${rel}（${hits} 处乱码特征）`);
+    }
+  };
+  walk(root);
+
+  check(
+    '中文文件未出现乱码',
+    offenders.length === 0,
+    offenders.length > 0
+      ? `疑似被 PowerShell 按 GBK 读写毁掉：${offenders.slice(0, 3).join(' / ')} —— 从 git 恢复或重写`
+      : '',
+  );
+}
+
+/* ---------- 7. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */
