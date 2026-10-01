@@ -20,6 +20,7 @@ import {
   type DimensionInput,
 } from './dimensions.ts';
 import { metadataFilter, selectDiverse } from './diversity.ts';
+import { loadSourceMeta, type SourceMeta } from './load-episodes.ts';
 
 /** MatchResult + #15 阶段二新增的可选结构化字段（CHANGE_REQUEST 见 #17，获批后并入正式 types） */
 export interface MatchResultExtended extends MatchResult {
@@ -44,6 +45,8 @@ export interface RetrievalMetaExtended {
 export interface RetrievalResponseExtended {
   situation: Situation;
   matches: MatchResult[];
+  /** 来源核查元信息（sources.json 的出版信息，供证据抽屉展示） */
+  source_meta: Record<string, SourceMeta>;
   meta: RetrievalMetaExtended;
 }
 
@@ -58,6 +61,11 @@ export interface RetrieveDeps {
   episodes: DecisionEpisode[];
   /** 预计算的案例向量（启动时建好；mock 模式下即席计算） */
   index?: EpisodeIndexEntry[];
+  /**
+   * 来源元信息（source_id → 出版信息）。
+   * 不传则内部按需读 sources.json；传空表则响应里 source_meta 为空。
+   */
+  sourceMeta?: Record<string, SourceMeta>;
 }
 
 /**
@@ -98,6 +106,7 @@ export interface RetrieveOptions {
 export async function retrieve(situation: Situation, opts: RetrieveOptions, deps: RetrieveDeps): Promise<RetrievalResponseExtended> {
   const t0 = Date.now();
   const index = deps.index ?? (await buildEpisodeIndex(deps));
+  const sourceMeta = deps.sourceMeta ?? loadSourceMeta();
 
   // 1. 召回：用户文本向量化，与案例召回向量算余弦
   const [narrativeVecs, situationVecs] = await Promise.all([
@@ -187,6 +196,15 @@ export async function retrieve(situation: Situation, opts: RetrieveOptions, deps
   return {
     situation,
     matches,
+    /**
+     * 来源核查元信息（source_id → 出版信息）。
+     *
+     * 为什么放这里：sources.json 里有 publisher / locator / accessed_on / limitations，
+     * 这些是**让证据可核查的关键**，但 episode.evidence 只带 source_id + url。
+     * 前端拿到这张表才能在抽屉里显示「东北大学史料馆《鲁迅的仙台留学》，
+     * 定位到"赴日与仙台入学"」，而不是只有一个生涩的编号。
+     */
+    source_meta: sourceMeta,
     meta: {
       candidates_recalled: index.length,
       after_metadata_filter: keptEntries.length,

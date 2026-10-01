@@ -206,11 +206,38 @@ export interface MatchResult {
   };
 }
 
+/** 来源的核查元信息（来自 data/sources.json） */
+export interface SourceMeta {
+  source_id: string;
+  title?: string;
+  publisher?: string;
+  /** 来源链接（通常与 evidence.url 一致；放在这里便于抽屉统一取用） */
+  url?: string;
+  /** 文献定位：这一段具体出自该来源的哪个部分 */
+  locator?: string;
+  accessed_on?: string;
+  /** 已知局限（如"机构叙述不能单独证明因果"） */
+  limitations?: string;
+  type?: string;
+  /** 访问方式（如 search_index） */
+  access_method?: string;
+  /** 本地留存路径（少数来源有；通常为空） */
+  local_path?: string;
+}
+
 /** 一次完整检索的返回 */
 export interface RetrievalResponse {
   situation: Situation;
   /** 固定返回 3 个案例，且 choice.type 至少覆盖 2 种 */
   matches: MatchResult[];
+  /**
+   * 来源核查元信息：source_id → 出版信息。
+   *
+   * 为什么需要：episode.evidence 只带 source_id 与 url，
+   * 但「可核查」还需要**谁出的、在哪一段、什么时候访问的、有什么局限**。
+   * 这些本来就在 data/sources.json 里，只是没往后端响应里传。
+   */
+  source_meta?: Record<string, SourceMeta>;
   /** 本次检索的元信息，用于"检索过程可视化" */
   meta: {
     candidates_recalled: number;   // 候选召回数

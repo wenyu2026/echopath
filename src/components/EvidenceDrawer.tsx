@@ -15,7 +15,7 @@
  */
 
 import { useEffect } from 'react';
-import type { Evidence } from '../types/episode';
+import type { Evidence, SourceMeta } from '../types/episode';
 
 const TYPE_LABEL: Record<string, string> = {
   self_writing: '本人写作',
@@ -40,6 +40,7 @@ export default function EvidenceDrawer({
   onClose,
   title,
   evidence,
+  sourceMeta,
   sourceCount,
   aiCount,
 }: {
@@ -47,6 +48,8 @@ export default function EvidenceDrawer({
   onClose: () => void;
   title: string;
   evidence: Evidence[];
+  /** source_id → 出版信息（谁出的 / 哪一段 / 局限） */
+  sourceMeta?: Record<string, SourceMeta>;
   /** 真正的外部来源数（不含 AI 推断） */
   sourceCount?: number;
   /** AI 推断条目数 —— 单独说明，不混进"来源"里 */
@@ -103,12 +106,35 @@ export default function EvidenceDrawer({
             evidence.map((e) => {
               const host = hostOf(e.url);
               const isAi = e.type === 'ai_inference';
+              // 出版信息来自 sources.json（经 source_meta 传过来）
+              const sm = sourceMeta?.[e.source_id];
               return (
                 <div className="evidence-item" key={e.source_id}>
                   <div className="evidence-type">{TYPE_LABEL[e.type] ?? e.type}</div>
                   <div className="evidence-claim">{e.claim}</div>
 
                   {e.quote && <blockquote className="evidence-quote">{e.quote}</blockquote>}
+
+                  {/* 谁出的、哪一段 —— 这才是能核查的依据，比一个编号有用得多 */}
+                  {sm && (sm.publisher || sm.title) && (
+                    <div className="evidence-cite">
+                      {sm.publisher && <strong>{sm.publisher}</strong>}
+                      {sm.publisher && sm.title && '　'}
+                      {sm.title && <span>《{sm.title}》</span>}
+                      {sm.locator && (
+                        <>
+                          <br />
+                          <span className="tiny muted">定位：{sm.locator}</span>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {sm?.limitations && (
+                    <div className="evidence-limit">
+                      <span className="tiny">已知局限：{sm.limitations}</span>
+                    </div>
+                  )}
 
                   <div className="evidence-meta">
                     <code className="evidence-src">{e.source_id}</code>
@@ -128,6 +154,10 @@ export default function EvidenceDrawer({
                       <span className="tiny muted">
                         {isAi ? 'AI 建模产物，无外部来源' : '这条没有记录链接'}
                       </span>
+                    )}
+
+                    {sm?.accessed_on && (
+                      <span className="tiny muted">{sm.accessed_on} 访问</span>
                     )}
                   </div>
                 </div>

@@ -33,25 +33,27 @@ export const demoScenarios: CachedScenario[] = [
       "constraints": [
         "已投入两年沉没成本",
         "新方向仅了解两个月",
-        "可接受延毕",
-        "家庭期望别太高"
+        "家庭期望别太高",
+        "可接受延毕"
       ],
-      "dilemma": "坚持本专业 vs 转向新方向",
+      "dilemma": "坚持不适专业 vs 转向新方向",
       "goals": [
         "追求兴趣",
-        "个人成长"
+        "个人成长",
+        "降低不适感"
       ],
       "options": [
-        "继续读完本专业",
-        "申请转专业",
-        "辅修新方向"
+        "继续读完原专业",
+        "转专业",
+        "辅修或双学位"
       ],
       "reversibility": "medium",
       "risk": "medium",
-      "stage": "大二/大三",
+      "stage": "大三/大二阶段",
       "unknowns": [
         "新方向能力匹配度",
-        "转专业成功率"
+        "转专业的成功概率",
+        "新方向就业前景"
       ]
     },
     "retrieval": {
@@ -59,25 +61,27 @@ export const demoScenarios: CachedScenario[] = [
         "constraints": [
           "已投入两年沉没成本",
           "新方向仅了解两个月",
-          "可接受延毕",
-          "家庭期望别太高"
+          "家庭期望别太高",
+          "可接受延毕"
         ],
-        "dilemma": "坚持本专业 vs 转向新方向",
+        "dilemma": "坚持不适专业 vs 转向新方向",
         "goals": [
           "追求兴趣",
-          "个人成长"
+          "个人成长",
+          "降低不适感"
         ],
         "options": [
-          "继续读完本专业",
-          "申请转专业",
-          "辅修新方向"
+          "继续读完原专业",
+          "转专业",
+          "辅修或双学位"
         ],
         "reversibility": "medium",
         "risk": "medium",
-        "stage": "大二/大三",
+        "stage": "大三/大二阶段",
         "unknowns": [
           "新方向能力匹配度",
-          "转专业成功率"
+          "转专业的成功概率",
+          "新方向就业前景"
         ]
       },
       "matches": [
@@ -163,8 +167,8 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.6,
-            "path_match": 0.16456672253944862,
-            "dilemma_match": 0.7237823226144418,
+            "path_match": 0.16449058445361645,
+            "dilemma_match": 0.7118493065055425,
             "constraint_match": 0.15,
             "goal_match": 0.4,
             "reversibility_match": 1,
@@ -176,7 +180,7 @@ export const demoScenarios: CachedScenario[] = [
           ],
           "why_different": [
             "【约束差异】你面对「家庭」类约束（家庭期望别太高）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+            "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
             "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
@@ -190,7 +194,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是继续写剧本并寻找电影制作机会。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -309,9 +313,9 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.6206338102586396,
-            "dilemma_match": 0.8437882470201572,
-            "constraint_match": 0.25918367346938775,
+            "path_match": 0.6206122063750084,
+            "dilemma_match": 0.8416648300863785,
+            "constraint_match": 0.259,
             "goal_match": 0.15,
             "reversibility_match": 1,
             "difference_penalty": 0.8999999999999999
@@ -449,8 +453,8 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.12622334733642476,
-            "dilemma_match": 0.5269568234396341,
+            "path_match": 0.12622418502856197,
+            "dilemma_match": 0.5263938341315655,
             "constraint_match": 0.5714285714285715,
             "goal_match": 0.6666666666666666,
             "reversibility_match": 1,
@@ -461,13 +465,13 @@ export const demoScenarios: CachedScenario[] = [
             "【约束】现实约束有具体重叠：「家庭期望别太高」（对方的约束：缺少生物学基础、已有家庭责任）"
           ],
           "why_different": [
-            "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+            "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1976 年（约 50 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
             "【未知】无法比较「新方向能力匹配度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【路径差异】你的可选路径里有「辅修新方向」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【路径差异】你的可选路径里有「辅修或双学位」这类低成本试探；案例里对方的实际动作是进入加州大学圣迭戈分校学习生物学课程并参与实验室训练。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -512,13 +516,422 @@ export const demoScenarios: CachedScenario[] = [
           }
         }
       ],
+      "source_meta": {
+        "LX-TOHOKU": {
+          "source_id": "LX-TOHOKU",
+          "title": "鲁迅的仙台留学",
+          "publisher": "东北大学史料馆",
+          "url": "https://www.archives.tohoku.ac.jp/luxun/cn/story/",
+          "type": "biography",
+          "locator": "赴日与仙台入学、第二学年退学",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-SENDAI": {
+          "source_id": "LX-SENDAI",
+          "title": "Chinese high school students visit Tohoku University",
+          "publisher": "东北大学",
+          "url": "https://www.tohoku.ac.jp/en/news/university_news/sakura_exchange_program.html",
+          "type": "biography",
+          "locator": "Lu Xun studied in Sendai from 1904 to 1906",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-PREFACE": {
+          "source_id": "LX-PREFACE",
+          "title": "《呐喊》自序（1922）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/wiki/吶喊",
+          "type": "self_writing",
+          "locator": "自序：医学、筹办新生、金心异劝写文章",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后自述与开放转录；动机按本人表述处理，不当作现场心理记录。"
+        },
+        "LX-SELECT": {
+          "source_id": "LX-SELECT",
+          "title": "《自选集》自序（1932）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/zh-hans/《自選集》自序",
+          "type": "self_writing",
+          "locator": "我做小说，是开手于一九一八年",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后回忆；不是逐日决策日志。"
+        },
+        "LX-MUSEUM": {
+          "source_id": "LX-MUSEUM",
+          "title": "鲁迅生平陈列：画出国人的魂灵",
+          "publisher": "上海鲁迅纪念馆",
+          "url": "https://www.luxunmuseum.cn/",
+          "type": "biography",
+          "locator": "1918—1922 年十四篇小说",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**原深链（/lxcl/index/id/5.html）2026-10-02 实测 404（官网改版），已改为站点首页；具体展览页需到馆内检索，未能定位到对应条目。**"
+        },
+        "AL-INTERVIEW": {
+          "source_id": "AL-INTERVIEW",
+          "title": "李安｜聆听电影之神的声音",
+          "publisher": "澎湃转载楚尘文化《李安访谈录》",
+          "url": "https://m.thepaper.cn/newsDetail_forward_27605082",
+          "type": "interview",
+          "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "中文译编的事后访谈；未将六年没有执导机会扩大成六年无任何正式工作。"
+        },
+        "AL-NYU": {
+          "source_id": "AL-NYU",
+          "title": "Ang Lee — Tisch Gala 2024",
+          "publisher": "纽约大学 Tisch",
+          "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html",
+          "type": "biography",
+          "locator": "1984 MFA、后续影片与奖项",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "页面把首部长片写在 1990 年；本集仅用来核对毕业与后续生涯，影片上映年采用访谈的 1991 年。"
+        },
+        "HM-SELF": {
+          "source_id": "HM-SELF",
+          "title": "Haruki Murakami: The Moment I Became a Novelist",
+          "publisher": "Haruki Murakami / Literary Hub / Knopf",
+          "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/",
+          "type": "self_writing",
+          "locator": "1978 球赛、营业后写作、1979 首作、卖店专职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "2015 年出版的自述节选；回顾性解释不代表 1978 年已有明确三年转行计划。"
+        },
+        "HM-1981": {
+          "source_id": "HM-1981",
+          "title": "Haruki Murakami",
+          "publisher": "Biblioteca Salaborsa Ragazzi / Bologna",
+          "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04",
+          "type": "biography",
+          "locator": "Nel 1981 Murakami vende il jazz bar",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公共图书馆的二手人物简介，仅补足卖店年份。"
+        },
+        "CD-STUDY": {
+          "source_id": "CD-STUDY",
+          "title": "Darwin’s student booklist",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist",
+          "type": "biography",
+          "locator": "Edinburgh 1825—1827；Cambridge January 1828",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-CHURCH": {
+          "source_id": "CD-CHURCH",
+          "title": "Darwin and the Church",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/religion/darwin-and-church",
+          "type": "biography",
+          "locator": "Cambridge degree and intended clerical career",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-BEAGLE": {
+          "source_id": "CD-BEAGLE",
+          "title": "Voyage of HMS Beagle",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle",
+          "type": "biography",
+          "locator": "1831 邀请、父亲资助；1831-12-27 至 1836-10-02 航行",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-REED": {
+          "source_id": "SJ-REED",
+          "title": "Steve Jobs and Reed College",
+          "publisher": "Reed College",
+          "url": "https://www.reed.edu/about/steve-jobs.html",
+          "type": "biography",
+          "locator": "fall 1972；one semester；auditing classes",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-SPEECH": {
+          "source_id": "SJ-SPEECH",
+          "title": "‘You’ve got to find what you love,’ Jobs says",
+          "publisher": "Steve Jobs / Stanford University",
+          "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+          "type": "self_writing",
+          "locator": "2005 毕业演讲：退学与重启事业两部分",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "预备演讲稿，动机与意义归本人回顾；不把退学认定为创业成功原因。"
+        },
+        "JB-SPEECH": {
+          "source_id": "JB-SPEECH",
+          "title": "2010 Baccalaureate remarks",
+          "publisher": "Jeff Bezos / Princeton University",
+          "url": "https://www.princeton.edu/news/2010/05/30/2010-baccalaureate-remarks",
+          "type": "self_writing",
+          "locator": "16 years ago、老板要求考虑 48 小时、离职创建 Amazon",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创业者事后回忆；没有未创业的对照结局。"
+        },
+        "BM-LJMU": {
+          "source_id": "BM-LJMU",
+          "title": "Brian May profile",
+          "publisher": "Liverpool John Moores University",
+          "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile",
+          "type": "biography",
+          "locator": "1974 中断博士，2006 重返，2007 取得博士",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "BM-IMPERIAL": {
+          "source_id": "BM-IMPERIAL",
+          "title": "Annual Alumni Lecture 2007",
+          "publisher": "Imperial College London",
+          "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/",
+          "type": "biography",
+          "locator": "2006 决定恢复、三十年文献补读、2007 年八月论文",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "VR-AUTO": {
+          "source_id": "VR-AUTO",
+          "title": "Venkatraman Ramakrishnan — Biographical",
+          "publisher": "Nobel Prize / Venki Ramakrishnan",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/",
+          "type": "self_writing",
+          "locator": "1976 UCSD、1978 Yale、1999 LMB",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "直接打开受站点限制；已核对搜索索引中的长段正文，合并前建议人类复核原页。事后自述。"
+        },
+        "VR-BIO": {
+          "source_id": "VR-BIO",
+          "title": "About Venki Ramakrishnan",
+          "publisher": "Nobel Prize Inspiration Initiative",
+          "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/",
+          "type": "biography",
+          "locator": "1976 PhD；UCSD two years；1999 LMB；2000 ribosome structure",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-ROCK": {
+          "source_id": "KK-ROCK",
+          "title": "Katalin Karikó",
+          "publisher": "Rockefeller University / Evelyn Strauss",
+          "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/",
+          "type": "biography",
+          "locator": "1995 降职；1997 Weissman；2005、2008、2009 研究与职位",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-BION": {
+          "source_id": "KK-BION",
+          "title": "Katalin Karikó and Drew Weissman awarded Nobel Prize",
+          "publisher": "BioNTech",
+          "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html",
+          "type": "biography",
+          "locator": "2013 入职；2014 联合论文；2022 转外部顾问",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "雇主新闻稿，有宣传目的；不据此断言个人收入、幸福或职业最优解。"
+        },
+        "FA-AUTO": {
+          "source_id": "FA-AUTO",
+          "title": "Frances H. Arnold — Biographical",
+          "publisher": "Nobel Prize / Frances Arnold",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/",
+          "type": "self_writing",
+          "locator": "1979—1980 SERI；January 1981 Berkeley；January 1987 Caltech faculty",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。事后自述，需人类复核。"
+        },
+        "JG-AUTO": {
+          "source_id": "JG-AUTO",
+          "title": "Sir John B. Gurdon — Biographical",
+          "publisher": "Nobel Prize / John Gurdon",
+          "url": "https://www.nobelprize.org/prizes/medicine/2012/gurdon/biographical/",
+          "type": "self_writing",
+          "locator": "1952 Oxford admission / 1953 Zoology；1960 邀请；Post-Doctoral Work",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。1960 是邀约年份，赴美确切年份未据此锁定。"
+        },
+        "JG-INTERVIEW": {
+          "source_id": "JG-INTERVIEW",
+          "title": "Sir John Gurdon: Godfather of cloning",
+          "publisher": "Journal of Cell Biology / PMC",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2315664/",
+          "type": "interview",
+          "locator": "Caltech bacteriophage postdoc 与一年后回到胚胎研究",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "2008 年回顾访谈；不能将不擅长某一实验等同于整体科研能力不足。"
+        },
+        "JD-BIO": {
+          "source_id": "JD-BIO",
+          "title": "James Dyson",
+          "publisher": "Dyson",
+          "url": "https://www.dyson.com/james-dyson",
+          "type": "biography",
+          "locator": "2014 electric vehicle；2019 halted",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "企业创始人介绍，有宣传选择偏差。"
+        },
+        "JD-CLOSE": {
+          "source_id": "JD-CLOSE",
+          "title": "An update on the Dyson automotive project",
+          "publisher": "James Dyson / Dyson",
+          "url": "https://www.dyson.com/automotive",
+          "type": "self_writing",
+          "locator": "2019-10-10 员工信：商业不可行、买方寻找失败、关闭项目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "管理层当时声明；员工安置是承诺，不当作已实现的结果。"
+        },
+        "SB-INVESTOR": {
+          "source_id": "SB-INVESTOR",
+          "title": "Slack",
+          "publisher": "Andreessen Horowitz / John O’Farrell",
+          "url": "https://a16z.com/announcement/slack/",
+          "type": "biography",
+          "locator": "October 2012 Glitch failure；40 to 8；$4m；Slack development",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人回顾，有利益关系；产品上市不证明所有员工或投资人均获益。"
+        },
+        "SB-ORIGIN": {
+          "source_id": "SB-ORIGIN",
+          "title": "What is Slack and how does it work?",
+          "publisher": "Slack",
+          "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work",
+          "type": "biography",
+          "locator": "internal chat tool for Glitch",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公司回顾仅支持内部工具起源；该页把游戏关闭写为 2013，与当时记录和投资人所述 2012 冲突，不用于关闭年份。"
+        },
+        "SB-LAUNCH": {
+          "source_id": "SB-LAUNCH",
+          "title": "Slack, The Newest Enterprise Social Network, Is The Latest Effort From Flickr Co-Founder Stewart Butterfield",
+          "publisher": "TechCrunch",
+          "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/",
+          "type": "biography",
+          "locator": "2013-08-14 发布报道",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "仅用于发布年份，产品当时仍在有限测试阶段。"
+        },
+        "EY-BIO": {
+          "source_id": "EY-BIO",
+          "title": "Eric S. Yuan",
+          "publisher": "Zoom Investor Relations",
+          "url": "https://investors.zoom.us/board-member-management/eric-yuan",
+          "type": "biography",
+          "locator": "1997 WebEx、2007 Cisco、June 2011 Zoom",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**该域名（investors.zoom.us）有 Akamai 反爬，自动化工具与无头浏览器均被拒（返回 403 或超时），无法用工具确认深链是否仍存在。**人工核查路径：浏览器打开 investors.zoom.us → Governance → Board of Directors；交叉核对：https://en.wikipedia.org/wiki/Eric_Yuan （二手来源，仅用于交叉验证履历年份）。"
+        },
+        "EY-2023": {
+          "source_id": "EY-2023",
+          "title": "A Message from Eric Yuan, CEO of Zoom",
+          "publisher": "Eric Yuan / Zoom",
+          "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/",
+          "type": "self_writing",
+          "locator": "2023-02-07 裁员约 1300 人、15%；承担责任",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "CEO 对员工的声明，不是独立调查，不能归咎于单次创办决定。"
+        },
+        "SA-INTERVIEW": {
+          "source_id": "SA-INTERVIEW",
+          "title": "How Sara Blakely Started Spanx",
+          "publisher": "Sara Blakely / Inc.",
+          "url": "https://www.inc.com/sara-blakely/how-sara-blakley-started-spanx.html",
+          "type": "interview",
+          "locator": "2012 视频文字：传真机销售、积蓄、夜间周末、一年打样",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创始人回忆，未确认准确离职日期。"
+        },
+        "SA-INVESTOR": {
+          "source_id": "SA-INVESTOR",
+          "title": "Behind the Deal: Blackstone’s Investment in SPANX",
+          "publisher": "Blackstone",
+          "url": "https://www.blackstone.com/insights/article/blackstones-investment-in-spanx/",
+          "type": "biography",
+          "locator": "2000 创办；2021 多数股权投资",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人公告；不使用估值推算本人到手财富。"
+        },
+        "FK-CHRON": {
+          "source_id": "FK-CHRON",
+          "title": "Chronik",
+          "publisher": "S. Fischer Verlag / FranzKafka.de",
+          "url": "https://www.franzkafka.de/leben/chronik",
+          "type": "biography",
+          "locator": "1908、1912、1922、1923、1924 年条目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "出版社年表；不据年表推断疾病与迁居的因果关系。"
+        },
+        "CN-AUTO": {
+          "source_id": "CN-AUTO",
+          "title": "Christiane Nüsslein-Volhard — Biographical",
+          "publisher": "Nobel Prize / Christiane Nüsslein-Volhard",
+          "url": "https://www.nobelprize.org/prizes/medicine/1995/nusslein-volhard/biographical/",
+          "type": "self_writing",
+          "locator": "1962 医院试做；summer 1964 Tübingen；Diplom 1969；PhD 1973",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。课程不合预期属于本人评价。"
+        },
+        "AE-UZH": {
+          "source_id": "AE-UZH",
+          "title": "Albert Einstein",
+          "publisher": "University of Zurich",
+          "url": "https://www.uzh.ch/en/researchinnovation/excellence/nobelprize/einstein",
+          "type": "biography",
+          "locator": "1900 无大学助教职位；1902—1909 专利局；1905 博士；1909 教职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "MODEL-V1": {
+          "source_id": "MODEL-V1",
+          "title": "本集的处境与类比建模规则",
+          "publisher": "fu6868 / Codex",
+          "type": "ai_inference",
+          "local_path": "README.md",
+          "locator": "事实、本人表述与建模",
+          "accessed_on": "2026-10-02",
+          "access_method": "local",
+          "limitations": "仅是检索标注，不代表人物完整真实选项、心理、选择因果或用户成功概率。"
+        }
+      },
       "meta": {
         "candidates_recalled": 36,
         "after_metadata_filter": 31,
         "after_rerank": 3,
         "dropped_by_metadata": 5,
         "forced_diversity": false,
-        "elapsed_ms": 644,
+        "elapsed_ms": 558,
         "weights": {
           "stage_match": 0.15,
           "path_match": 0.2,
@@ -527,8 +940,8 @@ export const demoScenarios: CachedScenario[] = [
           "goal_match": 0.15,
           "reversibility_match": 0.05
         },
-        "parser_elapsed_ms": 1739,
-        "parser_tokens": 471
+        "parser_elapsed_ms": 2249,
+        "parser_tokens": 508
       }
     }
   },
@@ -538,61 +951,57 @@ export const demoScenarios: CachedScenario[] = [
     "raw_input": "大三了，家里人都劝我考研，说学历高点以后好走。但我手上有两个实习机会，转正概率不小。我担心考研三年出来还不如现在积累的工作经验，又怕不考研以后天花板太低。补充：成绩中等，考研把握一般；实习是喜欢的方向；家里能支持我读研，但我有点不好意思继续花家里的钱。",
     "situation": {
       "constraints": [
-        "大三时间节点",
-        "家庭支持读研",
-        "实习转正概率大",
-        "成绩中等考研难",
-        "不好意思花家里钱"
+        "成绩中等考研把握一般",
+        "实习转正概率不小",
+        "家里支持读研",
+        "不好意思再花家里钱"
       ],
       "dilemma": "考研提升学历 vs 实习积累经验",
       "goals": [
-        "未来职业发展好",
-        "打破学历天花板",
-        "早日经济独立"
+        "职业长远发展",
+        "经济独立",
+        "降低决策风险"
       ],
       "options": [
-        "全力备考研究生",
-        "接受实习转正",
+        "全力备战考研",
+        "抓住实习转正",
         "边实习边备考"
       ],
       "reversibility": "medium",
       "risk": "high",
-      "stage": "大三/就业抉择期",
+      "stage": "大三关键期",
       "unknowns": [
-        "三年后研究生就业行情",
-        "研究生学历溢价幅度",
-        "实习转正后成长空间",
-        "备考实际成功率"
+        "研究生毕业后的就业环境",
+        "考研失败后的机会成本",
+        "行业未来学历门槛变化"
       ]
     },
     "retrieval": {
       "situation": {
         "constraints": [
-          "大三时间节点",
-          "家庭支持读研",
-          "实习转正概率大",
-          "成绩中等考研难",
-          "不好意思花家里钱"
+          "成绩中等考研把握一般",
+          "实习转正概率不小",
+          "家里支持读研",
+          "不好意思再花家里钱"
         ],
         "dilemma": "考研提升学历 vs 实习积累经验",
         "goals": [
-          "未来职业发展好",
-          "打破学历天花板",
-          "早日经济独立"
+          "职业长远发展",
+          "经济独立",
+          "降低决策风险"
         ],
         "options": [
-          "全力备考研究生",
-          "接受实习转正",
+          "全力备战考研",
+          "抓住实习转正",
           "边实习边备考"
         ],
         "reversibility": "medium",
         "risk": "high",
-        "stage": "大三/就业抉择期",
+        "stage": "大三关键期",
         "unknowns": [
-          "三年后研究生就业行情",
-          "研究生学历溢价幅度",
-          "实习转正后成长空间",
-          "备考实际成功率"
+          "研究生毕业后的就业环境",
+          "考研失败后的机会成本",
+          "行业未来学历门槛变化"
         ]
       },
       "matches": [
@@ -672,26 +1081,26 @@ export const demoScenarios: CachedScenario[] = [
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.03953813068056168,
-            "dilemma_match": 0.5467571305598252,
-            "constraint_match": 0.6,
+            "path_match": 0.03949083621995152,
+            "dilemma_match": 0.5504903566809576,
+            "constraint_match": 0.6666666666666666,
             "goal_match": 0.25,
             "reversibility_match": 1,
-            "difference_penalty": 0.75
+            "difference_penalty": 0.55
           },
           "why_similar": [
-            "【约束】现实约束有具体重叠：「不好意思花家里钱」（对方的约束：晋升与经费受限、已有专业积累）",
-            "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
+            "【约束】现实约束有具体重叠：「不好意思再花家里钱」（对方的约束：晋升与经费受限、已有专业积累）",
+            "【困境结构】两边的取舍都落在「放弃一边、换另一边」这一结构上（对方当时的困境：接受降职留研 vs 离开研究岗位）"
           ],
           "why_different": [
-            "【约束差异】你面对「时间与沉没投入」类约束（大三时间节点）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+            "【约束差异】你面对「门槛与资格」类约束（成绩中等考研把握一般）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【路径差异】你的可选路径里有「抓住实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
             "【⚠️ AI 类比·时代制度】案例发生在 1995 年（约 31 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【未知】无法比较「行业未来学历门槛变化」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「时间与沉没投入」类约束（大三时间节点）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「门槛与资格」类约束（成绩中等考研把握一般）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -699,7 +1108,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【路径差异】你的可选路径里有「抓住实习转正」这类低成本试探；案例里对方的实际动作是1995 年接受较低职位，继续 mRNA 研究。，没有试探类动作的记录——这是「先验证再决定」与「死磕原路」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -716,7 +1125,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「行业未来学历门槛变化」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -824,24 +1233,24 @@ export const demoScenarios: CachedScenario[] = [
           "dimensions": {
             "stage_match": 0.5,
             "path_match": 0,
-            "dilemma_match": 0.4256108183492653,
-            "constraint_match": 0.4,
+            "dilemma_match": 0.44003790048947167,
+            "constraint_match": 0.4444444444444444,
             "goal_match": 0.25,
             "reversibility_match": 0.75,
-            "difference_penalty": 0.49999999999999994
+            "difference_penalty": 0.39999999999999997
           },
           "why_similar": [
-            "【阶段】人生阶段接近（对方当时：企业跨行业）",
-            "【约束】现实约束有具体重叠：「大三时间节点」（对方的约束：跨行业能力待建立、商业化投入很大）"
+            "【约束】现实约束有重叠（对方的约束：跨行业能力待建立、商业化投入很大）",
+            "【阶段】人生阶段接近（对方当时：企业跨行业）"
           ],
           "why_different": [
-            "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
-            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「经济」类约束（不好意思再花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【路径差异】你的可选路径里有「抓住实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+            "【未知】无法比较「研究生毕业后的就业环境」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「经济」类约束（不好意思再花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -849,7 +1258,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【路径差异】你的可选路径里有「接受实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
+              "text": "【路径差异】你的可选路径里有「抓住实习转正」这类低成本试探；案例里对方的实际动作是启动电动车项目。，没有试探类动作的记录——这是「先验证再决定」与「直接转向」的结构差异（依据：options 与 choice.actions 对比）",
               "kind": "structure",
               "basis": "options × choice.actions 对比",
               "refs": [
@@ -858,7 +1267,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「研究生毕业后的就业环境」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
@@ -885,34 +1294,34 @@ export const demoScenarios: CachedScenario[] = [
         },
         {
           "episode": {
-            "episode_id": "arnold_1987_caltech_faculty",
+            "episode_id": "ramakrishnan_1978_yale_postdoc",
             "person": {
-              "name": "弗朗西丝·阿诺德",
+              "name": "文卡特拉曼·拉马克里希南",
               "tags": [
                 "考研还是就业",
-                "博士后结束"
+                "跨学科训练后"
               ]
             },
             "time": {
-              "year": 1987,
-              "stage": "博士后结束"
+              "year": 1978,
+              "stage": "跨学科训练后"
             },
             "prior_path": [
-              "完成博士及博士后训练，逐渐倾向学术工作。"
+              "已在 UCSD 学习生物学约两年。"
             ],
             "decision_state": {
-              "dilemma": "进入产业职位 vs 转为独立教职",
+              "dilemma": "再读完整博士 vs 转入博士后研究",
               "options": [
-                "进入产业职位",
-                "转为独立教职"
+                "再读完整博士",
+                "转入博士后研究"
               ],
               "constraints": [
-                "需独立建立课题",
-                "岗位选择具有地域差异"
+                "已有一个博士学位",
+                "仍需新领域经验"
               ],
               "goals": [
-                "保持研究自主",
-                "保留产业联系"
+                "进入具体课题",
+                "避免重复学位训练"
               ],
               "risk": "medium",
               "reversibility": "medium"
@@ -920,61 +1329,70 @@ export const demoScenarios: CachedScenario[] = [
             "choice": {
               "type": "explore_then_switch",
               "actions": [
-                "1987 年进入 Caltech 教师队伍。"
+                "联系研究者后赴 Yale 做博士后，进入核糖体研究。"
               ]
             },
             "outcomes": {
-              "short_term": "由训练岗位进入独立学术职位。",
-              "mid_term": "未知：本集未单独核实其起步数年的经费、教学与生活负担。",
-              "long_term": "2018 年以诺贝尔奖得主身份回顾研究历程；奖项不能代替职业成本评价。"
+              "short_term": "从补课阶段进入具体研究团队。",
+              "mid_term": "未知：本集没有单独核实这一博后选择最初数年的全部成果与职位变化。",
+              "long_term": "1999 年进入 LMB，2000 年参与确定核糖体亚基结构。"
             },
             "reflection": {
               "unknowns": [
                 "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。",
+                "博士后是已有博士者的研究岗位，不等同本科毕业直接就业；第二博士也不同于首次考研。",
                 "未核实本人对这次选择的直接评价；不补写励志语录。",
-                "未知：本集未单独核实其起步数年的经费、教学与生活负担。"
+                "未知：本集没有单独核实这一博后选择最初数年的全部成果与职位变化。"
               ]
             },
             "evidence": [
               {
-                "source_id": "FA-AUTO",
+                "source_id": "VR-AUTO",
                 "type": "self_writing",
-                "claim": "博士后经历、1987 教职及获奖时的自述。",
-                "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/"
+                "claim": "1978 年 Yale 博后与无需第二博士的选择。",
+                "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/"
+              },
+              {
+                "source_id": "VR-BIO",
+                "type": "biography",
+                "claim": "后续 LMB 及 2000 年研究进展。",
+                "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/"
               },
               {
                 "source_id": "MODEL-V1",
                 "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。"
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士后是已有博士者的研究岗位，不等同本科毕业直接就业；第二博士也不同于首次考研。"
               }
             ],
             "retrieval_tags": [
               "考研还是就业",
               "explore_then_switch"
+            ],
+            "next_episode_ids": [
+              "ramakrishnan_1999_lmb"
             ]
           },
           "dimensions": {
             "stage_match": 0.5,
-            "path_match": 0.37641697267193597,
-            "dilemma_match": 0.5537042093414904,
-            "constraint_match": 0.25,
+            "path_match": 0.17334195153463738,
+            "dilemma_match": 0.5387057470098663,
+            "constraint_match": 0.5,
             "goal_match": 0.25,
             "reversibility_match": 1,
-            "difference_penalty": 0.75
+            "difference_penalty": 0.55
           },
           "why_similar": [
-            "【困境结构】两边的取舍都落在「放弃一边、换另一边」这一结构上（对方当时的困境：进入产业职位 vs 转为独立教职）",
-            "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
+            "【约束】现实约束有具体重叠：「成绩中等考研把握一般」（对方的约束：已有一个博士学位、仍需新领域经验）",
+            "【困境结构】两边的取舍都落在「放弃一边、换另一边」这一结构上（对方当时的困境：再读完整博士 vs 转入博士后研究）"
           ],
           "why_different": [
-            "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「经济」类约束（不好意思再花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+            "【未知】无法比较「行业未来学历门槛变化」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「经济」类约束（不好意思花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「经济」类约束（不好意思再花家里钱）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -982,7 +1400,7 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
+              "text": "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
               "kind": "era",
               "basis": "ai_inference（模型外部知识）",
               "refs": [
@@ -990,40 +1408,451 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「三年后研究生就业行情」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「行业未来学历门槛变化」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
           ],
           "evidence_layers": {
-            "facts": [],
+            "facts": [
+              "后续 LMB 及 2000 年研究进展。（VR-BIO）"
+            ],
             "self_claims": [
-              "博士后经历、1987 教职及获奖时的自述。（FA-AUTO）"
+              "1978 年 Yale 博后与无需第二博士的选择。（VR-AUTO）"
             ],
             "interpretations": [
-              "由训练岗位进入独立学术职位。（outcomes.short_term）",
-              "未知：本集未单独核实其起步数年的经费、教学与生活负担。（outcomes.mid_term）",
-              "2018 年以诺贝尔奖得主身份回顾研究历程；奖项不能代替职业成本评价。（outcomes.long_term）"
+              "从补课阶段进入具体研究团队。（outcomes.short_term）",
+              "未知：本集没有单独核实这一博后选择最初数年的全部成果与职位变化。（outcomes.mid_term）",
+              "1999 年进入 LMB，2000 年参与确定核糖体亚基结构。（outcomes.long_term）"
             ],
             "ai_inferences": [
-              "【⚠️ AI 类比·时代制度】案例发生在 1987 年（约 39 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
+              "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
             ],
             "unknowns": [
               "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "博士后转教职属于高筛选的学术就业，只能类比职业方向和继续科研投入。",
+              "博士后是已有博士者的研究岗位，不等同本科毕业直接就业；第二博士也不同于首次考研。",
               "未核实本人对这次选择的直接评价；不补写励志语录。",
-              "未知：本集未单独核实其起步数年的经费、教学与生活负担。"
+              "未知：本集没有单独核实这一博后选择最初数年的全部成果与职位变化。"
             ]
           }
         }
       ],
+      "source_meta": {
+        "LX-TOHOKU": {
+          "source_id": "LX-TOHOKU",
+          "title": "鲁迅的仙台留学",
+          "publisher": "东北大学史料馆",
+          "url": "https://www.archives.tohoku.ac.jp/luxun/cn/story/",
+          "type": "biography",
+          "locator": "赴日与仙台入学、第二学年退学",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-SENDAI": {
+          "source_id": "LX-SENDAI",
+          "title": "Chinese high school students visit Tohoku University",
+          "publisher": "东北大学",
+          "url": "https://www.tohoku.ac.jp/en/news/university_news/sakura_exchange_program.html",
+          "type": "biography",
+          "locator": "Lu Xun studied in Sendai from 1904 to 1906",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-PREFACE": {
+          "source_id": "LX-PREFACE",
+          "title": "《呐喊》自序（1922）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/wiki/吶喊",
+          "type": "self_writing",
+          "locator": "自序：医学、筹办新生、金心异劝写文章",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后自述与开放转录；动机按本人表述处理，不当作现场心理记录。"
+        },
+        "LX-SELECT": {
+          "source_id": "LX-SELECT",
+          "title": "《自选集》自序（1932）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/zh-hans/《自選集》自序",
+          "type": "self_writing",
+          "locator": "我做小说，是开手于一九一八年",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后回忆；不是逐日决策日志。"
+        },
+        "LX-MUSEUM": {
+          "source_id": "LX-MUSEUM",
+          "title": "鲁迅生平陈列：画出国人的魂灵",
+          "publisher": "上海鲁迅纪念馆",
+          "url": "https://www.luxunmuseum.cn/",
+          "type": "biography",
+          "locator": "1918—1922 年十四篇小说",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**原深链（/lxcl/index/id/5.html）2026-10-02 实测 404（官网改版），已改为站点首页；具体展览页需到馆内检索，未能定位到对应条目。**"
+        },
+        "AL-INTERVIEW": {
+          "source_id": "AL-INTERVIEW",
+          "title": "李安｜聆听电影之神的声音",
+          "publisher": "澎湃转载楚尘文化《李安访谈录》",
+          "url": "https://m.thepaper.cn/newsDetail_forward_27605082",
+          "type": "interview",
+          "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "中文译编的事后访谈；未将六年没有执导机会扩大成六年无任何正式工作。"
+        },
+        "AL-NYU": {
+          "source_id": "AL-NYU",
+          "title": "Ang Lee — Tisch Gala 2024",
+          "publisher": "纽约大学 Tisch",
+          "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html",
+          "type": "biography",
+          "locator": "1984 MFA、后续影片与奖项",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "页面把首部长片写在 1990 年；本集仅用来核对毕业与后续生涯，影片上映年采用访谈的 1991 年。"
+        },
+        "HM-SELF": {
+          "source_id": "HM-SELF",
+          "title": "Haruki Murakami: The Moment I Became a Novelist",
+          "publisher": "Haruki Murakami / Literary Hub / Knopf",
+          "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/",
+          "type": "self_writing",
+          "locator": "1978 球赛、营业后写作、1979 首作、卖店专职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "2015 年出版的自述节选；回顾性解释不代表 1978 年已有明确三年转行计划。"
+        },
+        "HM-1981": {
+          "source_id": "HM-1981",
+          "title": "Haruki Murakami",
+          "publisher": "Biblioteca Salaborsa Ragazzi / Bologna",
+          "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04",
+          "type": "biography",
+          "locator": "Nel 1981 Murakami vende il jazz bar",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公共图书馆的二手人物简介，仅补足卖店年份。"
+        },
+        "CD-STUDY": {
+          "source_id": "CD-STUDY",
+          "title": "Darwin’s student booklist",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist",
+          "type": "biography",
+          "locator": "Edinburgh 1825—1827；Cambridge January 1828",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-CHURCH": {
+          "source_id": "CD-CHURCH",
+          "title": "Darwin and the Church",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/religion/darwin-and-church",
+          "type": "biography",
+          "locator": "Cambridge degree and intended clerical career",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-BEAGLE": {
+          "source_id": "CD-BEAGLE",
+          "title": "Voyage of HMS Beagle",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle",
+          "type": "biography",
+          "locator": "1831 邀请、父亲资助；1831-12-27 至 1836-10-02 航行",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-REED": {
+          "source_id": "SJ-REED",
+          "title": "Steve Jobs and Reed College",
+          "publisher": "Reed College",
+          "url": "https://www.reed.edu/about/steve-jobs.html",
+          "type": "biography",
+          "locator": "fall 1972；one semester；auditing classes",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-SPEECH": {
+          "source_id": "SJ-SPEECH",
+          "title": "‘You’ve got to find what you love,’ Jobs says",
+          "publisher": "Steve Jobs / Stanford University",
+          "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+          "type": "self_writing",
+          "locator": "2005 毕业演讲：退学与重启事业两部分",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "预备演讲稿，动机与意义归本人回顾；不把退学认定为创业成功原因。"
+        },
+        "JB-SPEECH": {
+          "source_id": "JB-SPEECH",
+          "title": "2010 Baccalaureate remarks",
+          "publisher": "Jeff Bezos / Princeton University",
+          "url": "https://www.princeton.edu/news/2010/05/30/2010-baccalaureate-remarks",
+          "type": "self_writing",
+          "locator": "16 years ago、老板要求考虑 48 小时、离职创建 Amazon",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创业者事后回忆；没有未创业的对照结局。"
+        },
+        "BM-LJMU": {
+          "source_id": "BM-LJMU",
+          "title": "Brian May profile",
+          "publisher": "Liverpool John Moores University",
+          "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile",
+          "type": "biography",
+          "locator": "1974 中断博士，2006 重返，2007 取得博士",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "BM-IMPERIAL": {
+          "source_id": "BM-IMPERIAL",
+          "title": "Annual Alumni Lecture 2007",
+          "publisher": "Imperial College London",
+          "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/",
+          "type": "biography",
+          "locator": "2006 决定恢复、三十年文献补读、2007 年八月论文",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "VR-AUTO": {
+          "source_id": "VR-AUTO",
+          "title": "Venkatraman Ramakrishnan — Biographical",
+          "publisher": "Nobel Prize / Venki Ramakrishnan",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/",
+          "type": "self_writing",
+          "locator": "1976 UCSD、1978 Yale、1999 LMB",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "直接打开受站点限制；已核对搜索索引中的长段正文，合并前建议人类复核原页。事后自述。"
+        },
+        "VR-BIO": {
+          "source_id": "VR-BIO",
+          "title": "About Venki Ramakrishnan",
+          "publisher": "Nobel Prize Inspiration Initiative",
+          "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/",
+          "type": "biography",
+          "locator": "1976 PhD；UCSD two years；1999 LMB；2000 ribosome structure",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-ROCK": {
+          "source_id": "KK-ROCK",
+          "title": "Katalin Karikó",
+          "publisher": "Rockefeller University / Evelyn Strauss",
+          "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/",
+          "type": "biography",
+          "locator": "1995 降职；1997 Weissman；2005、2008、2009 研究与职位",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-BION": {
+          "source_id": "KK-BION",
+          "title": "Katalin Karikó and Drew Weissman awarded Nobel Prize",
+          "publisher": "BioNTech",
+          "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html",
+          "type": "biography",
+          "locator": "2013 入职；2014 联合论文；2022 转外部顾问",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "雇主新闻稿，有宣传目的；不据此断言个人收入、幸福或职业最优解。"
+        },
+        "FA-AUTO": {
+          "source_id": "FA-AUTO",
+          "title": "Frances H. Arnold — Biographical",
+          "publisher": "Nobel Prize / Frances Arnold",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/",
+          "type": "self_writing",
+          "locator": "1979—1980 SERI；January 1981 Berkeley；January 1987 Caltech faculty",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。事后自述，需人类复核。"
+        },
+        "JG-AUTO": {
+          "source_id": "JG-AUTO",
+          "title": "Sir John B. Gurdon — Biographical",
+          "publisher": "Nobel Prize / John Gurdon",
+          "url": "https://www.nobelprize.org/prizes/medicine/2012/gurdon/biographical/",
+          "type": "self_writing",
+          "locator": "1952 Oxford admission / 1953 Zoology；1960 邀请；Post-Doctoral Work",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。1960 是邀约年份，赴美确切年份未据此锁定。"
+        },
+        "JG-INTERVIEW": {
+          "source_id": "JG-INTERVIEW",
+          "title": "Sir John Gurdon: Godfather of cloning",
+          "publisher": "Journal of Cell Biology / PMC",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2315664/",
+          "type": "interview",
+          "locator": "Caltech bacteriophage postdoc 与一年后回到胚胎研究",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "2008 年回顾访谈；不能将不擅长某一实验等同于整体科研能力不足。"
+        },
+        "JD-BIO": {
+          "source_id": "JD-BIO",
+          "title": "James Dyson",
+          "publisher": "Dyson",
+          "url": "https://www.dyson.com/james-dyson",
+          "type": "biography",
+          "locator": "2014 electric vehicle；2019 halted",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "企业创始人介绍，有宣传选择偏差。"
+        },
+        "JD-CLOSE": {
+          "source_id": "JD-CLOSE",
+          "title": "An update on the Dyson automotive project",
+          "publisher": "James Dyson / Dyson",
+          "url": "https://www.dyson.com/automotive",
+          "type": "self_writing",
+          "locator": "2019-10-10 员工信：商业不可行、买方寻找失败、关闭项目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "管理层当时声明；员工安置是承诺，不当作已实现的结果。"
+        },
+        "SB-INVESTOR": {
+          "source_id": "SB-INVESTOR",
+          "title": "Slack",
+          "publisher": "Andreessen Horowitz / John O’Farrell",
+          "url": "https://a16z.com/announcement/slack/",
+          "type": "biography",
+          "locator": "October 2012 Glitch failure；40 to 8；$4m；Slack development",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人回顾，有利益关系；产品上市不证明所有员工或投资人均获益。"
+        },
+        "SB-ORIGIN": {
+          "source_id": "SB-ORIGIN",
+          "title": "What is Slack and how does it work?",
+          "publisher": "Slack",
+          "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work",
+          "type": "biography",
+          "locator": "internal chat tool for Glitch",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公司回顾仅支持内部工具起源；该页把游戏关闭写为 2013，与当时记录和投资人所述 2012 冲突，不用于关闭年份。"
+        },
+        "SB-LAUNCH": {
+          "source_id": "SB-LAUNCH",
+          "title": "Slack, The Newest Enterprise Social Network, Is The Latest Effort From Flickr Co-Founder Stewart Butterfield",
+          "publisher": "TechCrunch",
+          "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/",
+          "type": "biography",
+          "locator": "2013-08-14 发布报道",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "仅用于发布年份，产品当时仍在有限测试阶段。"
+        },
+        "EY-BIO": {
+          "source_id": "EY-BIO",
+          "title": "Eric S. Yuan",
+          "publisher": "Zoom Investor Relations",
+          "url": "https://investors.zoom.us/board-member-management/eric-yuan",
+          "type": "biography",
+          "locator": "1997 WebEx、2007 Cisco、June 2011 Zoom",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**该域名（investors.zoom.us）有 Akamai 反爬，自动化工具与无头浏览器均被拒（返回 403 或超时），无法用工具确认深链是否仍存在。**人工核查路径：浏览器打开 investors.zoom.us → Governance → Board of Directors；交叉核对：https://en.wikipedia.org/wiki/Eric_Yuan （二手来源，仅用于交叉验证履历年份）。"
+        },
+        "EY-2023": {
+          "source_id": "EY-2023",
+          "title": "A Message from Eric Yuan, CEO of Zoom",
+          "publisher": "Eric Yuan / Zoom",
+          "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/",
+          "type": "self_writing",
+          "locator": "2023-02-07 裁员约 1300 人、15%；承担责任",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "CEO 对员工的声明，不是独立调查，不能归咎于单次创办决定。"
+        },
+        "SA-INTERVIEW": {
+          "source_id": "SA-INTERVIEW",
+          "title": "How Sara Blakely Started Spanx",
+          "publisher": "Sara Blakely / Inc.",
+          "url": "https://www.inc.com/sara-blakely/how-sara-blakley-started-spanx.html",
+          "type": "interview",
+          "locator": "2012 视频文字：传真机销售、积蓄、夜间周末、一年打样",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创始人回忆，未确认准确离职日期。"
+        },
+        "SA-INVESTOR": {
+          "source_id": "SA-INVESTOR",
+          "title": "Behind the Deal: Blackstone’s Investment in SPANX",
+          "publisher": "Blackstone",
+          "url": "https://www.blackstone.com/insights/article/blackstones-investment-in-spanx/",
+          "type": "biography",
+          "locator": "2000 创办；2021 多数股权投资",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人公告；不使用估值推算本人到手财富。"
+        },
+        "FK-CHRON": {
+          "source_id": "FK-CHRON",
+          "title": "Chronik",
+          "publisher": "S. Fischer Verlag / FranzKafka.de",
+          "url": "https://www.franzkafka.de/leben/chronik",
+          "type": "biography",
+          "locator": "1908、1912、1922、1923、1924 年条目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "出版社年表；不据年表推断疾病与迁居的因果关系。"
+        },
+        "CN-AUTO": {
+          "source_id": "CN-AUTO",
+          "title": "Christiane Nüsslein-Volhard — Biographical",
+          "publisher": "Nobel Prize / Christiane Nüsslein-Volhard",
+          "url": "https://www.nobelprize.org/prizes/medicine/1995/nusslein-volhard/biographical/",
+          "type": "self_writing",
+          "locator": "1962 医院试做；summer 1964 Tübingen；Diplom 1969；PhD 1973",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。课程不合预期属于本人评价。"
+        },
+        "AE-UZH": {
+          "source_id": "AE-UZH",
+          "title": "Albert Einstein",
+          "publisher": "University of Zurich",
+          "url": "https://www.uzh.ch/en/researchinnovation/excellence/nobelprize/einstein",
+          "type": "biography",
+          "locator": "1900 无大学助教职位；1902—1909 专利局；1905 博士；1909 教职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "MODEL-V1": {
+          "source_id": "MODEL-V1",
+          "title": "本集的处境与类比建模规则",
+          "publisher": "fu6868 / Codex",
+          "type": "ai_inference",
+          "local_path": "README.md",
+          "locator": "事实、本人表述与建模",
+          "accessed_on": "2026-10-02",
+          "access_method": "local",
+          "limitations": "仅是检索标注，不代表人物完整真实选项、心理、选择因果或用户成功概率。"
+        }
+      },
       "meta": {
         "candidates_recalled": 36,
         "after_metadata_filter": 31,
         "after_rerank": 3,
         "dropped_by_metadata": 5,
         "forced_diversity": false,
-        "elapsed_ms": 456,
+        "elapsed_ms": 193,
         "weights": {
           "stage_match": 0.15,
           "path_match": 0.2,
@@ -1032,8 +1861,8 @@ export const demoScenarios: CachedScenario[] = [
           "goal_match": 0.15,
           "reversibility_match": 0.05
         },
-        "parser_elapsed_ms": 2340,
-        "parser_tokens": 717
+        "parser_elapsed_ms": 2330,
+        "parser_tokens": 510
       }
     }
   },
@@ -1043,155 +1872,156 @@ export const demoScenarios: CachedScenario[] = [
     "raw_input": "毕业两年了，在一家小公司做产品，学得快但看不到晋升路径。拿到了一个大厂的 offer，薪资涨三成，但岗位方向比较窄。我很纠结要不要去，怕自己变成螺丝钉，又怕留下来错过平台机会。补充：目前存款不多；无家庭负担；最在意成长空间和长期竞争力。",
     "situation": {
       "constraints": [
+        "毕业两年经验",
         "存款不多",
         "无家庭负担",
-        "小公司晋升路径缺失",
-        "大厂岗位方向过窄"
+        "大厂岗位方向窄"
       ],
-      "dilemma": "留小公司全栈 vs 去大厂做螺丝钉",
+      "dilemma": "留小厂求全能 vs 去大厂做螺丝钉",
       "goals": [
         "提升成长空间",
-        "增强长期竞争力",
-        "获得平台背书"
+        "确保长期竞争力",
+        "薪资增长"
       ],
       "options": [
-        "留原公司积累",
-        "接受大厂offer",
-        "寻找中型平台机会"
+        "留任小公司",
+        "入职大厂",
+        "继续寻找新机会"
       ],
       "reversibility": "medium",
       "risk": "medium",
-      "stage": "毕业两年/职场起步期",
+      "stage": "职场新人期",
       "unknowns": [
-        "大厂内部转岗或跳槽难度",
-        "窄方向未来的市场需求"
+        "大厂具体业务发展前景",
+        "大厂内部转岗难度",
+        "小公司未来稳定性",
+        "窄方向的市场通用性"
       ]
     },
     "retrieval": {
       "situation": {
         "constraints": [
+          "毕业两年经验",
           "存款不多",
           "无家庭负担",
-          "小公司晋升路径缺失",
-          "大厂岗位方向过窄"
+          "大厂岗位方向窄"
         ],
-        "dilemma": "留小公司全栈 vs 去大厂做螺丝钉",
+        "dilemma": "留小厂求全能 vs 去大厂做螺丝钉",
         "goals": [
           "提升成长空间",
-          "增强长期竞争力",
-          "获得平台背书"
+          "确保长期竞争力",
+          "薪资增长"
         ],
         "options": [
-          "留原公司积累",
-          "接受大厂offer",
-          "寻找中型平台机会"
+          "留任小公司",
+          "入职大厂",
+          "继续寻找新机会"
         ],
         "reversibility": "medium",
         "risk": "medium",
-        "stage": "毕业两年/职场起步期",
+        "stage": "职场新人期",
         "unknowns": [
-          "大厂内部转岗或跳槽难度",
-          "窄方向未来的市场需求"
+          "大厂具体业务发展前景",
+          "大厂内部转岗难度",
+          "小公司未来稳定性",
+          "窄方向的市场通用性"
         ]
       },
       "matches": [
         {
           "episode": {
-            "episode_id": "ang_lee_1984_six_years_persist",
+            "episode_id": "may_2006_resume_phd",
             "person": {
-              "name": "李安",
+              "name": "布赖恩·梅",
               "tags": [
                 "考研还是就业",
-                "毕业后起步"
+                "重返研究"
               ]
             },
             "time": {
-              "year": 1984,
-              "stage": "毕业后起步"
+              "year": 2006,
+              "stage": "重返研究"
             },
             "prior_path": [
-              "1984 年获得纽约大学电影制作硕士学位。"
+              "博士研究已中断约三十年；仍从事音乐。"
             ],
             "decision_state": {
-              "dilemma": "继续电影创作 vs 转入其他工作",
+              "dilemma": "继续仅做音乐 vs 恢复博士研究",
               "options": [
-                "继续电影创作",
-                "转入其他工作"
+                "继续仅做音乐",
+                "恢复博士研究"
               ],
               "constraints": [
-                "首部长片机会不足",
-                "创作回报延迟"
+                "需补读多年文献",
+                "既有工作仍在继续"
               ],
               "goals": [
-                "争取执导机会",
-                "维持创作积累"
+                "完成遗留研究",
+                "保持音乐活动"
               ],
-              "risk": "high",
+              "risk": "medium",
               "reversibility": "medium"
             },
             "choice": {
-              "type": "persist",
+              "type": "dual_track",
               "actions": [
-                "继续写剧本并寻找电影制作机会。"
+                "2006 年恢复博士研究，整理旧资料并补读文献。"
               ]
             },
             "outcomes": {
-              "short_term": "毕业后起初未能获得长片执导机会。",
-              "mid_term": "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。",
-              "long_term": "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。"
+              "short_term": "2007 年提交论文并取得博士学位。",
+              "mid_term": "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+              "long_term": "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
             },
             "reflection": {
               "unknowns": [
                 "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
-                "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
-                "未核实本人对这次选择的直接评价；不补写励志语录。"
+                "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。",
+                "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+                "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
               ]
             },
             "evidence": [
               {
-                "source_id": "AL-NYU",
+                "source_id": "BM-LJMU",
                 "type": "biography",
-                "claim": "1984 年电影 MFA；后续导演履历。",
-                "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html"
+                "claim": "2006 恢复和 2007 完成。",
+                "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
               },
               {
-                "source_id": "AL-INTERVIEW",
-                "type": "interview",
-                "claim": "毕业后六年筹片、1990 年比赛和随后拍片。",
-                "url": "https://m.thepaper.cn/newsDetail_forward_27605082"
+                "source_id": "BM-IMPERIAL",
+                "type": "biography",
+                "claim": "旧研究材料、文献补读及论文提交。",
+                "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/"
               },
               {
                 "source_id": "MODEL-V1",
                 "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。"
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。"
               }
             ],
             "retrieval_tags": [
               "考研还是就业",
-              "persist"
-            ],
-            "next_episode_ids": [
-              "ang_lee_1990_script_competition"
+              "dual_track"
             ]
           },
           "dimensions": {
             "stage_match": 0.9,
-            "path_match": 0,
-            "dilemma_match": 0.3880970716447333,
-            "constraint_match": 0.22222222222222224,
-            "goal_match": 0.4,
+            "path_match": 0.06995060415848266,
+            "dilemma_match": 0.3645670096279062,
+            "constraint_match": 0.4,
+            "goal_match": 0.15,
             "reversibility_match": 1,
-            "difference_penalty": 0.65
+            "difference_penalty": 0.35
           },
           "why_similar": [
-            "【阶段】人生阶段接近（对方当时：毕业后起步）",
+            "【阶段】人生阶段接近（对方当时：重返研究）",
             "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
           ],
           "why_different": [
             "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-            "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
@@ -1203,71 +2033,194 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-              "kind": "era",
-              "basis": "ai_inference（模型外部知识）",
-              "refs": [
-                "time.year"
-              ]
-            },
-            {
-              "text": "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
           ],
           "evidence_layers": {
             "facts": [
-              "1984 年电影 MFA；后续导演履历。（AL-NYU）",
-              "毕业后六年筹片、1990 年比赛和随后拍片。（AL-INTERVIEW）"
+              "2006 恢复和 2007 完成。（BM-LJMU）",
+              "旧研究材料、文献补读及论文提交。（BM-IMPERIAL）"
             ],
             "self_claims": [],
             "interpretations": [
-              "毕业后起初未能获得长片执导机会。（outcomes.short_term）",
-              "据访谈，约六年间项目屡未成行；1990 年两部剧本在比赛中获奖。（outcomes.mid_term）",
-              "《推手》后继续执导多部长片，纽约大学履历列有后来的获奖作品。（outcomes.long_term）"
+              "2007 年提交论文并取得博士学位。（outcomes.short_term）",
+              "未知：所用来源没有系统评估取得学位后数年的机会成本。（outcomes.mid_term）",
+              "未知：不能从取得博士学位推断长远收入、幸福或研究影响。（outcomes.long_term）"
             ],
-            "ai_inferences": [
-              "【⚠️ AI 类比·时代制度】案例发生在 1984 年（约 42 年前）：当时的学业转向不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
-            ],
+            "ai_inferences": [],
             "unknowns": [
               "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
-              "六年内全部就业记录和家庭收支未核实；删除“六年无正式工作”的断言。",
+              "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+              "未核实本人对这次选择的直接评价；不补写励志语录。",
+              "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+              "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+            ]
+          }
+        },
+        {
+          "episode": {
+            "episode_id": "butterfield_2012_close_glitch",
+            "person": {
+              "name": "斯图尔特·巴特菲尔德",
+              "tags": [
+                "大厂还是小公司/创业",
+                "创业项目止损"
+              ]
+            },
+            "time": {
+              "year": 2012,
+              "stage": "创业项目止损"
+            },
+            "prior_path": [
+              "Tiny Speck 经营网络游戏 Glitch，增长没有达到预期。"
+            ],
+            "decision_state": {
+              "dilemma": "继续投入游戏 vs 关闭并缩小团队",
+              "options": [
+                "继续投入游戏",
+                "关闭并缩小团队"
+              ],
+              "constraints": [
+                "产品需求不足",
+                "团队依赖融资"
+              ],
+              "goals": [
+                "限制后续损失",
+                "寻找人员出路"
+              ],
+              "risk": "high",
+              "reversibility": "low"
+            },
+            "choice": {
+              "type": "abandon",
+              "actions": [
+                "2012 年决定关闭 Glitch，缩减团队。"
+              ]
+            },
+            "outcomes": {
+              "short_term": "游戏关闭，投资人回顾称团队由约四十人缩至八人。",
+              "mid_term": "剩余团队探索工作沟通工具，之后形成 Slack。",
+              "long_term": "2019 年 Slack 上市；这不改变原游戏失败及裁员的事实。"
+            },
+            "reflection": {
+              "unknowns": [
+                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+                "尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。",
+                "未核实本人对这次选择的直接评价；不补写励志语录。"
+              ]
+            },
+            "evidence": [
+              {
+                "source_id": "SB-INVESTOR",
+                "type": "biography",
+                "claim": "2012 项目失败、团队缩减及后续 Slack。",
+                "url": "https://a16z.com/announcement/slack/"
+              },
+              {
+                "source_id": "MODEL-V1",
+                "type": "ai_inference",
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。"
+              }
+            ],
+            "retrieval_tags": [
+              "大厂还是小公司/创业",
+              "abandon"
+            ],
+            "next_episode_ids": [
+              "butterfield_2013_slack_pivot"
+            ]
+          },
+          "dimensions": {
+            "stage_match": 0.9,
+            "path_match": 0.21800780421908889,
+            "dilemma_match": 0.4349070254785464,
+            "constraint_match": 0.2573770491803279,
+            "goal_match": 0.15,
+            "reversibility_match": 0.75,
+            "difference_penalty": 0.49999999999999994
+          },
+          "why_similar": [
+            "【阶段】人生阶段接近（对方当时：创业项目止损）",
+            "【可逆性】双方对这次选择的可逆性判断一致（都是「低」）—— 都还留着退路"
+          ],
+          "why_different": [
+            "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【可逆性差异】你的选择可逆性为「中」，对方当时评估为「低」——对方几乎没有退路，其代价结构比你的情形更重（依据：reversibility 字段对比）",
+            "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+          ],
+          "why_different_detail": [
+            {
+              "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "kind": "structure",
+              "basis": "constraints 对比",
+              "refs": [
+                "decision_state.constraints"
+              ]
+            },
+            {
+              "text": "【可逆性差异】你的选择可逆性为「中」，对方当时评估为「低」——对方几乎没有退路，其代价结构比你的情形更重（依据：reversibility 字段对比）",
+              "kind": "structure",
+              "basis": "reversibility 字段对比",
+              "refs": [
+                "decision_state.reversibility"
+              ]
+            },
+            {
+              "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "kind": "unknown",
+              "basis": "数据缺失（episode 无对应字段）"
+            }
+          ],
+          "evidence_layers": {
+            "facts": [
+              "2012 项目失败、团队缩减及后续 Slack。（SB-INVESTOR）"
+            ],
+            "self_claims": [],
+            "interpretations": [
+              "游戏关闭，投资人回顾称团队由约四十人缩至八人。（outcomes.short_term）",
+              "剩余团队探索工作沟通工具，之后形成 Slack。（outcomes.mid_term）",
+              "2019 年 Slack 上市；这不改变原游戏失败及裁员的事实。（outcomes.long_term）"
+            ],
+            "ai_inferences": [],
+            "unknowns": [
+              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+              "尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。",
               "未核实本人对这次选择的直接评价；不补写励志语录。"
             ]
           }
         },
         {
           "episode": {
-            "episode_id": "ramakrishnan_1999_lmb",
+            "episode_id": "yuan_2011_zoom",
             "person": {
-              "name": "文卡特拉曼·拉马克里希南",
+              "name": "袁征",
               "tags": [
                 "大厂还是小公司/创业",
-                "科研机构转换"
+                "大公司转创业"
               ]
             },
             "time": {
-              "year": 1999,
-              "stage": "科研机构转换"
+              "year": 2011,
+              "stage": "大公司转创业"
             },
             "prior_path": [
-              "在美国 Utah 开展核糖体研究。"
+              "1997 年进入 WebEx，2007 年随收购进入 Cisco，任工程管理职务。"
             ],
             "decision_state": {
-              "dilemma": "留在原机构 vs 迁往英国 LMB",
+              "dilemma": "留在 Cisco vs 另建通信产品",
               "options": [
-                "留在原机构",
-                "迁往英国 LMB"
+                "留在 Cisco",
+                "另建通信产品"
               ],
               "constraints": [
-                "涉及家庭迁移",
-                "新团队资源需重建"
+                "需另组团队",
+                "已有职业机会成本"
               ],
               "goals": [
-                "加强科研协作",
-                "集中研究投入"
+                "自主做产品",
+                "建立新的组织"
               ],
               "risk": "high",
               "reversibility": "medium"
@@ -1275,38 +2228,39 @@ export const demoScenarios: CachedScenario[] = [
             "choice": {
               "type": "direct_switch",
               "actions": [
-                "1999 年转至英国 LMB。"
+                "2011 年创办 Zoom。"
               ]
             },
             "outcomes": {
-              "short_term": "据自述，接受约四成减薪并迁移研究生活。",
-              "mid_term": "2000 年取得核糖体亚基结构研究进展。",
-              "long_term": "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。"
+              "short_term": "从大公司工程管理转为新公司创办者。",
+              "mid_term": "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。",
+              "long_term": "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。"
             },
             "reflection": {
               "unknowns": [
                 "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
-                "未核实本人对这次选择的直接评价；不补写励志语录。"
-              ]
+                "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
+                "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
+              ],
+              "self_comment": "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。"
             },
             "evidence": [
               {
-                "source_id": "VR-AUTO",
-                "type": "self_writing",
-                "claim": "1999 迁移与约 40% 薪酬下降的自述。",
-                "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/"
+                "source_id": "EY-BIO",
+                "type": "biography",
+                "claim": "WebEx/Cisco 履历和 2011 年创办 Zoom。",
+                "url": "https://investors.zoom.us/board-member-management/eric-yuan"
               },
               {
-                "source_id": "VR-BIO",
-                "type": "biography",
-                "claim": "2000 结构工作及 2009 奖项。",
-                "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/"
+                "source_id": "EY-2023",
+                "type": "self_writing",
+                "claim": "2023 裁员及 CEO 对过快扩张的反思。",
+                "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/"
               },
               {
                 "source_id": "MODEL-V1",
                 "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。"
+                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。"
               }
             ],
             "retrieval_tags": [
@@ -1315,159 +2269,25 @@ export const demoScenarios: CachedScenario[] = [
             ]
           },
           "dimensions": {
-            "stage_match": 0.5,
-            "path_match": 0.021959828518286994,
-            "dilemma_match": 0.5075522680497617,
-            "constraint_match": 0.25,
-            "goal_match": 0.25,
-            "reversibility_match": 1,
-            "difference_penalty": 0.35
-          },
-          "why_similar": [
-            "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：留在原机构 vs 迁往英国 LMB）",
-            "【阶段】人生阶段接近（对方当时：科研机构转换）"
-          ],
-          "why_different": [
-            "【约束差异】你面对「ceiling」类约束（小公司晋升路径缺失）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【未知】无法比较「窄方向未来的市场需求」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-          ],
-          "why_different_detail": [
-            {
-              "text": "【约束差异】你面对「ceiling」类约束（小公司晋升路径缺失）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-              "kind": "structure",
-              "basis": "constraints 对比",
-              "refs": [
-                "decision_state.constraints"
-              ]
-            },
-            {
-              "text": "【未知】无法比较「窄方向未来的市场需求」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-              "kind": "unknown",
-              "basis": "数据缺失（episode 无对应字段）"
-            }
-          ],
-          "evidence_layers": {
-            "facts": [
-              "2000 结构工作及 2009 奖项。（VR-BIO）"
-            ],
-            "self_claims": [
-              "1999 迁移与约 40% 薪酬下降的自述。（VR-AUTO）"
-            ],
-            "interpretations": [
-              "据自述，接受约四成减薪并迁移研究生活。（outcomes.short_term）",
-              "2000 年取得核糖体亚基结构研究进展。（outcomes.mid_term）",
-              "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。（outcomes.long_term）"
-            ],
-            "ai_inferences": [],
-            "unknowns": [
-              "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
-              "未核实本人对这次选择的直接评价；不补写励志语录。"
-            ]
-          }
-        },
-        {
-          "episode": {
-            "episode_id": "butterfield_2013_slack_pivot",
-            "person": {
-              "name": "斯图尔特·巴特菲尔德",
-              "tags": [
-                "大厂还是小公司/创业",
-                "失败后转产品"
-              ]
-            },
-            "time": {
-              "year": 2013,
-              "stage": "失败后转产品"
-            },
-            "prior_path": [
-              "Glitch 关闭后仍保有部分资金和小团队，曾内部使用沟通工具。"
-            ],
-            "decision_state": {
-              "dilemma": "退回剩余资金 vs 转做协作工具",
-              "options": [
-                "退回剩余资金",
-                "转做协作工具"
-              ],
-              "constraints": [
-                "团队已缩减",
-                "外部需求尚待验证"
-              ],
-              "goals": [
-                "重用已验证工具",
-                "寻找新市场"
-              ],
-              "risk": "high",
-              "reversibility": "medium"
-            },
-            "choice": {
-              "type": "explore_then_switch",
-              "actions": [
-                "把内部沟通工具发展为面向其他团队的 Slack。"
-              ]
-            },
-            "outcomes": {
-              "short_term": "从内部使用进入对外产品验证。",
-              "mid_term": "逐渐取得企业客户，获得后续融资。",
-              "long_term": "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。"
-            },
-            "reflection": {
-              "unknowns": [
-                "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-                "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
-                "未核实本人对这次选择的直接评价；不补写励志语录。"
-              ]
-            },
-            "evidence": [
-              {
-                "source_id": "SB-INVESTOR",
-                "type": "biography",
-                "claim": "剩余团队和资金、客户与上市回顾。",
-                "url": "https://a16z.com/announcement/slack/"
-              },
-              {
-                "source_id": "SB-ORIGIN",
-                "type": "biography",
-                "claim": "Slack 起源于游戏团队内部沟通工具。",
-                "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work"
-              },
-              {
-                "source_id": "SB-LAUNCH",
-                "type": "biography",
-                "claim": "2013 年发布测试产品。",
-                "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/"
-              },
-              {
-                "source_id": "MODEL-V1",
-                "type": "ai_inference",
-                "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。已有投资关系、现金与协作团队是特殊条件；不是零资源转行。"
-              }
-            ],
-            "retrieval_tags": [
-              "大厂还是小公司/创业",
-              "explore_then_switch"
-            ]
-          },
-          "dimensions": {
-            "stage_match": 0.5,
-            "path_match": 0.1894172630662273,
-            "dilemma_match": 0.49158856656112315,
+            "stage_match": 0.9,
+            "path_match": 0.13186306936849904,
+            "dilemma_match": 0.5234256106459108,
             "constraint_match": 0.15,
             "goal_match": 0.15,
             "reversibility_match": 1,
             "difference_penalty": 0.44999999999999996
           },
           "why_similar": [
-            "【阶段】人生阶段接近（对方当时：失败后转产品）",
-            "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：退回剩余资金 vs 转做协作工具）"
+            "【阶段】人生阶段接近（对方当时：大公司转创业）",
+            "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
           ],
           "why_different": [
-            "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-            "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+            "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+            "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
           ],
           "why_different_detail": [
             {
-              "text": "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+              "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
               "kind": "structure",
               "basis": "constraints 对比",
               "refs": [
@@ -1475,39 +2295,449 @@ export const demoScenarios: CachedScenario[] = [
               ]
             },
             {
-              "text": "【未知】无法比较「大厂内部转岗或跳槽难度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+              "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
               "kind": "unknown",
               "basis": "数据缺失（episode 无对应字段）"
             }
           ],
           "evidence_layers": {
             "facts": [
-              "剩余团队和资金、客户与上市回顾。（SB-INVESTOR）",
-              "Slack 起源于游戏团队内部沟通工具。（SB-ORIGIN）",
-              "2013 年发布测试产品。（SB-LAUNCH）"
+              "WebEx/Cisco 履历和 2011 年创办 Zoom。（EY-BIO）"
             ],
-            "self_claims": [],
+            "self_claims": [
+              "2023 裁员及 CEO 对过快扩张的反思。（EY-2023）",
+              "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。（reflection.self_comment，本人自述）"
+            ],
             "interpretations": [
-              "从内部使用进入对外产品验证。（outcomes.short_term）",
-              "逐渐取得企业客户，获得后续融资。（outcomes.mid_term）",
-              "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。（outcomes.long_term）"
+              "从大公司工程管理转为新公司创办者。（outcomes.short_term）",
+              "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。（outcomes.mid_term）",
+              "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。（outcomes.long_term）"
             ],
             "ai_inferences": [],
             "unknowns": [
               "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-              "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
-              "未核实本人对这次选择的直接评价；不补写励志语录。"
+              "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
+              "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
             ]
           }
         }
       ],
+      "source_meta": {
+        "LX-TOHOKU": {
+          "source_id": "LX-TOHOKU",
+          "title": "鲁迅的仙台留学",
+          "publisher": "东北大学史料馆",
+          "url": "https://www.archives.tohoku.ac.jp/luxun/cn/story/",
+          "type": "biography",
+          "locator": "赴日与仙台入学、第二学年退学",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-SENDAI": {
+          "source_id": "LX-SENDAI",
+          "title": "Chinese high school students visit Tohoku University",
+          "publisher": "东北大学",
+          "url": "https://www.tohoku.ac.jp/en/news/university_news/sakura_exchange_program.html",
+          "type": "biography",
+          "locator": "Lu Xun studied in Sendai from 1904 to 1906",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "LX-PREFACE": {
+          "source_id": "LX-PREFACE",
+          "title": "《呐喊》自序（1922）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/wiki/吶喊",
+          "type": "self_writing",
+          "locator": "自序：医学、筹办新生、金心异劝写文章",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后自述与开放转录；动机按本人表述处理，不当作现场心理记录。"
+        },
+        "LX-SELECT": {
+          "source_id": "LX-SELECT",
+          "title": "《自选集》自序（1932）",
+          "publisher": "鲁迅；维基文库转录",
+          "url": "https://zh.wikisource.org/zh-hans/《自選集》自序",
+          "type": "self_writing",
+          "locator": "我做小说，是开手于一九一八年",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "事后回忆；不是逐日决策日志。"
+        },
+        "LX-MUSEUM": {
+          "source_id": "LX-MUSEUM",
+          "title": "鲁迅生平陈列：画出国人的魂灵",
+          "publisher": "上海鲁迅纪念馆",
+          "url": "https://www.luxunmuseum.cn/",
+          "type": "biography",
+          "locator": "1918—1922 年十四篇小说",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**原深链（/lxcl/index/id/5.html）2026-10-02 实测 404（官网改版），已改为站点首页；具体展览页需到馆内检索，未能定位到对应条目。**"
+        },
+        "AL-INTERVIEW": {
+          "source_id": "AL-INTERVIEW",
+          "title": "李安｜聆听电影之神的声音",
+          "publisher": "澎湃转载楚尘文化《李安访谈录》",
+          "url": "https://m.thepaper.cn/newsDetail_forward_27605082",
+          "type": "interview",
+          "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "中文译编的事后访谈；未将六年没有执导机会扩大成六年无任何正式工作。"
+        },
+        "AL-NYU": {
+          "source_id": "AL-NYU",
+          "title": "Ang Lee — Tisch Gala 2024",
+          "publisher": "纽约大学 Tisch",
+          "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html",
+          "type": "biography",
+          "locator": "1984 MFA、后续影片与奖项",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "页面把首部长片写在 1990 年；本集仅用来核对毕业与后续生涯，影片上映年采用访谈的 1991 年。"
+        },
+        "HM-SELF": {
+          "source_id": "HM-SELF",
+          "title": "Haruki Murakami: The Moment I Became a Novelist",
+          "publisher": "Haruki Murakami / Literary Hub / Knopf",
+          "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/",
+          "type": "self_writing",
+          "locator": "1978 球赛、营业后写作、1979 首作、卖店专职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "2015 年出版的自述节选；回顾性解释不代表 1978 年已有明确三年转行计划。"
+        },
+        "HM-1981": {
+          "source_id": "HM-1981",
+          "title": "Haruki Murakami",
+          "publisher": "Biblioteca Salaborsa Ragazzi / Bologna",
+          "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04",
+          "type": "biography",
+          "locator": "Nel 1981 Murakami vende il jazz bar",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公共图书馆的二手人物简介，仅补足卖店年份。"
+        },
+        "CD-STUDY": {
+          "source_id": "CD-STUDY",
+          "title": "Darwin’s student booklist",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist",
+          "type": "biography",
+          "locator": "Edinburgh 1825—1827；Cambridge January 1828",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-CHURCH": {
+          "source_id": "CD-CHURCH",
+          "title": "Darwin and the Church",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/religion/darwin-and-church",
+          "type": "biography",
+          "locator": "Cambridge degree and intended clerical career",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "CD-BEAGLE": {
+          "source_id": "CD-BEAGLE",
+          "title": "Voyage of HMS Beagle",
+          "publisher": "Darwin Correspondence Project / Cambridge",
+          "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle",
+          "type": "biography",
+          "locator": "1831 邀请、父亲资助；1831-12-27 至 1836-10-02 航行",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-REED": {
+          "source_id": "SJ-REED",
+          "title": "Steve Jobs and Reed College",
+          "publisher": "Reed College",
+          "url": "https://www.reed.edu/about/steve-jobs.html",
+          "type": "biography",
+          "locator": "fall 1972；one semester；auditing classes",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "SJ-SPEECH": {
+          "source_id": "SJ-SPEECH",
+          "title": "‘You’ve got to find what you love,’ Jobs says",
+          "publisher": "Steve Jobs / Stanford University",
+          "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+          "type": "self_writing",
+          "locator": "2005 毕业演讲：退学与重启事业两部分",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "预备演讲稿，动机与意义归本人回顾；不把退学认定为创业成功原因。"
+        },
+        "JB-SPEECH": {
+          "source_id": "JB-SPEECH",
+          "title": "2010 Baccalaureate remarks",
+          "publisher": "Jeff Bezos / Princeton University",
+          "url": "https://www.princeton.edu/news/2010/05/30/2010-baccalaureate-remarks",
+          "type": "self_writing",
+          "locator": "16 years ago、老板要求考虑 48 小时、离职创建 Amazon",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创业者事后回忆；没有未创业的对照结局。"
+        },
+        "BM-LJMU": {
+          "source_id": "BM-LJMU",
+          "title": "Brian May profile",
+          "publisher": "Liverpool John Moores University",
+          "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile",
+          "type": "biography",
+          "locator": "1974 中断博士，2006 重返，2007 取得博士",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "BM-IMPERIAL": {
+          "source_id": "BM-IMPERIAL",
+          "title": "Annual Alumni Lecture 2007",
+          "publisher": "Imperial College London",
+          "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/",
+          "type": "biography",
+          "locator": "2006 决定恢复、三十年文献补读、2007 年八月论文",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "VR-AUTO": {
+          "source_id": "VR-AUTO",
+          "title": "Venkatraman Ramakrishnan — Biographical",
+          "publisher": "Nobel Prize / Venki Ramakrishnan",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/",
+          "type": "self_writing",
+          "locator": "1976 UCSD、1978 Yale、1999 LMB",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "直接打开受站点限制；已核对搜索索引中的长段正文，合并前建议人类复核原页。事后自述。"
+        },
+        "VR-BIO": {
+          "source_id": "VR-BIO",
+          "title": "About Venki Ramakrishnan",
+          "publisher": "Nobel Prize Inspiration Initiative",
+          "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/",
+          "type": "biography",
+          "locator": "1976 PhD；UCSD two years；1999 LMB；2000 ribosome structure",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-ROCK": {
+          "source_id": "KK-ROCK",
+          "title": "Katalin Karikó",
+          "publisher": "Rockefeller University / Evelyn Strauss",
+          "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/",
+          "type": "biography",
+          "locator": "1995 降职；1997 Weissman；2005、2008、2009 研究与职位",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "KK-BION": {
+          "source_id": "KK-BION",
+          "title": "Katalin Karikó and Drew Weissman awarded Nobel Prize",
+          "publisher": "BioNTech",
+          "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html",
+          "type": "biography",
+          "locator": "2013 入职；2014 联合论文；2022 转外部顾问",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "雇主新闻稿，有宣传目的；不据此断言个人收入、幸福或职业最优解。"
+        },
+        "FA-AUTO": {
+          "source_id": "FA-AUTO",
+          "title": "Frances H. Arnold — Biographical",
+          "publisher": "Nobel Prize / Frances Arnold",
+          "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/",
+          "type": "self_writing",
+          "locator": "1979—1980 SERI；January 1981 Berkeley；January 1987 Caltech faculty",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。事后自述，需人类复核。"
+        },
+        "JG-AUTO": {
+          "source_id": "JG-AUTO",
+          "title": "Sir John B. Gurdon — Biographical",
+          "publisher": "Nobel Prize / John Gurdon",
+          "url": "https://www.nobelprize.org/prizes/medicine/2012/gurdon/biographical/",
+          "type": "self_writing",
+          "locator": "1952 Oxford admission / 1953 Zoology；1960 邀请；Post-Doctoral Work",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。1960 是邀约年份，赴美确切年份未据此锁定。"
+        },
+        "JG-INTERVIEW": {
+          "source_id": "JG-INTERVIEW",
+          "title": "Sir John Gurdon: Godfather of cloning",
+          "publisher": "Journal of Cell Biology / PMC",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2315664/",
+          "type": "interview",
+          "locator": "Caltech bacteriophage postdoc 与一年后回到胚胎研究",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "2008 年回顾访谈；不能将不擅长某一实验等同于整体科研能力不足。"
+        },
+        "JD-BIO": {
+          "source_id": "JD-BIO",
+          "title": "James Dyson",
+          "publisher": "Dyson",
+          "url": "https://www.dyson.com/james-dyson",
+          "type": "biography",
+          "locator": "2014 electric vehicle；2019 halted",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "企业创始人介绍，有宣传选择偏差。"
+        },
+        "JD-CLOSE": {
+          "source_id": "JD-CLOSE",
+          "title": "An update on the Dyson automotive project",
+          "publisher": "James Dyson / Dyson",
+          "url": "https://www.dyson.com/automotive",
+          "type": "self_writing",
+          "locator": "2019-10-10 员工信：商业不可行、买方寻找失败、关闭项目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "管理层当时声明；员工安置是承诺，不当作已实现的结果。"
+        },
+        "SB-INVESTOR": {
+          "source_id": "SB-INVESTOR",
+          "title": "Slack",
+          "publisher": "Andreessen Horowitz / John O’Farrell",
+          "url": "https://a16z.com/announcement/slack/",
+          "type": "biography",
+          "locator": "October 2012 Glitch failure；40 to 8；$4m；Slack development",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人回顾，有利益关系；产品上市不证明所有员工或投资人均获益。"
+        },
+        "SB-ORIGIN": {
+          "source_id": "SB-ORIGIN",
+          "title": "What is Slack and how does it work?",
+          "publisher": "Slack",
+          "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work",
+          "type": "biography",
+          "locator": "internal chat tool for Glitch",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "公司回顾仅支持内部工具起源；该页把游戏关闭写为 2013，与当时记录和投资人所述 2012 冲突，不用于关闭年份。"
+        },
+        "SB-LAUNCH": {
+          "source_id": "SB-LAUNCH",
+          "title": "Slack, The Newest Enterprise Social Network, Is The Latest Effort From Flickr Co-Founder Stewart Butterfield",
+          "publisher": "TechCrunch",
+          "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/",
+          "type": "biography",
+          "locator": "2013-08-14 发布报道",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "仅用于发布年份，产品当时仍在有限测试阶段。"
+        },
+        "EY-BIO": {
+          "source_id": "EY-BIO",
+          "title": "Eric S. Yuan",
+          "publisher": "Zoom Investor Relations",
+          "url": "https://investors.zoom.us/board-member-management/eric-yuan",
+          "type": "biography",
+          "locator": "1997 WebEx、2007 Cisco、June 2011 Zoom",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。**该域名（investors.zoom.us）有 Akamai 反爬，自动化工具与无头浏览器均被拒（返回 403 或超时），无法用工具确认深链是否仍存在。**人工核查路径：浏览器打开 investors.zoom.us → Governance → Board of Directors；交叉核对：https://en.wikipedia.org/wiki/Eric_Yuan （二手来源，仅用于交叉验证履历年份）。"
+        },
+        "EY-2023": {
+          "source_id": "EY-2023",
+          "title": "A Message from Eric Yuan, CEO of Zoom",
+          "publisher": "Eric Yuan / Zoom",
+          "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/",
+          "type": "self_writing",
+          "locator": "2023-02-07 裁员约 1300 人、15%；承担责任",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "CEO 对员工的声明，不是独立调查，不能归咎于单次创办决定。"
+        },
+        "SA-INTERVIEW": {
+          "source_id": "SA-INTERVIEW",
+          "title": "How Sara Blakely Started Spanx",
+          "publisher": "Sara Blakely / Inc.",
+          "url": "https://www.inc.com/sara-blakely/how-sara-blakley-started-spanx.html",
+          "type": "interview",
+          "locator": "2012 视频文字：传真机销售、积蓄、夜间周末、一年打样",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "创始人回忆，未确认准确离职日期。"
+        },
+        "SA-INVESTOR": {
+          "source_id": "SA-INVESTOR",
+          "title": "Behind the Deal: Blackstone’s Investment in SPANX",
+          "publisher": "Blackstone",
+          "url": "https://www.blackstone.com/insights/article/blackstones-investment-in-spanx/",
+          "type": "biography",
+          "locator": "2000 创办；2021 多数股权投资",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "投资人公告；不使用估值推算本人到手财富。"
+        },
+        "FK-CHRON": {
+          "source_id": "FK-CHRON",
+          "title": "Chronik",
+          "publisher": "S. Fischer Verlag / FranzKafka.de",
+          "url": "https://www.franzkafka.de/leben/chronik",
+          "type": "biography",
+          "locator": "1908、1912、1922、1923、1924 年条目",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "出版社年表；不据年表推断疾病与迁居的因果关系。"
+        },
+        "CN-AUTO": {
+          "source_id": "CN-AUTO",
+          "title": "Christiane Nüsslein-Volhard — Biographical",
+          "publisher": "Nobel Prize / Christiane Nüsslein-Volhard",
+          "url": "https://www.nobelprize.org/prizes/medicine/1995/nusslein-volhard/biographical/",
+          "type": "self_writing",
+          "locator": "1962 医院试做；summer 1964 Tübingen；Diplom 1969；PhD 1973",
+          "accessed_on": "2026-10-02",
+          "access_method": "search_index",
+          "limitations": "原页直接访问受限；已核对索引正文。课程不合预期属于本人评价。"
+        },
+        "AE-UZH": {
+          "source_id": "AE-UZH",
+          "title": "Albert Einstein",
+          "publisher": "University of Zurich",
+          "url": "https://www.uzh.ch/en/researchinnovation/excellence/nobelprize/einstein",
+          "type": "biography",
+          "locator": "1900 无大学助教职位；1902—1909 专利局；1905 博士；1909 教职",
+          "accessed_on": "2026-10-02",
+          "access_method": "page",
+          "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+        },
+        "MODEL-V1": {
+          "source_id": "MODEL-V1",
+          "title": "本集的处境与类比建模规则",
+          "publisher": "fu6868 / Codex",
+          "type": "ai_inference",
+          "local_path": "README.md",
+          "locator": "事实、本人表述与建模",
+          "accessed_on": "2026-10-02",
+          "access_method": "local",
+          "limitations": "仅是检索标注，不代表人物完整真实选项、心理、选择因果或用户成功概率。"
+        }
+      },
       "meta": {
         "candidates_recalled": 36,
-        "after_metadata_filter": 31,
+        "after_metadata_filter": 29,
         "after_rerank": 3,
-        "dropped_by_metadata": 5,
+        "dropped_by_metadata": 7,
         "forced_diversity": false,
-        "elapsed_ms": 278,
+        "elapsed_ms": 242,
         "weights": {
           "stage_match": 0.15,
           "path_match": 0.2,
@@ -1516,8 +2746,8 @@ export const demoScenarios: CachedScenario[] = [
           "goal_match": 0.15,
           "reversibility_match": 0.05
         },
-        "parser_elapsed_ms": 3474,
-        "parser_tokens": 531
+        "parser_elapsed_ms": 3653,
+        "parser_tokens": 510
       }
     }
   }

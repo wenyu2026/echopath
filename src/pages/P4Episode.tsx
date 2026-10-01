@@ -210,6 +210,7 @@ export default function P4Episode() {
         onClose={() => setDrawerOpen(false)}
         title={`${ep.person.name} · ${ep.time.year}`}
         evidence={ep.evidence}
+        sourceMeta={result.source_meta}
         sourceCount={sourceCount}
         aiCount={aiCount}
       />

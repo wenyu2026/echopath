@@ -965,3 +965,20 @@ input:focus, textarea:focus, select:focus {
   color: var(--ink-2);
   line-height: 1.7;
 }
+
+/* 证据抽屉：出版信息与局限
+   —— 「谁出的、哪一段、什么局限」才是可核查的依据 */
+.evidence-cite {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+.evidence-limit {
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: var(--bg-sunken);
+  border-radius: 5px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}

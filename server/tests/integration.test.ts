@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { loadEpisodes } from '../retrieval/load-episodes.ts';
+import { loadEpisodes, loadSourceMeta } from '../retrieval/load-episodes.ts';
 import { selectDiverse } from '../retrieval/diversity.ts';
 import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
@@ -363,6 +363,56 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
   };
   assert.ok(!validateSituation(tooFew).ok, '严格版应因条数不足而拒绝');
   assert.ok(validateSituationShape(tooFew).ok, '宽松版应接受同样的输入');
+});
+
+/* ============================================================
+   ⑳ 证据抽屉要能显示「谁出的、哪一段、什么局限」
+   ------------------------------------------------------------
+   实测发现 sources.json 里有 publisher / locator / accessed_on / limitations ——
+   这些**正是让证据可核查的东西**，但 episode.evidence 只带 source_id + url，
+   前端根本拿不到。于是抽屉里只能显示「LX-SENDAI + 一个链接」。
+   改后能显示「澎湃转载楚尘文化《李安访谈录》· 定位到格伦·肯尼访谈」。
+   ============================================================ */
+
+test('来源元信息：sources.json 能加载成 source_id → 出版信息 的映射', () => {
+  const meta = loadSourceMeta();
+  const ids = Object.keys(meta);
+  assert.ok(ids.length >= 30, `应加载到 ≥30 条来源，实际 ${ids.length}`);
+
+  // 抽查字段完整性 —— 缺了这些就没法核查
+  const sample = meta[ids[0]];
+  assert.ok(sample.publisher, '应有 publisher（谁出的）');
+  assert.ok(sample.title !== undefined, '应有 title');
+  assert.ok(sample.locator, '应有 locator（定位到哪一段）');
+  assert.ok(sample.limitations, '应有 limitations（已知局限）');
+});
+
+test('来源元信息：每条 evidence 都能在 sources.json 里找到对应元信息', () => {
+  const episodes = loadEpisodes();
+  const meta = loadSourceMeta();
+  let missing = 0;
+  for (const e of episodes) {
+    for (const ev of e.evidence ?? []) {
+      if (!meta[ev.source_id]) missing++;
+    }
+  }
+  assert.equal(missing, 0, `有 ${missing} 条 evidence 的 source_id 在 sources.json 里找不到`);
+});
+
+test('来源元信息：检索响应必须带上 source_meta（否则前端无从显示）', async () => {
+  const src = readFileSync(join(root, 'server', 'retrieval', 'retrieve.ts'), 'utf8');
+  assert.ok(/source_meta/.test(src), 'retrieve 的返回值里应有 source_meta');
+
+  const types = readFileSync(join(root, 'src', 'types', 'episode.ts'), 'utf8');
+  assert.ok(/source_meta\??:/.test(types), '契约里应有 source_meta 字段');
+  assert.ok(/interface SourceMeta/.test(types), '应有 SourceMeta 类型');
+});
+
+test('来源元信息：抽屉要渲染出版信息与局限，而不只是编号', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
+  assert.ok(/sourceMeta/.test(src), '抽屉应接收 sourceMeta');
+  assert.ok(/publisher/.test(src) && /locator/.test(src), '应渲染 publisher 与 locator');
+  assert.ok(/limitations/.test(src), '应渲染已知局限 —— 这是诚实性的关键一块');
 });
 
 /* ============================================================
