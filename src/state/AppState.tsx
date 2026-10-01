@@ -83,6 +83,42 @@ interface Persisted {
   offlineReason?: string | null;
 }
 
+/**
+ * 恢复旧会话时的防御性清理。
+ *
+ * 为什么需要：后端在解析阶段已经会去掉叠词（「止损止损」→「止损」），
+ * 但**已经存进 sessionStorage 的旧数据不会自动变干净** ——
+ * 用户刷新后加载的是旧快照，脏数据照样显示出来。
+ * 实测就撞到过：清理逻辑上线后，页面上仍然显示「止损止损」。
+ *
+ * 这里做同样的处理，保证「无论数据从哪来，显示前都是干净的」。
+ * 只去掉相邻完全重复的整词，不做任何改写。
+ */
+function dedupeAdjacent(s: string): string {
+  if (s.length < 2) return s;
+  if (s.length % 2 === 0) {
+    const h = s.length / 2;
+    if (s.slice(0, h) === s.slice(h)) return s.slice(0, h);
+  }
+  const parts = s.split(/\s+/);
+  if (parts.length >= 2 && parts.every((p) => p === parts[0])) return parts[0];
+  return s;
+}
+
+function sanitizeSituation(s: Situation | null): Situation | null {
+  if (!s) return s;
+  const clean = (arr: string[] | undefined) => (Array.isArray(arr) ? arr.map((x) => dedupeAdjacent(String(x).trim())) : arr);
+  return {
+    ...s,
+    stage: s.stage ? dedupeAdjacent(s.stage.trim()) : s.stage,
+    dilemma: s.dilemma ? dedupeAdjacent(s.dilemma.trim()) : s.dilemma,
+    options: clean(s.options) as string[],
+    constraints: clean(s.constraints) as string[],
+    goals: clean(s.goals) as string[],
+    unknowns: clean(s.unknowns) as string[],
+  };
+}
+
 function loadSession(): Persisted | null {
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
@@ -94,7 +130,7 @@ function loadSession(): Persisted | null {
     if (p.result && !Array.isArray(p.result.matches)) return null;
     return {
       journey: p.journey ?? {},
-      situation: p.situation ?? null,
+      situation: sanitizeSituation(p.situation ?? null),
       result: p.result ?? null,
       reachable: typeof p.reachable === 'number' ? p.reachable : 0,
       mode: p.mode === 'offline' ? 'offline' : 'live',
