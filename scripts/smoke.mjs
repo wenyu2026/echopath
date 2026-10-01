@@ -25,11 +25,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const here = dirname(fileURLToPath(import.meta.url));
-const root = join(here, '..');
+import { join } from 'node:path';
 
 const BASE = process.env.SMOKE_BASE ?? 'http://localhost:5173';
 const STARTUP_WAIT_MS = 20_000;
@@ -166,7 +162,7 @@ function cleanup() {
  * 这样顺带验证了「前端能连通后端、拿到符合契约的响应」。
  * 后端不可用时返回 ok:false，让上层显式报出来（而不是悄悄降级）。
  */
-async function seedSession(send, base) {
+async function seedSession(send, _base) {
   const DEMO_INPUT =
     '大三，材料科学，读了两年半，越来越觉得不适合自己。已投入两年半；转专业有成绩门槛；可以接受延毕；最看重兴趣和成长。';
 
@@ -228,7 +224,8 @@ try {
     if (msg.id && pending.has(msg.id)) {
       const { resolve, reject } = pending.get(msg.id);
       pending.delete(msg.id);
-      msg.error ? reject(new Error(msg.error.message)) : resolve(msg.result);
+      if (msg.error) reject(new Error(msg.error.message));
+      else resolve(msg.result);
       return;
     }
     // 收集控制台错误

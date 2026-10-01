@@ -482,7 +482,16 @@ if (serverOk) {
     .split('\n')
     .filter((l) => /路由|种入|❌/.test(l))
     .slice(-4)
-    .map((l) => l.replace(/\x1b\[[0-9;]*m/g, '').trim())
+    // 去掉 ANSI 颜色码再取摘要。
+    // 不用正则写控制字符（lint 的 no-control-regex 会拦）——
+    // 直接用 ESC 字符切分，再拼回不含 ESC 的部分。
+    .map((l) =>
+      l
+        .split('\u001b')
+        .map((seg) => seg.replace(/^\[[0-9;]*m/, ''))
+        .join('')
+        .trim(),
+    )
     .join(' / ');
   check('前端 6 条路由渲染正常（真实浏览器）', smoke.ok, smoke.ok ? '' : lines.slice(0, 320));
 } else {
