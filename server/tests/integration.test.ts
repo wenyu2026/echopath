@@ -366,6 +366,52 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ⑱ 「看证据来源（N）」的 N 不能把 AI 推断算进去
+   ------------------------------------------------------------
+   原来按钮写的是 ep.evidence.length，但每条案例的 evidence 里
+   都有 1 条 ai_inference —— 于是按钮显示「看证据来源（3）」，
+   点进去只有 2 条能点开。
+   点开发现少一条，比一开始就写对更伤可信度。
+   ============================================================ */
+
+test('证据计数：AI 推断不能算作「来源」', () => {
+  const src = readFileSync(join(root, 'src', 'pages', 'P4Episode.tsx'), 'utf8');
+
+  assert.ok(
+    /sourceCount/.test(src),
+    '应单独算外部来源数，而不是直接用 evidence.length',
+  );
+  assert.ok(
+    /type\s*!==\s*'ai_inference'/.test(src),
+    'sourceCount 必须排除 ai_inference',
+  );
+  assert.ok(
+    !/看证据来源（\{ep\.evidence\.length\}\)/.test(src),
+    '不应再用 evidence.length 当来源数（会把 AI 推断算进去）',
+  );
+});
+
+test('证据计数：抽屉要单独说明 AI 推断有几条', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
+
+  assert.ok(/aiCount/.test(src), '抽屉应接收 AI 推断条数并单独说明');
+  assert.ok(
+    /不是来源|只是说明哪些字段是建模/.test(src),
+    '要讲清 AI 推断不是来源，而是"哪些字段是建模的"',
+  );
+});
+
+test('证据数据：每条案例确实都有 AI 推断条目（这正是不该混入计数的原因）', () => {
+  const episodes = loadEpisodes();
+  for (const e of episodes) {
+    const ai = e.evidence.filter((x) => x.type === 'ai_inference').length;
+    assert.ok(ai >= 1, `${e.episode_id} 应有 AI 推断条目（说明字段是建模的）`);
+    const real = e.evidence.filter((x) => x.type !== 'ai_inference').length;
+    assert.ok(real >= 1, `${e.episode_id} 应至少有一条真实外部来源`);
+  }
+});
+
+/* ============================================================
    ⑰ 三条路的展示顺序不能是排名
    ------------------------------------------------------------
    前端把三条标成 路径 A / B / C，A 在最上面、配色最靠前。

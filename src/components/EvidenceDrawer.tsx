@@ -40,11 +40,17 @@ export default function EvidenceDrawer({
   onClose,
   title,
   evidence,
+  sourceCount,
+  aiCount,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   evidence: Evidence[];
+  /** 真正的外部来源数（不含 AI 推断） */
+  sourceCount?: number;
+  /** AI 推断条目数 —— 单独说明，不混进"来源"里 */
+  aiCount?: number;
 }) {
   // ESC 关闭
   useEffect(() => {
@@ -75,13 +81,20 @@ export default function EvidenceDrawer({
         <div className="drawer-body">
           <p className="muted small" style={{ marginBottom: 18 }}>
             每个关键事实都应能追溯到具体来源。
-            {linkCount > 0 && (
+            {typeof sourceCount === 'number' && (
               <>
                 {' '}
-                下面有 <strong>{linkCount} 条可以直接点开原文</strong>验证。
+                这条案例有 <strong>{sourceCount} 条外部来源</strong>
+                {linkCount > 0 && <>（其中 {linkCount} 条可直接点开原文）</>}。
               </>
-            )}{' '}
-            <strong>标注为「AI 推断」的内容不是史实</strong>，只表示结构相似，不必去找来源。
+            )}
+            {typeof aiCount === 'number' && aiCount > 0 && (
+              <>
+                {' '}
+                另有 <strong>{aiCount} 条 AI 推断</strong> —— 那不是来源，
+                只是说明哪些字段是建模出来的，不必去找出处。
+              </>
+            )}
           </p>
 
           {evidence.length === 0 ? (

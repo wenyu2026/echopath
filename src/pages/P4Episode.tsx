@@ -38,6 +38,10 @@ export default function P4Episode() {
   const ep = m.episode;
   const color = PATH_COLORS[i] ?? '#2f5d8a';
 
+  // 真正的外部来源数 —— 不算 AI 推断（那条没有出处，只说明建模范围）
+  const sourceCount = ep.evidence.filter((e) => e.type !== 'ai_inference').length;
+  const aiCount = ep.evidence.length - sourceCount;
+
   return (
     <div>
       <div className="row" style={{ marginBottom: 6 }}>
@@ -66,8 +70,15 @@ export default function P4Episode() {
         <div className="card-head">
           <span className="card-sub">完整经过</span>
           <span className="spacer" />
+          {/*
+            ⚠️ 数字要诚实：原来写的是 ep.evidence.length，
+            但那把 **AI 推断条目**也算成「证据来源」了 ——
+            实测每条案例的 evidence 里都有 1 条 ai_inference，
+            所以按钮会写「看证据来源（3）」而实际只有 2 条能点开。
+            点进去发现少一条，比一开始就写对更伤可信度。
+          */}
           <button className="btn btn-sm" onClick={() => setDrawerOpen(true)}>
-            🔍 看证据来源（{ep.evidence.length}）
+            🔍 看证据来源（{sourceCount}）
           </button>
         </div>
 
@@ -199,6 +210,8 @@ export default function P4Episode() {
         onClose={() => setDrawerOpen(false)}
         title={`${ep.person.name} · ${ep.time.year}`}
         evidence={ep.evidence}
+        sourceCount={sourceCount}
+        aiCount={aiCount}
       />
     </div>
   );
