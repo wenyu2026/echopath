@@ -14,6 +14,7 @@
     "validate:data": "node scripts/validate-data.mjs",
     "build:cache": "node scripts/build-demo-cache.mjs",
     "refresh:cache": "node scripts/build-demo-cache.mjs --from-api",
+    "preflight": "node scripts/preflight.mjs",
     "start": "node scripts/start-demo.mjs"
   },
   "dependencies": {
