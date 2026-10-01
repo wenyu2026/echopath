@@ -58,6 +58,9 @@ function buildCheck() {
 }
 
 const line = '─'.repeat(58);
+
+/** 扫描时要跳过的目录（多处复用，放模块级） */
+const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', '.vite']);
 console.log('');
 console.log('  来路 EchoPath · 演示前自检');
 console.log('  ' + line);
@@ -202,7 +205,6 @@ check(
 {
   const MARKERS = ['锛', '鐨', '涓€', '鏄', '鍜', '锟斤拷', '鎴戜', '鏂囦', '鈥', '楠屾'];
   const SCAN_EXT = ['.md', '.ts', '.tsx', '.mjs', '.json', '.html', '.css'];
-  const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', '.vite']);
   // 本文件自己含这些特征字符（就是上面这行字面量）—— 必须跳过，否则自检永远不过
   const SELF = relative(root, fileURLToPath(import.meta.url)).replace(/\\/g, '/');
   const offenders = [];
@@ -246,7 +248,56 @@ check(
   );
 }
 
-/* ---------- 7. 构建能过 ---------- */const buildRes = buildCheck();
+/* ---------- 7. 文案红线：不得出现「替用户做决定」的表述 ---------- */
+// 这是产品最核心的伦理主张（方案第 17 节），也是最容易被后人无意破坏的一条 ——
+// 比如随手加了句「建议你先做低成本验证」。
+// 后端已有 output-guard 在生成时拦截，这里查的是**写死在前端代码里的文案**。
+{
+  const BAD = ['你应该', '你最好', '建议你', '我推荐你', '最优选择', '正确选择', '最好的选择'];
+  const hits = [];
+  const walkDir = (dir, depth = 0) => {
+    if (depth > 6) return;
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) {
+        if (!SKIP_DIRS.has(e.name)) walkDir(p, depth + 1);
+        continue;
+      }
+      if (!/\.(tsx?|md)$/.test(e.name)) continue;
+      let text;
+      try {
+        text = readFileSync(p, 'utf8');
+      } catch {
+        continue;
+      }
+      text.split('\n').forEach((line, i) => {
+        const s = line.trim();
+        // 注释里写「本页绝不出现你应该选择 X」是说明，不算违规
+        if (s.startsWith('//') || s.startsWith('*') || s.startsWith('/*') || s.startsWith('#')) return;
+        for (const b of BAD) {
+          if (line.includes(b)) hits.push(`${relative(root, p)}:${i + 1} 「${b}」`);
+        }
+      });
+    }
+  };
+  walkDir(join(root, 'src'));
+
+  check(
+    '文案红线：无处方指令（你应该/建议你…）',
+    hits.length === 0,
+    hits.length > 0
+      ? `产品主张「不替用户做决定」，这些文案违反了：${hits.slice(0, 3).join(' / ')}`
+      : '',
+  );
+}
+
+/* ---------- 8. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */
