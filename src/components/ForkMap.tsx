@@ -6,9 +6,20 @@
  *   系统不替你画未来，而是把「别人从相似节点出发后已经走完的路」叠加给你看。
  *
  * ⚠️ 这不是排名，是三条不同的路。颜色区分方向，不区分优劣。
+ *
+ * ⚠️ v2 改进：「过去」的三个节点原来是写死的「入学 / 投入 / 动摇」。
+ *   走查时发现无论用户输入什么故事，地图上都显示同样的三个词 ——
+ *   连"换工作"这种跟入学毫无关系的处境也显示「入学」。
+ *   而地图是整个 demo 视觉上最显眼的东西，**写死的标签等于告诉评委
+ *   「这张图是装饰，不是数据」**。
+ *
+ *   现在改成从真实数据推出来：
+ *     · 从 situation.stage 推第一个节点（你从哪来）
+ *     · 从匹配案例的 prior_path 抽共同动作（这条路上的人做过什么）
+ *     · 最后一个固定为「动摇」—— 因为能走到检索这一步，本身就是动摇了
  */
 
-import type { MatchResult } from '../types/episode';
+import type { MatchResult, Situation } from '../types/episode';
 
 /** 三条路径的配色与位置 */
 const LANES = [
@@ -27,16 +38,68 @@ const CHOICE_LABEL: Record<string, string> = {
   dual_track: '双轨并行',
 };
 
+/**
+ * 从处境与案例推出「过去」这条线上的三个节点。
+ *
+ * 目标：让标签**属于用户自己的故事**，而不是通用占位词。
+ * 每个标签控制在 2-5 字，保证 SVG 里放得下。
+ */
+function buildPastNodes(situation: Situation | null, matches: MatchResult[]): { label: string }[] {
+  // ① 起点：用户自己说的阶段（截短到能放下）
+  const stage = (situation?.stage ?? '').trim();
+  const start = stage ? shorten(stage, 5) : '起点';
+
+  // ② 中段：从匹配案例的来时路里找一个**两个以上案例共有**的动作用词
+  const mid = commonPriorPathWord(matches) ?? '已投入';
+
+  // ③ 末段：能走到这一步，本身就是动摇 —— 这个词对所有处境都成立
+  return [{ label: start }, { label: mid }, { label: '动摇' }];
+}
+
+/** 从多个案例的 prior_path 里抽一个出现 ≥2 次、且适合做节点的短词 */
+function commonPriorPathWord(matches: MatchResult[]): string | undefined {
+  const counter = new Map<string, number>();
+  // 这些词信息量太低，不适合当选节点标签
+  const STOP = new Set(['已经', '一直', '开始', '后来', '当时', '自己', '没有', '一个', '这个', '那个']);
+
+  for (const m of matches) {
+    const seen = new Set<string>();
+    for (const p of m.episode.prior_path ?? []) {
+      // 抽 2-4 字的中文词
+      for (const w of String(p).match(/[\u4e00-\u9fa5]{2,4}/g) ?? []) {
+        if (STOP.has(w) || seen.has(w)) continue;
+        seen.add(w);
+        counter.set(w, (counter.get(w) ?? 0) + 1);
+      }
+    }
+  }
+
+  // 取「多个案例共有」的，优先较长（信息量更大）
+  const shared = [...counter.entries()].filter(([, n]) => n >= 2 && n < matches.length + 1);
+  if (shared.length === 0) return undefined;
+  shared.sort((a, b) => b[1] - a[1] || b[0].length - a[0].length);
+  return shared[0][0];
+}
+
+/** 截短标签，保证 SVG 里放得下 */
+function shorten(s: string, max: number): string {
+  const clean = s.replace(/[/／·、,，\s]/g, '');
+  return clean.length <= max ? clean : clean.slice(0, max);
+}
+
 type Props = {
   matches: MatchResult[];
+  /** 用于让「过去」这条线反映用户自己的处境，而不是通用占位词 */
+  situation?: Situation | null;
   onSelect?: (index: number) => void;
   activeIndex?: number;
 };
 
-export default function ForkMap({ matches, onSelect, activeIndex }: Props) {
+export default function ForkMap({ matches, situation, onSelect, activeIndex }: Props) {
   const nowX = 286;
   const nowY = 200;
   const endX = 812;
+  const pastNodes = buildPastNodes(situation ?? null, matches);
 
   return (
     <div className="forkmap">
@@ -76,20 +139,21 @@ export default function ForkMap({ matches, onSelect, activeIndex }: Props) {
           未来（迷雾）
         </text>
 
-        {/* ---------- 过去：一条实线 + 关键节点 ---------- */}
+        {/* ---------- 过去：一条实线 + 关键节点 ----------
+            节点标签来自真实数据（用户阶段 + 匹配案例共有的来时路动作），
+            不再是写死的「入学 / 投入 / 动摇」 */}
         <line x1="30" y1={nowY} x2={nowX - 18} y2={nowY} stroke="#c4bdb1" strokeWidth="2" />
-        {[
-          { x: 74, label: '入学' },
-          { x: 146, label: '投入' },
-          { x: 218, label: '动摇' },
-        ].map((n) => (
-          <g key={n.label}>
-            <circle cx={n.x} cy={nowY} r="4.5" fill="#f7f5f1" stroke="#a8a29a" strokeWidth="1.6" />
-            <text x={n.x} y={nowY + 26} fontSize="11.5" fill="#7d7871" textAnchor="middle">
-              {n.label}
-            </text>
-          </g>
-        ))}
+        {pastNodes.map((n, i) => {
+          const x = 74 + i * 72;
+          return (
+            <g key={`${n.label}-${i}`}>
+              <circle cx={x} cy={nowY} r="4.5" fill="#f7f5f1" stroke="#a8a29a" strokeWidth="1.6" />
+              <text x={x} y={nowY + 26} fontSize="11.5" fill="#7d7871" textAnchor="middle">
+                {n.label}
+              </text>
+            </g>
+          );
+        })}
 
         {/* ---------- 现在：节点 ---------- */}
         <circle cx={nowX} cy={nowY} r="46" fill="url(#nowGlow)" />

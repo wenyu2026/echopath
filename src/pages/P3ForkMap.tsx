@@ -12,7 +12,7 @@ import ForkMap, { CHOICE_LABEL } from '../components/ForkMap';
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
 export default function P3ForkMap() {
-  const { result, setReachable, mode } = useApp();
+  const { result, setReachable, mode, situation } = useApp();
   const nav = useNavigate();
 
   if (!result) {
@@ -75,7 +75,7 @@ export default function P3ForkMap() {
 
       {/* 分叉地图 */}
       <div style={{ marginTop: 18 }}>
-        <ForkMap matches={matches} onSelect={openEpisode} />
+        <ForkMap matches={matches} situation={situation} onSelect={openEpisode} />
       </div>
 
       {/* 三条路径卡 */}
