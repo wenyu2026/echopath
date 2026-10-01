@@ -1,122 +1,72 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+/**
+ * 应用外壳 + 路由
+ * ============================================
+ * 六个页面：P1 来时路 → P2 当前路口 → P3 分叉地图 → P4 案例详情 → P5 像与不像 → P6 回到自己
+ *
+ * ⚠️ 有意不使用聊天框式界面（方案明确要求）：
+ *    聊天框会让评委一眼认为"又一个 AI Chat"。
+ *    这里做的是「路口 + 分叉 + 案例卡 + 证据抽屉」的地图式体验。
+ */
 
-function App() {
-  const [count, setCount] = useState(0)
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { AppProvider, useApp } from './state/AppState';
+import { Stepper } from './components/Stepper';
+
+import P1Journey from './pages/P1Journey';
+import P2Crossroads from './pages/P2Crossroads';
+import P3ForkMap from './pages/P3ForkMap';
+import P4Episode from './pages/P4Episode';
+import P5Compare from './pages/P5Compare';
+import P6Reflect from './pages/P6Reflect';
+
+function Shell() {
+  const { reachable } = useApp();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar-inner">
+          <Link to="/" className="brand">
+            来路 <small>EchoPath</small>
+          </Link>
+          <span className="slogan">
+            不是预测你的未来，而是把别人已经走过的未来提前给你看
+          </span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        <Stepper reachable={reachable} />
+      </header>
 
-      <div className="ticks"></div>
+      <main className="page">
+        <Routes>
+          <Route path="/" element={<P1Journey />} />
+          <Route path="/crossroads" element={<P2Crossroads />} />
+          <Route path="/map" element={<P3ForkMap />} />
+          <Route path="/episode/:index" element={<P4Episode />} />
+          <Route path="/compare" element={<P5Compare />} />
+          <Route path="/reflect" element={<P6Reflect />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <footer className="closing" style={{ marginTop: 0 }}>
+        <p style={{ fontSize: 15 }}>
+          学军黑客松 2026 · 赛道一 Echo · 未来·回响
+          <br />
+          <span className="small muted" style={{ fontFamily: 'var(--sans)' }}>
+            数据为演示样例，来源需经核实；系统不提供决策建议，也不预测个人未来。
+          </span>
+        </p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppProvider>
+        <Shell />
+      </AppProvider>
+    </BrowserRouter>
+  );
+}
