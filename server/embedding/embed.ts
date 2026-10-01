@@ -5,7 +5,15 @@
  * 数据只有几十条，内存算余弦即可。Embedder 接口可注入：
  * - realEmbedder：真实网关调用
  * - mockEmbedder：确定性伪向量（字符 bigram 哈希），离线单测用，无语义但可复现
+ *
+ * ⚠️ 集成修复（#17）：网关的 embedding 接口**单次批量上限 20 条**，
+ *    实测 36 条会被拒：`batch size is invalid, it should not be larger than 20`。
+ *    这个问题只在数据从 3 条涨到 36 条后才暴露 —— 分别在两个分支上各自都正常，
+ *    合起来才炸。所以这里必须分批。
  */
+
+/** 网关实测的批量上限（留 1 条余量，避免边界抖动） */
+const MAX_EMBED_BATCH = 20;
 
 export interface Embedder {
   readonly kind: 'real' | 'mock';
@@ -21,14 +29,27 @@ export function realEmbedder(config: { apiKey: string; baseUrl?: string; model?:
     async embed(texts: string[]) {
       if (texts.length === 0) return [];
       const { embeddings } = await import('../shared/gateway.ts');
-      const { vectors, elapsedMs } = await embeddings(
-        { apiKey: config.apiKey, baseUrl: config.baseUrl, timeoutMs: config.timeoutMs },
-        config.model ?? 'qwen3.7-text-embedding',
-        texts,
-      );
-      cachedDim = vectors[0]?.length ?? 0;
-      console.error(`[embedding] ${texts.length} 条文本，${vectors[0]?.length ?? '?'} 维，${elapsedMs}ms`);
-      return vectors;
+
+      // 分批：单批超过上限会被网关拒绝
+      const out: number[][] = [];
+      for (let i = 0; i < texts.length; i += MAX_EMBED_BATCH) {
+        const batch = texts.slice(i, i + MAX_EMBED_BATCH);
+        const { vectors, elapsedMs } = await embeddings(
+          { apiKey: config.apiKey, baseUrl: config.baseUrl, timeoutMs: config.timeoutMs },
+          config.model ?? 'qwen3.7-text-embedding',
+          batch,
+        );
+        cachedDim = vectors[0]?.length ?? cachedDim;
+        console.error(
+          `[embedding] 第 ${Math.floor(i / MAX_EMBED_BATCH) + 1} 批：${batch.length} 条，${vectors[0]?.length ?? '?'} 维，${elapsedMs}ms`,
+        );
+        out.push(...vectors);
+      }
+
+      if (out.length !== texts.length) {
+        throw new Error(`embedding 分批结果数量不匹配：请求 ${texts.length}，返回 ${out.length}`);
+      }
+      return out;
     },
   };
 }

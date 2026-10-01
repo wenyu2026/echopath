@@ -54,7 +54,10 @@ export default function P4Episode() {
       <h1>
         {ep.person.name}
         <span className="muted" style={{ fontSize: 17, fontFamily: 'var(--sans)', marginLeft: 12 }}>
-          {ep.time.year} 年 · {ep.time.age} 岁 · {ep.time.stage}
+          {ep.time.year} 年
+          {/* 部分案例没有 age —— 不能直接渲染 undefined */}
+          {typeof ep.time.age === 'number' ? ` · ${ep.time.age} 岁` : ''}
+          {ep.time.stage ? ` · ${ep.time.stage}` : ''}
         </span>
       </h1>
 

@@ -7,11 +7,11 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp, mockSituation } from '../state/AppState';
+import { useApp } from '../state/AppState';
 import { journeyQuestions } from '../data/mock';
 
 export default function P1Journey() {
-  const { journey, setJourneyAnswer, setSituation, setReachable } = useApp();
+  const { journey, setJourneyAnswer, buildSituation, loadingSituation, setReachable } = useApp();
   const nav = useNavigate();
   const [idx, setIdx] = useState(0);
 
@@ -20,13 +20,14 @@ export default function P1Journey() {
   const filled = journeyQuestions.filter((x) => (journey[x.id] ?? '').trim().length > 0).length;
   const isLast = idx === journeyQuestions.length - 1;
 
-  function next() {
+  async function next() {
     if (!isLast) {
       setIdx(idx + 1);
       return;
     }
-    // 进入 P2 前，先给一份"AI 抽取的处境"（当前为 mock）
-    setSituation(structuredClone(mockSituation));
+    // 进入 P2 前，把回答交给后端解析成结构化处境。
+    // 后端不可用时 buildSituation 内部会自动降级到离线数据，不会卡住流程。
+    await buildSituation();
     setReachable(1);
     nav('/crossroads');
   }
@@ -78,8 +79,12 @@ export default function P1Journey() {
               跳过这题
             </button>
           )}
-          <button className="btn btn-primary" onClick={next}>
-            {isLast ? '看看我走到了哪个路口 →' : '下一个问题 →'}
+          <button className="btn btn-primary" onClick={next} disabled={loadingSituation}>
+            {loadingSituation
+              ? '正在理解你的处境…'
+              : isLast
+                ? '看看我走到了哪个路口 →'
+                : '下一个问题 →'}
           </button>
         </div>
       </div>

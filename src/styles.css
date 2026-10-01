@@ -670,8 +670,64 @@ input:focus, textarea:focus, select:focus {
 .compare-col.similar .compare-title { color: var(--ok); }
 .compare-col.different .compare-title { color: var(--warn); }
 
-.compare-col ul { margin: 0; padding-left: 20px; }
-.compare-col li { font-size: 14px; margin-bottom: 8px; color: var(--ink-2); }
+.compare-col ul { margin: 0; padding-left: 0; list-style: none; }
+.compare-col li {
+  font-size: 14px;
+  margin-bottom: 11px;
+  color: var(--ink-2);
+  padding-left: 15px;
+  position: relative;
+  line-height: 1.75;
+}
+.compare-col li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 10px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+/* 差异类别徽章 —— 方案第 2.3 节要求 AI 类比与未知必须视觉区分 */
+.kind-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  margin-right: 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.7;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+/* ⚠️ AI 类比：最需要被看见的一类，用最重的视觉 */
+.kind-ai {
+  background: #f5b301;
+  color: #3d2c00;
+  box-shadow: 0 0 0 2px rgba(245, 179, 1, 0.22);
+}
+
+/* 未知：诚实兜底，虚线边框表达「不确定」 */
+.kind-unknown {
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-3);
+}
+
+/* 结构差异：可追溯的硬差异 */
+.kind-structure {
+  background: var(--now-soft);
+  color: var(--now);
+}
+
+/* 证据差异 */
+.kind-evidence {
+  background: #e8e0f0;
+  color: #5a3d7a;
+}
 
 /* 检索过程 */
 .pipeline {

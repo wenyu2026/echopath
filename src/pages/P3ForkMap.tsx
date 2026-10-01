@@ -12,7 +12,7 @@ import ForkMap, { CHOICE_LABEL } from '../components/ForkMap';
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
 export default function P3ForkMap() {
-  const { result, setReachable } = useApp();
+  const { result, setReachable, mode } = useApp();
   const nav = useNavigate();
 
   if (!result) {
@@ -38,6 +38,15 @@ export default function P3ForkMap() {
         下面是 <strong>三条真实有人走过的路</strong>。不是排名，也不是推荐 ——
         颜色只区分方向，不区分好坏。
       </p>
+
+      {mode === 'offline' && (
+        <div className="notice warn" style={{ marginBottom: 18 }}>
+          <strong>⚠️ 离线演示模式</strong>
+          <br />
+          后端接口不可用，当前展示的是预生成快照。<strong>功能演示不受影响</strong>，
+          但下面的检索统计是快照里的历史值，不是本次实时计算。
+        </div>
+      )}
 
       {/* 检索过程可视化（方案第 13 节要求：不要隐藏过程） */}
       <div className="card">
@@ -82,7 +91,10 @@ export default function P3ForkMap() {
                 </div>
                 <div className="path-title">{CHOICE_LABEL[ep.choice.type] ?? ep.choice.type}</div>
                 <div className="path-person">
-                  {ep.person.name}　·　{ep.time.year} 年，{ep.time.age} 岁
+                  {ep.person.name}　·　{ep.time.year} 年
+                  {/* ⚠️ 数据里部分案例没有 age（#13 的 36 条并非都有），
+                      不能直接渲染 undefined，否则显示「2006 年， 岁」 */}
+                  {typeof ep.time.age === 'number' ? `，${ep.time.age} 岁` : ''}
                   <br />
                   <span className="tiny">{ep.time.stage}</span>
                 </div>

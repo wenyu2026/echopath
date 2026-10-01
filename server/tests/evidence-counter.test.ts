@@ -24,11 +24,38 @@ const DEMO_SITUATION: Situation = {
 
 test('证据分层：facts 每条带 source_id，self_writing 不进 facts', () => {
   const [luXun] = loadEpisodes().filter((e) => e.episode_id.startsWith('lu_xun'));
+
+  // ⚠️ 集成修复（#17）：原测试硬编码了 source_id 'LX-S3'，但 #19 合并后
+  //    fu6868 重写了数据，鲁迅案例的 source_id 变成了 LX-SENDAI / LX-TOHOKU / …
+  //    所以这里改成「从数据里取真实的 source_id」，不再依赖具体命名。
+  const bioIds = luXun.evidence.filter((e) => e.type === 'biography').map((e) => e.source_id);
+  const selfIds = luXun.evidence.filter((e) => e.type === 'self_writing').map((e) => e.source_id);
+  assert.ok(bioIds.length > 0, '该案例应有 biography 来源');
+  assert.ok(selfIds.length > 0, '该案例应有 self_writing 来源');
+
   const layers = writeEvidenceLayers(luXun);
-  assert.ok(layers.facts.some((f) => f.includes('LX-S3')), 'biography 来源应进 facts');
-  assert.ok(layers.facts.every((f) => f.includes('（LX')), 'facts 每条必须挂 source_id');
-  assert.ok(layers.self_claims.some((s) => s.includes('LX-S1')), 'self_writing 进 self_claims');
-  assert.ok(layers.facts.every((f) => !f.includes('自述')), 'self_writing 内容不得混入 facts');
+
+  assert.ok(
+    bioIds.some((id) => layers.facts.some((f) => f.includes(id))),
+    `biography 来源应进 facts（可选 id：${bioIds.join(' / ')}）`,
+  );
+  assert.ok(
+    selfIds.some((id) => layers.self_claims.some((s) => s.includes(id))),
+    `self_writing 应进 self_claims（可选 id：${selfIds.join(' / ')}）`,
+  );
+
+  // 每条 facts / self_claims 都必须挂来源（不限定前缀，只要带括号标注）
+  assert.ok(
+    layers.facts.every((f) => /[（(][^）)]+[）)]\s*$/.test(f)),
+    `facts 每条必须挂 source_id：${layers.facts.filter((f) => !/[（(][^）)]+[）)]\s*$/.test(f)).join(' | ')}`,
+  );
+
+  // self_writing 的内容不得混进 facts
+  assert.ok(
+    !selfIds.some((id) => layers.facts.some((f) => f.includes(id))),
+    'self_writing 来源不得出现在 facts 层',
+  );
+
   assert.equal(traceabilityIssues(layers).length, 0, '可追溯性机械检查通过');
 });
 
