@@ -14,6 +14,7 @@ import { dirname, join } from 'node:path';
 
 import { loadEpisodes } from '../retrieval/load-episodes.ts';
 import { selectDiverse } from '../retrieval/diversity.ts';
+import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
 import {
   categoryMatch,
@@ -178,6 +179,108 @@ test('持久化：AppState 存了 mode 与 offlineReason，且读取时有形状
   assert.ok(src.includes('offlineReason'), '应持久化 offlineReason');
   assert.ok(src.includes('Array.isArray(p.result.matches)'), '读取时应有形状校验，坏数据不能崩页面');
   assert.ok(src.includes('removeItem'), 'reset() 应清空持久化');
+});
+
+/* ============================================================
+   ⑧ 「像你的地方」不能比「不像」弱
+   ------------------------------------------------------------
+   对比两侧文案发现的不对称：改之前三条案例的「像」全都是
+   「可逆性相近」排第一（该维度双方都是 medium 时恒为 1.0，
+   信息量最低却霸榜），而且不说是哪一条重合。
+   ============================================================ */
+
+test('解释：reversibility 不该霸榜（低信息量维度要降权）', () => {
+  const episodes = loadEpisodes();
+  const situation = {
+    stage: '大三关键抉择期',
+    dilemma: '直接就业 vs 继续考研',
+    options: ['直接就业', '继续考研'],
+    constraints: ['家庭期望值较低', '成绩中等'],
+    goals: ['追求个人兴趣'],
+    risk: 'medium' as const,
+    reversibility: 'medium' as const,
+    unknowns: ['上岸概率'],
+  };
+
+  // 取若干 case 检查「可逆性」在首位出现的比例
+  const picks = episodes.slice(0, 12).map((ep) => {
+    const d = scoreDimensions({
+      situation,
+      situationVec: new Array(8).fill(0.1),
+      episode: ep,
+      episodeRecallVec: new Array(8).fill(0.1),
+      episodePathVec: new Array(8).fill(0.1),
+    });
+    return explainSimilarity(situation, ep, d);
+  });
+
+  const reversibilityFirst = picks.filter((r) => r[0]?.startsWith('【可逆性】')).length;
+  assert.ok(
+    reversibilityFirst <= picks.length * 0.34,
+    `「可逆性」不该在多数案例里排第一（${reversibilityFirst}/${picks.length}）—— 低信息量维度霸榜了`,
+  );
+});
+
+test('解释：不得在无依据时声称结构相同（不出现空泛的「同构」）', () => {
+  const episodes = loadEpisodes();
+  const situation = {
+    stage: '大三',
+    // 这个 dilemma 落不进 DILEMMA_CLASSES，旧版会输出「同属「同构」型」
+    dilemma: '留在大城市 vs 回老家',
+    options: ['a', 'b'],
+    constraints: ['c1', 'c2'],
+    goals: ['g1'],
+    risk: 'medium' as const,
+    reversibility: 'medium' as const,
+    unknowns: ['u1', 'u2'],
+  };
+
+  for (const ep of episodes.slice(0, 8)) {
+    const d = scoreDimensions({
+      situation,
+      situationVec: new Array(8).fill(0.1),
+      episode: ep,
+      episodeRecallVec: new Array(8).fill(0.1),
+      episodePathVec: new Array(8).fill(0.1),
+    });
+    for (const line of explainSimilarity(situation, ep, d)) {
+      assert.ok(
+        !line.includes('「同构」型'),
+        `不该在识别不出困境类别时硬说结构相同：${line}`,
+      );
+    }
+  }
+});
+
+test('解释：有具体重合项时，文案要引用到具体词条', () => {
+  const episodes = loadEpisodes();
+  const situation = {
+    stage: '大三',
+    dilemma: '坚持 vs 转向',
+    options: ['a', 'b'],
+    constraints: ['家庭期望别太高', '经济压力大'],
+    goals: ['追求个人兴趣', '个人成长'],
+    risk: 'medium' as const,
+    reversibility: 'medium' as const,
+    unknowns: ['u1', 'u2'],
+  };
+
+  const all = episodes.slice(0, 20).flatMap((ep) => {
+    const d = scoreDimensions({
+      situation,
+      situationVec: new Array(8).fill(0.1),
+      episode: ep,
+      episodeRecallVec: new Array(8).fill(0.1),
+      episodePathVec: new Array(8).fill(0.1),
+    });
+    return explainSimilarity(situation, ep, d);
+  });
+
+  // 至少有一条理由给出了「具体交集」而不是只说"有交集"
+  assert.ok(
+    all.some((l) => l.includes('具体交集') || l.includes('具体重叠')),
+    '「像」的理由里应出现具体重合项，而不是一律泛泛而谈',
+  );
 });
 
 /* ============================================================

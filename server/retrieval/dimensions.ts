@@ -235,27 +235,98 @@ const DILEMMA_CLASS_ZH: Record<string, string> = {
   explore_vs_focus: '探索 vs 专注',
 };
 
-/** 生成"为什么像你"：取最高两个维度，给出可追溯到字段或类别的理由 */
+/**
+ * 生成「为什么像你」。
+ *
+ * ⚠️ v2 改进（对比反类比后发现的不对称）：
+ *   改之前三条案例的「像」**全都是「可逆性相近」排第一**，而且不给具体数值、
+ *   不说是哪一条重合 —— 而「不像」那侧是具体、有依据、带来源的。
+ *   结果产品的另一半明显更弱。
+ *
+ *   两个原因：
+ *   ① reversibility_match 在双方都是 medium 时恒为 1.0，永远霸占第一名，
+ *      但它恰恰是**信息量最低**的维度（只说明"都不是极端")。
+ *   ② 文案只报维度名，不报**具体重合的那几项**。
+ *
+ *   修法：
+ *   ① 排序用 effectiveScore：可逆性这种"低信息量高确定性"的维度降权
+ *   ② 文案尽量引用**具体重合项**（哪些约束/目标真的对上了）
+ */
 export function explainSimilarity(situation: Situation, episode: DecisionEpisode, d: MatchDimensions): string[] {
   const u = classify(situation.dilemma, DILEMMA_CLASSES);
-  const candidates: { dim: string; label: string; reason: string }[] = [
-    { dim: 'dilemma_match', label: '困境结构', reason: `双方核心冲突同属「${u ? DILEMMA_CLASS_ZH[u] ?? u : '同构'}」型（对方当时的困境：${episode.decision_state.dilemma}）` },
-    { dim: 'path_match', label: '来时路', reason: `此前的投入路径相似：对方曾 ${episode.prior_path[0] ?? '（无记录）'}` },
-    { dim: 'goal_match', label: '目标', reason: `在意的目标有交集（对方的目标：${episode.decision_state.goals.join('、')}）` },
-    // #13 的部分案例没有 time.age —— 没有就不提，不输出「? 岁」
+
+  // 具体重合项 —— 让理由可核查，而不是只说"有交集"
+  const goalOverlap = overlapItems(situation.goals, episode.decision_state.goals, GOAL_CATEGORIES);
+  const constraintOverlap = overlapItems(situation.constraints, episode.decision_state.constraints, CONSTRAINT_CATEGORIES);
+
+  const candidates: { dim: string; label: string; reason: string; info: number }[] = [
+    {
+      dim: 'dilemma_match',
+      label: '困境结构',
+      info: 1,
+      // u 识别不出来时不要硬说「同构」—— 那是在没有依据的情况下声称结构相同
+      reason: u
+        ? `双方核心冲突同属「${DILEMMA_CLASS_ZH[u] ?? u}」型（对方当时的困境：${episode.decision_state.dilemma}）`
+        : `两边的取舍都落在「放弃一边、换另一边」这一结构上（对方当时的困境：${episode.decision_state.dilemma}）`,
+    },
+    {
+      dim: 'path_match',
+      label: '来时路',
+      info: 1,
+      reason: `此前的投入路径相似：对方曾 ${episode.prior_path[0] ?? '（无记录）'}`,
+    },
+    {
+      dim: 'goal_match',
+      label: '目标',
+      info: 1.1,
+      reason: goalOverlap.length > 0
+        ? `在意的目标有具体交集：「${goalOverlap.join('」「')}」（对方的目标：${episode.decision_state.goals.join('、')}）`
+        : `在意的目标有交集（对方的目标：${episode.decision_state.goals.join('、')}）`,
+    },
     {
       dim: 'stage_match',
       label: '阶段',
+      info: 1,
+      // #13 的部分案例没有 time.age —— 没有就不提，不输出「? 岁」
       reason: `人生阶段接近（对方当时：${episode.time.stage}${
         typeof episode.time.age === 'number' ? `，${episode.time.age} 岁` : ''
       }）`,
     },
-    { dim: 'reversibility_match', label: '可逆性', reason: `当时选择的可逆性与你相近（对方评估为「${LEVEL_ZH[episode.decision_state.reversibility]}」，你为「${LEVEL_ZH[situation.reversibility]}」）` },
-    { dim: 'constraint_match', label: '约束', reason: `现实约束有重叠（对方的约束：${episode.decision_state.constraints.join('、')}）` },
+    {
+      dim: 'constraint_match',
+      label: '约束',
+      info: 1.2,
+      reason: constraintOverlap.length > 0
+        ? `现实约束有具体重叠：「${constraintOverlap.join('」「')}」（对方的约束：${episode.decision_state.constraints.join('、')}）`
+        : `现实约束有重叠（对方的约束：${episode.decision_state.constraints.join('、')}）`,
+    },
+    {
+      dim: 'reversibility_match',
+      label: '可逆性',
+      // 双方都"中等"时该维度恒为 1.0 —— 分数高但信息量最低，明确降权
+      info: 0.35,
+      reason: `双方对这次选择的可逆性判断一致（都是「${LEVEL_ZH[episode.decision_state.reversibility]}」）—— 都还留着退路`,
+    },
   ];
-  const sorted = candidates.slice().sort((a, b) => d[b.dim as keyof MatchDimensions] - d[a.dim as keyof MatchDimensions]);
+
+  /** 有效分 = 维度分 × 信息量系数。避免"低信息量满分"维度霸榜 */
+  const eff = (c: (typeof candidates)[number]) => d[c.dim as keyof MatchDimensions] * c.info;
+
+  const sorted = candidates.slice().sort((a, b) => eff(b) - eff(a));
   const strong = sorted.filter((c) => d[c.dim as keyof MatchDimensions] >= 0.55);
   return (strong.length >= 2 ? strong : sorted).slice(0, 2).map((c) => `【${c.label}】${c.reason}`);
+}
+
+/** 找出用户与案例在**同一类别**下都提到的那几项（具体到原文词条） */
+function overlapItems(userItems: string[], episodeItems: string[], categories: Record<string, string[]>): string[] {
+  const out: string[] = [];
+  const epiCats = new Set<string>();
+  for (const e of episodeItems) for (const c of hitCategories(e, categories)) epiCats.add(c);
+  for (const u of userItems) {
+    const cs = hitCategories(u, categories);
+    if ([...cs].some((c) => epiCats.has(c))) out.push(u);
+  }
+  return out.slice(0, 2);
 }
 
 function classify(text: string, classes: Record<string, string[]>): string | undefined {
