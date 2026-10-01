@@ -882,3 +882,24 @@ input:focus, textarea:focus, select:focus {
   font-size: 11px;
   line-height: 1.4;
 }
+
+/* What-if 自定义条件输入 */
+.whatif-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+.whatif-custom input {
+  flex: 1 1 300px;
+  min-width: 220px;
+  padding: 9px 13px;
+  font-size: 14px;
+}
+.whatif-custom .tiny {
+  flex: 1 1 100%;
+  margin-left: 2px;
+}
