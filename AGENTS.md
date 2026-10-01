@@ -291,6 +291,73 @@ Get-NetTCPConnection -State Listen -LocalPort 7890   # 有输出 = Clash 在跑
 
 ---
 
+## 11. 🔒 怎么保证不做重复劳动（三道闸门）
+
+「合并任务」不是最后做一次的动作，而是**三个连续闸门**，每道挡一类重复：
+
+| 闸门 | 时机 | 挡什么 | 工具 |
+|---|---|---|---|
+| ① **建 Issue 前查重** | 派活时 | 两人拿同一个任务 | `scripts/dup-check.ps1` |
+| ② **开工前 CHECKIN** | 领活时 | 同时开工同一件事 | 发 CHECKIN + 打 `member-x` 标签 |
+| ③ **PR 时查重** | 合代码时 | 写了两份重复代码 | 人工 review + `dup-check` 搜旧 Issue |
+
+### 工具 1：全队任务视图（开工前必看）
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\status.ps1
+```
+
+一眼看清：**谁在做什么、谁卡住了、哪些还没人领**。
+末尾会专门列出「还没人认领的任务」—— **想接活先看这里，别自己新开一个。**
+
+### 工具 2：建 Issue 前查重（派活前必跑）
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\dup-check.ps1 -Keyword "登录"
+```
+
+同时搜 open 和 closed。**closed 也要搜**，因为「已经做完的事」最容易被重复做一遍 ——
+尤其是工具函数、接口、配置这类容易各写一份的东西。
+
+### 🔴 成员身份靠 Label，不靠 assignee
+
+**重要**：全队共用一个 GitHub 账号（见第 8 节），`--assignee` 无法区分成员。
+所以**每个任务必须打上 `member-a/b/c/d` 标签**：
+
+```bash
+gh issue create --title "..." --label "task" --label "member-a"
+```
+
+看板脚本正是靠这个标签识别负责人的。不打标签 = 显示「未认领」= 别人不知道你在做。
+
+### 🚫 最容易重复的四类东西（重点防）
+
+| 类型 | 例子 | 防法 |
+|---|---|---|
+| **工具函数** | 日期格式化、请求封装、校验 | **先搜** `dup-check.ps1 -Keyword "utils"`，有就复用 |
+| **接口定义** | `User`、`ApiResponse` 类型 | 归 `shared/**`，**由 member-d 统一维护** |
+| **配置** | vite / tsconfig / env | 唯一 owner 制（见第 5 节） |
+| **同一个页面/功能** | 两个人都写登录页 | CHECKIN 先到先得 |
+
+**发现别人在做同一件事，立即停下并发 `BLOCKED`**，说明"这事 member-x 在做，我改做别的"——
+**不要闷头做完再对比**，那是纯浪费。
+
+### 合并流程（代码层面）
+
+```bash
+git checkout main
+git pull                                    # 1. 先同步，避免基于旧代码
+git merge member-a/xxx                      # 2. 合并
+# 3. 有冲突 → 停在 Issue 发 BLOCKED，别硬resolve
+npm run build                               # 4. 合并后必须验证能构建
+git push
+```
+
+**合并后一定要重新构建/跑一次** —— 两个分支各自能跑，合起来不一定能跑，
+这是集成阶段最常见的翻车点。
+
+---
+
 ## 附：本协议自身的修改
 
 改 `AGENTS.md` 时**必须同步更新 `GEMINI.md` 里的哈希**（那里有说明），否则 PR 打回。

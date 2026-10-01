@@ -29,7 +29,7 @@ Claude Code 与 Codex CLI 读 `AGENTS.md`，Gemini CLI 读 `GEMINI.md`。
 修改 `AGENTS.md` 后，**必须**重新计算哈希并更新下面这一行，否则 PR 打回。
 
 ```
-AGENTS.md sha256 前 8 位：072db33a
+AGENTS.md sha256 前 8 位：6b83b878
 ```
 
 **计算命令：**
