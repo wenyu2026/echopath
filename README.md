@@ -45,9 +45,18 @@ npm install
 copy .env.example .env      # Windows
 # 然后编辑 .env，填入 TOKENDANCE_API_KEY（向队长索取）
 
-# 4. 启动
-npm run dev                 # 打开 http://localhost:5173
+# 4. 一条命令拉起前后端
+npm start                   # 打开 http://localhost:5173
 ```
+
+**上台前先跑一次自检**（30 秒，给明确的「可以上台 / 阻塞项」）：
+
+```bash
+npm run preflight
+```
+
+> ⚠️ 只跑 `npm run dev` 会**只启前端、不带后端**，接口全部走离线兜底。
+> 演示请用 `npm start`。
 
 ---
 
@@ -109,12 +118,55 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 
 ## 常用命令
 
+### 演示 / 日常
+
 | 命令 | 作用 |
 |---|---|
-| `npm run dev` | 启动开发服务器（5173） |
+| **`npm start`** | **一条命令拉起前后端**（后端 :3000 + 前端 :5173）—— 演示用这个 |
+| **`npm run preflight`** | **上台前自检**（13 项，30 秒），给明确的「可以上台 / 阻塞项」 |
+| `npm run dev` | 只启前端（5173）。**不带后端**，接口会走离线兜底 |
+| `npm run server` | 只启后端（3000） |
 | `npm run build` | 构建（含 TS 类型检查） |
+| `npm test` | 后端单测（71 项，全部离线，不需要密钥） |
 | `npm run lint` | 代码检查 |
+
+### 数据与验证
+
+| 命令 | 作用 |
+|---|---|
+| `npm run validate:data` | 校验 `data/episodes.json` 的结构与来源引用 |
+| **`npm run check:sources`** | **来源链接体检** —— 查 37 条来源的链接是否还能打开 |
+| **`npm run review:sheet`** | 生成**人工核查清单**（`data/REVIEW-CHECKLIST.md`），把"去审来源"变成可打勾的表格 |
+| `npm run refresh:cache` | 重新生成离线兜底快照（需后端在跑） |
+| `npm run build:cache` | 用现有 fixture 生成快照（不请求后端） |
 | `.\scripts\status.ps1` | 看全队进度 |
+
+> **改完 `data/` 或 `server/` 里的检索/反类比逻辑，记得跑 `npm run refresh:cache`** ——
+> 否则离线快照会和实时结果不一致，`npm run preflight` 会报出来。
+
+---
+
+## 演示相关的两个关键设计
+
+### What-if：证明「结构匹配而非文本匹配」
+
+P5 底部可以「改一个条件，看匹配怎么变」。这不是玩具 —— 它是**证明匹配发生在结构层**的唯一硬手段：
+
+> 文本相似度**不会**因为你「假设我不怕延毕」而改变；结构匹配**会**。
+
+实测：同一段输入文字，改一个约束条件 → 选出来的三个人整个换了。
+
+**它刻意不走离线降级**：降级返回固定快照，「改条件→结果变化」就成了假的。
+
+### 离线兜底：拔网线也能演示
+
+三个演示场景的快照打包进前端。断网或接口失败时自动降级，
+顶部显示黄色「离线演示模式」横幅，并**明确说明这不是实时计算结果**。
+
+`pickScenario()` 会按用户实际填写的内容挑最接近的那份快照 ——
+否则演示场景 2 时显示场景 1 的数据，输入和结果对不上，比没有数据更糟。
+
+**离线模式无法演示 What-if**（它需要实时重算），此时会明说而不是假装。
 
 ---
 
@@ -129,6 +181,22 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 
 **不加会在演示时卡 20 秒以上。**
 
+### 解析模型已换成 `deepseek-v4.1-flash`
+
+同一提示词 + `json_schema`，三个演示场景各跑 3 轮（共 9 次）：
+
+| 模型 | 成功 | 平均 | 中位 | 最慢 |
+|---|---|---|---|---|
+| `glm-5` | 9/9 | 4.1s | 4.0s | 5.4s |
+| **`deepseek-v4.1-flash`** | **9/9** | **2.3s** | **2.2s** | **2.8s** |
+
+解析占了整条链路 **87%** 的等待（检索只要 0.16–0.4s），所以这 1.8 秒直接决定体感。
+
+**可回退**：`SITUATION_MODEL=glm-5 npm run server`
+
+**实测不可用的模型**（别重复试）：`glm-5.3-flashx`（关不掉思考）、`glm-4.5-air`（只支持 stream）、
+`glm-5.3` / `step-3.7-flash`（空 content）、`qwen3.5-flash`（要求提示词含 "json"）、`minimax-m3`（14.4s + 非法 JSON）
+
 ### 必须用 `json_schema` 严格模式
 
 `response_format: json_object` **只保证语法合法，不保证符合 Schema**
@@ -137,6 +205,11 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 ### 不需要向量库
 
 数据只有 36–60 条，直接内存算余弦相似度（<1ms）。省掉 Chroma/pgvector。
+
+### embedding 接口单次批量上限 20 条
+
+实测 36 条会被拒：`batch size is invalid, it should not be larger than 20`。
+`server/embedding/embed.ts` 已做分批 —— **别再改回一次性全发**。
 
 **详细参数与踩坑记录**：[`.agent/DecisionEpisode-Schema.md`](.agent/DecisionEpisode-Schema.md)
 

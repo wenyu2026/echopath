@@ -297,7 +297,46 @@ check(
   );
 }
 
-/* ---------- 8. 构建能过 ---------- */const buildRes = buildCheck();
+/* ---------- 8. README 里写的命令必须真实存在 ---------- */
+// 踩过一次：README 的快速开始写的是 `npm run dev`，而它**只启前端、不带后端**，
+// 照做的人会得到"接口全失败、走离线兜底"的奇怪状态。
+// 文档过期比没文档更坑 —— 没文档人会问，过期文档人会照做。
+{
+  let issues = [];
+  try {
+    const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const scripts = new Set(Object.keys(pkg.scripts ?? {}));
+    const readme = readFileSync(join(root, 'README.md'), 'utf8');
+
+    // ⚠️ 字符类必须含 `-`：脚本名里常有连字符（refresh:cache / validate:data）。
+    //    第一版写成 [a-z:]+，于是 "preflight-typo" 会被截成 "preflight" ——
+    //    变异测试时漏报了，加 `-` 之后才抓得住。
+    const NAME = '[a-z][a-z:-]*';
+    const usedRun = new Set([...readme.matchAll(new RegExp(`npm run (${NAME})`, 'g'))].map((m) => m[1]));
+    const usedDirect = new Set([...readme.matchAll(/npm (start|test)\b/g)].map((m) => m[1]));
+
+    for (const s of usedRun) {
+      if (!scripts.has(s)) issues.push(`README 写了 npm run ${s}，但 package.json 里没有`);
+    }
+    for (const s of usedDirect) {
+      if (!scripts.has(s)) issues.push(`README 写了 npm ${s}，但 package.json 里没有`);
+    }
+
+    // 反向：实现了但完全没写进 README 的（preview 属于边缘，跳过）
+    const documented = new Set([...usedRun, ...usedDirect]);
+    for (const s of scripts) {
+      if (s !== 'preview' && !documented.has(s)) {
+        issues.push(`package.json 有 ${s} 但 README 没提`);
+      }
+    }
+  } catch (e) {
+    issues = [`读取 package.json 或 README 失败：${e.message}`];
+  }
+
+  check('README 里的命令与 package.json 一致', issues.length === 0, issues.slice(0, 3).join(' / '));
+}
+
+/* ---------- 9. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */
