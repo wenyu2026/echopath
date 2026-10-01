@@ -5,6 +5,7 @@
 ```
 .agent/
   README.md          ← 本文件
+  DELEGATION.md      ← 给队友 AI 的部署提示词（直接复制粘贴）
   claims/
     member-a.md      ← 一人一份，各写各的责任区
     member-b.md
