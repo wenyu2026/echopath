@@ -16,6 +16,7 @@ import { loadEpisodes } from '../retrieval/load-episodes.ts';
 import { selectDiverse } from '../retrieval/diversity.ts';
 import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
+import { normalizeSituationFields } from '../parser/situation-parser.ts';
 import {
   categoryMatch,
   bigramOverlap,
@@ -340,8 +341,46 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
-   ⑦ API 层：错误码映射
+   ⑨ 模型输出的小瑕疵要在显示前清掉
+   ------------------------------------------------------------
+   实测见到过 goals 里出现「止损止损」这种叠词。不影响程序正确性，
+   但会直接显示给用户 —— 在「把别人的经历讲清楚」的产品里显得很廉价。
    ============================================================ */
+
+test('净化：去掉相邻重复词，但不改写其他内容', () => {
+  const out = normalizeSituationFields({
+    stage: '大三',
+    dilemma: '坚持 vs 转向',
+    options: ['止损止损', '继续读完', '正常选项'],
+    constraints: ['家庭 家庭'],
+    goals: ['探索新方向'],
+    unknowns: ['上岸概率', '止损止损'],
+    risk: 'medium',
+    reversibility: 'medium',
+  }) as Record<string, unknown>;
+
+  assert.deepEqual(out.options, ['止损', '继续读完', '正常选项'], '叠词应被去掉，其他选项不能动');
+  assert.deepEqual(out.constraints, ['家庭'], '空格分隔的重复词也应去掉');
+  assert.deepEqual(out.goals, ['探索新方向'], '正常内容必须原样保留');
+  assert.deepEqual(out.unknowns, ['上岸概率', '止损'], '叠词处理应覆盖 unknowns');
+  assert.equal(out.stage, '大三');
+});
+
+test('净化：不误伤正常的多字词与短语', () => {
+  const out = normalizeSituationFields({
+    stage: '大三',
+    dilemma: '直接就业 vs 继续考研',
+    options: ['继续深造本专业', '跨专业考研'],
+    constraints: ['已投入两年半时间'],
+    goals: ['顺利毕业'],
+    unknowns: ['考研上岸概率'],
+    risk: 'medium',
+    reversibility: 'medium',
+  }) as Record<string, unknown>;
+
+  assert.deepEqual(out.options, ['继续深造本专业', '跨专业考研'], '「深造」这类词不该被误判为叠词');
+  assert.deepEqual(out.constraints, ['已投入两年半时间']);
+});
 
 test('API：可预期的客户端错误不应一律回 500', () => {
   const raw = readFileSync(join(root, 'server', 'api.ts'), 'utf8');

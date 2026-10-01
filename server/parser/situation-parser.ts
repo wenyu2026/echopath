@@ -103,7 +103,8 @@ export async function parseSituation(config: GatewayConfig, rawInput: string): P
       ],
     });
     const parsed = extractJsonObject(result.content);
-    const check = validateSituation(parsed);
+    const cleaned = normalizeSituationFields(parsed);
+    const check = validateSituation(cleaned);
     if (check.ok) {
       return { situation: check.situation, elapsedMs: result.elapsedMs, totalTokens: result.totalTokens, attempts: attempt };
     }
@@ -111,4 +112,45 @@ export async function parseSituation(config: GatewayConfig, rawInput: string): P
     console.error(`[parser] 第 ${attempt} 次输出未通过校验: ${lastIssues.join('; ')}`);
   }
   throw new Error(`Situation Parser 两次输出均未通过校验: ${lastIssues.join('; ')}`);
+}
+
+/**
+ * 清理模型输出的重复词与小瑕疵。
+ *
+ * 为什么需要：实测见到过 goals 里出现「止损止损」这种叠词 ——
+ * 模型偶尔会把同一个词吐两遍。它不影响程序正确性，但**会直接显示给用户**，
+ * 在一个"把别人的经历讲清楚"的产品里，这种瑕疵会显得很廉价。
+ *
+ * 只做最保守的处理：
+ *   · 去掉相邻重复的整词（「止损止损」→「止损」）
+ *   · trim 两端空白
+ * 不做改写、不做同义替换 —— 那会引入模型之外的风险。
+ */
+export function normalizeSituationFields(parsed: unknown): unknown {
+  if (typeof parsed !== 'object' || parsed === null) return parsed;
+  const obj = { ...(parsed as Record<string, unknown>) };
+
+  for (const key of ['options', 'constraints', 'goals', 'unknowns']) {
+    const arr = obj[key];
+    if (!Array.isArray(arr)) continue;
+    obj[key] = arr.map((x) => (typeof x === 'string' ? dedupeAdjacent(x.trim()) : x));
+  }
+  for (const key of ['stage', 'dilemma']) {
+    if (typeof obj[key] === 'string') obj[key] = dedupeAdjacent((obj[key] as string).trim());
+  }
+  return obj;
+}
+
+/** 「止损止损」→「止损」；「A A」→「A」。只处理完全重复的相邻片段 */
+function dedupeAdjacent(s: string): string {
+  if (s.length < 2) return s;
+  // 整体由同一个片段重复两次构成
+  if (s.length % 2 === 0) {
+    const h = s.length / 2;
+    if (s.slice(0, h) === s.slice(h)) return s.slice(0, h);
+  }
+  // 空格分隔的重复词：「止损 止损」→「止损」
+  const parts = s.split(/\s+/);
+  if (parts.length >= 2 && parts.every((p) => p === parts[0])) return parts[0];
+  return s;
 }
