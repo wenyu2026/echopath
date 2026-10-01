@@ -3,13 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "学军黑客松 2026 · 赛道一 Echo · AI 错题本",
+  "description": "学军黑客松 2026 · 赛道一 Echo · 来路 EchoPath",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "validate:data": "node scripts/validate-data.mjs"
+    "validate:data": "node scripts/validate-data.mjs",
+    "test": "node --test \"server/tests/*.test.ts\"",
+    "server": "node --env-file=.env server/api.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

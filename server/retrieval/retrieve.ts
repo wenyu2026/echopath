@@ -9,6 +9,9 @@
  */
 import type { DecisionEpisode, MatchResult, Situation } from '../../src/types/episode.ts';
 import { cosine, type Embedder } from '../embedding/embed.ts';
+import { buildEvidenceLayers } from '../evidence/layers.ts';
+import { generateCounterAnalogy } from '../counter-analogy/generate.ts';
+import type { GatewayConfig } from '../shared/gateway.ts';
 import {
   DIMENSION_WEIGHTS,
   explainSimilarity,
@@ -51,6 +54,12 @@ export interface RetrieveDeps {
   episodes: DecisionEpisode[];
   /** 预计算的案例向量（启动时建好；mock 模式下即席计算） */
   index?: EpisodeIndexEntry[];
+  /**
+   * #15 反类比用的网关配置。
+   * 不传则跳过 LLM 表述，直接用代码候选成文（仍是可追溯的，不编造）——
+   * 这让没有 API Key 时也能跑通全链路，便于前端联调与断网演示。
+   */
+  gateway?: GatewayConfig;
 }
 
 export function recallTextOf(ep: DecisionEpisode): string {
@@ -127,20 +136,57 @@ export async function retrieve(situation: Situation, opts: RetrieveOptions, deps
     console.error('[retrieval] ⚠️ 候选中 choice.type 不足 2 种，按分数返回');
   }
 
-  // 5. 组装 MatchResult（#15 阶段二填充 why_different / evidence_layers 的完整分层）
-  const matches: MatchResult[] = picked.map(({ episode, dimensions }) => ({
-    episode,
-    dimensions,
-    why_similar: explainSimilarity(situation, episode, dimensions),
-    why_different: [],
-    evidence_layers: {
-      facts: [],
-      self_claims: [],
-      interpretations: [],
-      ai_inferences: [],
-      unknowns: [...(episode.reflection.unknowns ?? [])],
-    },
-  }));
+  // 5. 组装 MatchResult
+  //    #15 阶段二：evidence_layers 走纯代码判定表（零幻觉、零延迟），
+  //    why_different 走「代码候选 → LLM 表述 → 校验」三段式。
+  //    两者都对单个案例独立，可并发；任一失败都降级而不是中断整条检索。
+  const matches: MatchResult[] = await Promise.all(
+    picked.map(async ({ episode, dimensions }) => {
+      // 证据分层是纯函数，不会失败
+      const layers = buildEvidenceLayers(episode);
+
+      let whyDifferent: string[] = [];
+      let whyDifferentDetail: MatchResult['why_different_detail'];
+
+      try {
+        const ca = await generateCounterAnalogy(situation, episode, deps.gateway);
+        whyDifferent = ca.texts;
+        whyDifferentDetail = ca.details;
+
+        // 规则文档 1.1 最后一行：反类比里 kind=era 的条目同时归入 ai_inferences。
+        // 理由：era 类差异依赖模型外部知识（「当时转行无现代门槛」），
+        // 永远无法绑定 source_id，必须在证据面板上以「⚠️ AI 类比」显式暴露，
+        // 而不是只藏在前端的一张卡片里。
+        const eraItems = ca.details.filter((d) => d.kind === 'era').map((d) => `⚠️ ${d.text} (ai_inference: ${d.basis})`);
+        if (eraItems.length > 0) {
+          layers.ai_inferences = [...layers.ai_inferences, ...eraItems];
+        }
+      } catch (e) {
+        // 反类比失败不能拖垮检索：退化为一条诚实的 unknown
+        console.error(`[retrieval] 反类比生成失败（${episode.episode_id}）：`, (e as Error).message);
+        whyDifferent = [
+          `【未知】无法判断与该案例的关键差异：反类比生成失败（${(e as Error).message.slice(0, 40)}）`,
+        ];
+        whyDifferentDetail = [
+          {
+            text: whyDifferent[0],
+            kind: 'unknown',
+            basis: 'counter-analogy 生成异常',
+            refs: [`episode_id=${episode.episode_id}`],
+          },
+        ];
+      }
+
+      return {
+        episode,
+        dimensions,
+        why_similar: explainSimilarity(situation, episode, dimensions),
+        why_different: whyDifferent,
+        why_different_detail: whyDifferentDetail,
+        evidence_layers: layers,
+      } satisfies MatchResult;
+    }),
+  );
 
   return {
     situation,

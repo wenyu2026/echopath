@@ -156,6 +156,31 @@ export interface MatchDimensions {
 }
 
 /**
+ * 反类比的一条结构化明细。
+ *
+ * 为什么需要它（CHANGE_REQUEST #17 已批准）：
+ *   `why_different` 是给前端直接渲染的 string[]，但方案第 2.3 节要求
+ *   「⚠️ AI 类比」与「【未知】」必须与普通差异**视觉区分**，纯文本行做不到。
+ *   所以每条差异额外携带「依据类型」，前端可据此渲染不同样式。
+ */
+export interface WhyDifferentDetail {
+  /** 给用户看的一句话（与 why_different[i] 一致） */
+  text: string;
+  /**
+   * 差异类别：
+   * - structure：结构字段差异（纯代码可比，如 constraints 对比）
+   * - evidence：证据覆盖差异
+   * - era：时代/制度差异 —— **属 AI 类比，前端必须显著标注**
+   * - unknown：证据不足，无法判断
+   */
+  kind: 'structure' | 'evidence' | 'era' | 'unknown';
+  /** 依据说明，如 "constraints 对比" / "LX-S3" / "模型外部知识" */
+  basis: string;
+  /** 引用的 source_id 或结构字段名 */
+  refs?: string[];
+}
+
+/**
  * 一个案例的匹配结果。
  * ⚠️ 不输出单一"相似度 87%"，而是维度卡 + 像/不像的解释。
  */
@@ -166,6 +191,11 @@ export interface MatchResult {
   why_similar: string[];
   /** 为什么不像你 —— 反类比，至少 2 条重要不可比因素 */
   why_different: string[];
+  /**
+   * 反类比的结构化明细（可选）。
+   * `why_different` 由它序列化生成；前端可先只读 string[]，渐进迁移。
+   */
+  why_different_detail?: WhyDifferentDetail[];
   /** 该案例结论的可信度分层 */
   evidence_layers: {
     facts: string[];        // 史实

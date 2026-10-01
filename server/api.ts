@@ -35,7 +35,12 @@ function makeDeps(): RetrieveDeps {
   const embedder = API_KEY
     ? realEmbedder({ apiKey: API_KEY })
     : mockEmbedder();
-  const deps: RetrieveDeps = { embedder, episodes: loadEpisodes() };
+  const deps: RetrieveDeps = {
+    embedder,
+    episodes: loadEpisodes(),
+    // #15 反类比：没 key 时不传，退化为纯代码候选（链路仍可跑通）
+    gateway: API_KEY ? { apiKey: API_KEY } : undefined,
+  };
   return deps;
 }
 
