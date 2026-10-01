@@ -115,6 +115,9 @@ unknown 条目格式：`【未知】无法比较「X」：案例资料里查不�
 
 ## 修订记录
 
+- **2026-10-02 决定确认（产品负责人 Damn4lee）**：
+  - §2.3 维持「unknown 不计入 2 条底线」（方案 B），已锁定；
+  - §1.1 的 outcomes 前置条件（`evidence_ref`）已作为建议发给 fu6868（[#13 评论](https://github.com/wenyu2026/xuejun-hackathon/issues/13#issuecomment-5938586560)），fu6868 按 #13 节奏决定是否采纳；落地后短期结果可升格进 facts。
 - **2026-10-02 验收修订（依产品负责人验收发现）**：
   1. §2.3 unknown 条目改为**不计入** 2 条底线（原稿：计入）——防止用 unknown 凑数达标；
   2. §1.1 outcomes 全部保守归 interpretations（原稿：short_term 有证据覆盖时可进 facts）——数据侧无 per-outcome 来源绑定前不假装可追溯；
