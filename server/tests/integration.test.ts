@@ -16,7 +16,7 @@ import { loadEpisodes } from '../retrieval/load-episodes.ts';
 import { selectDiverse } from '../retrieval/diversity.ts';
 import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
-import { normalizeSituationFields } from '../parser/situation-parser.ts';
+import { normalizeSituationFields, detectOutOfScope } from '../parser/situation-parser.ts';
 import { getJourneyQuestions, detectJourneyStage } from '../../src/data/mock.ts';
 import {
   categoryMatch,
@@ -363,6 +363,52 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
   };
   assert.ok(!validateSituation(tooFew).ok, '严格版应因条数不足而拒绝');
   assert.ok(validateSituationShape(tooFew).ok, '宽松版应接受同样的输入');
+});
+
+/* ============================================================
+   ⑭ 超出产品范围的输入要明确拒答
+   ------------------------------------------------------------
+   实测最尴尬的情形：喂「今天中午吃什么好呢，食堂人太多了」，
+   模型照样吐结构化处境（阶段=午餐决策 / 冲突=忍受拥挤 vs 另寻出路），
+   然后匹配出三位历史人物「对照」这顿午饭。
+   评委随手打句玩笑话，看到的是系统一本正经地胡编 —— 比拒答难看得多。
+   ============================================================ */
+
+test('超范围：日常消费/天气/订票类输入必须拒答', () => {
+  const shouldReject = [
+    '今天中午吃什么好呢，食堂人太多了',
+    '买哪个手机好',
+    '今天天气怎么样',
+    '帮我订一张票',
+    '。。。',
+    '烦',
+  ];
+  for (const t of shouldReject) {
+    const r = detectOutOfScope(t);
+    assert.ok(r, `应判为超范围但放行了：${t}`);
+    assert.ok(r.reason.length > 0, '应给出原因');
+    assert.ok(r.hint.length > 0, '应给出引导');
+  }
+});
+
+test('超范围：真实处境必须放行（宁可少拦，不要误拦）', () => {
+  const shouldPass = [
+    '大三，材料科学，读了两年半，越来越觉得不适合自己',
+    '工作五年了，在一家小公司做产品，看不到晋升路径',
+    '想转行但不知道往哪转',
+    '很迷茫',       // 三字但确实是人生状态的表达
+    '四十岁了还在做同样的工作',
+  ];
+  for (const t of shouldPass) {
+    assert.equal(detectOutOfScope(t), null, `不该拦下真实处境：${t}`);
+  }
+});
+
+test('超范围：拒答信息要能指导用户改写，而不是只说「失败」', () => {
+  const r = detectOutOfScope('今天中午吃什么');
+  assert.ok(r, '应拒答');
+  assert.ok(/不是人生抉择|日常消费/.test(r.reason), `原因要具体：${r.reason}`);
+  assert.ok(r.hint.length >= 10, `引导要够用：${r.hint}`);
 });
 
 /* ============================================================

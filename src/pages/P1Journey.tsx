@@ -11,7 +11,7 @@ import { useApp } from '../state/AppState';
 import { getJourneyQuestions } from '../data/mock';
 
 export default function P1Journey() {
-  const { journey, setJourneyAnswer, buildSituation, loadingSituation, setReachable } = useApp();
+  const { journey, setJourneyAnswer, buildSituation, loadingSituation, setReachable, outOfScope, clearOutOfScope } = useApp();
   const nav = useNavigate();
   const [idx, setIdx] = useState(0);
 
@@ -30,8 +30,10 @@ export default function P1Journey() {
       return;
     }
     // 进入 P2 前，把回答交给后端解析成结构化处境。
-    // 后端不可用时 buildSituation 内部会自动降级到离线数据，不会卡住流程。
-    await buildSituation();
+    // 后端不可用时 buildSituation 内部会自动降级到离线数据，不会卡住流程；
+    // 但**输入超出范围**时必须留在原地给引导，不能带着空处境往下走。
+    const ok = await buildSituation();
+    if (!ok) return;
     setReachable(1);
     nav('/crossroads');
   }
@@ -44,6 +46,27 @@ export default function P1Journey() {
         <br />
         <span className="small">（这是一次性收集，不会用于其它用途）</span>
       </p>
+
+      {/* 输入超出范围时明确拒答，而不是硬编一个处境出来。
+          实测最糟的情形：喂「中午吃什么」也能被解析成「午餐决策」并匹配历史人物。 */}
+      {outOfScope && (
+        <div className="notice warn" style={{ marginBottom: 20 }}>
+          <strong>这个系统处理不了这类问题</strong>
+          <br />
+          {outOfScope.reason}。
+          {outOfScope.hint && (
+            <>
+              <br />
+              {outOfScope.hint}
+            </>
+          )}
+          <div style={{ marginTop: 10 }}>
+            <button className="btn btn-sm" onClick={clearOutOfScope}>
+              好，我换个说法
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 进度 */}
       <div className="row tiny muted" style={{ marginBottom: 8 }}>

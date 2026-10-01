@@ -35,9 +35,9 @@ type Ctx = {
 
   result: RetrievalResponse | null;
 
-  /** P1 → P2：把自然语言回答交给后端解析成结构化处境 */
+  /** P1 → P2：把自然语言回答交给后端解析成结构化处境。返回 false 表示不该继续往下走 */
   loadingSituation: boolean;
-  buildSituation: () => Promise<void>;
+  buildSituation: () => Promise<boolean>;
 
   /** P2 → P3：用（可能被用户改过的）处境去检索 */
   loadingRetrieval: boolean;
@@ -53,6 +53,13 @@ type Ctx = {
   mode: RunMode;
   /** 降级原因（给 UI 显示提示） */
   offlineReason: string | null;
+
+  /**
+   * 输入不在产品范围内时的说明（后端 422 OUT_OF_SCOPE）。
+   * 与「接口失败」区分开：这是**明确的业务答复**，要给引导而不是报错。
+   */
+  outOfScope: { reason: string; hint: string } | null;
+  clearOutOfScope: () => void;
 
   reachable: number;
   setReachable: (n: number) => void;
@@ -238,6 +245,20 @@ function buildNarrative(journey: Journey): string {
     .join('\n');
 }
 
+/**
+ * 输入超范围时后端返回 422 OUT_OF_SCOPE。
+ * 这不是「接口挂了」，而是**明确的业务答复** ——
+ * 所以绝不能走离线兜底（那会拿别人的处境糊弄用户）。
+ */
+export class OutOfScopeError extends Error {
+  hint: string;
+  constructor(reason: string, hint: string) {
+    super(reason);
+    this.name = 'OutOfScopeError';
+    this.hint = hint;
+  }
+}
+
 async function postJson<T>(path: string, payload: unknown, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -250,6 +271,15 @@ async function postJson<T>(path: string, payload: unknown, timeoutMs = REQUEST_T
     });
     if (!res.ok) {
       const text = await res.text().catch(() => '');
+      // 422 且带 OUT_OF_SCOPE → 抛专门的错误，让 UI 给引导而不是报"失败"
+      if (res.status === 422 && text.includes('OUT_OF_SCOPE')) {
+        try {
+          const j = JSON.parse(text) as { error?: { message?: string; hint?: string } };
+          throw new OutOfScopeError(j.error?.message ?? '输入不在本产品的范围内', j.error?.hint ?? '');
+        } catch (e) {
+          if (e instanceof OutOfScopeError) throw e;
+        }
+      }
       throw new Error(`HTTP ${res.status}${text ? `：${text.slice(0, 120)}` : ''}`);
     }
     return (await res.json()) as T;
@@ -271,6 +301,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [loadingRetrieval, setLoadingRetrieval] = useState(false);
   const [mode, setMode] = useState<RunMode>(restored?.mode ?? 'live');
   const [offlineReason, setOfflineReason] = useState<string | null>(restored?.offlineReason ?? null);
+  const [outOfScope, setOutOfScope] = useState<{ reason: string; hint: string } | null>(null);
   const [reachable, setReachable] = useState(restored?.reachable ?? 0);
 
   // 任何状态变化都同步到 sessionStorage
@@ -311,8 +342,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       result,
 
       loadingSituation,
-      async buildSituation() {
+      async buildSituation(): Promise<boolean> {
         setLoadingSituation(true);
+        setOutOfScope(null);
         const narrative = buildNarrative(journey);
         try {
           const res = await postJson<{ situation: Situation }>('/api/situation', {
@@ -321,8 +353,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setSituation(res.situation);
           setMode('live');
           setOfflineReason(null);
+          return true;
         } catch (e) {
+          // ⚠️ 超出范围是**明确的业务答复**，不能走离线兜底 ——
+          //    拿别人的处境糊弄用户比看到错误提示糟糕得多。
+          if (e instanceof OutOfScopeError) {
+            setOutOfScope({ reason: e.message, hint: e.hint });
+            return false;
+          }
+          // 接口不可用 → 降级到快照，流程照常往下走
           fallback(`解析接口不可用（${(e as Error).message.slice(0, 60)}）`, 'situation');
+          return true;
         } finally {
           setLoadingSituation(false);
         }
@@ -368,6 +409,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       mode,
       offlineReason,
 
+      outOfScope,
+      clearOutOfScope: () => setOutOfScope(null),
+
       reachable,
       setReachable,
 
@@ -386,7 +430,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       },
     };
-  }, [journey, situation, result, loadingSituation, loadingRetrieval, mode, offlineReason, reachable]);
+  }, [journey, situation, result, loadingSituation, loadingRetrieval, mode, offlineReason, reachable, outOfScope]);
 
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

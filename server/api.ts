@@ -18,7 +18,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import type { Situation } from '../src/types/episode.ts';
-import { parseSituation } from './parser/situation-parser.ts';
+import { parseSituation, OutOfScopeError } from './parser/situation-parser.ts';
 import { validateSituationShape } from './shared/situation-contract.ts';
 import { mockEmbedder, realEmbedder } from './embedding/embed.ts';
 import { loadEpisodes } from './retrieval/load-episodes.ts';
@@ -223,6 +223,18 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     // 会让调用方以为是服务端炸了，排查方向直接跑偏
     if (err instanceof BodyTooLarge) {
       json(res, 413, { error: { code: 'BODY_TOO_LARGE', message: err.message } });
+      return;
+    }
+    // 输入不在产品范围内 —— 单独一个错误码，前端要给出明确的引导，
+    // 而不是笼统的「解析失败」
+    if (err instanceof OutOfScopeError) {
+      json(res, 422, {
+        error: {
+          code: 'OUT_OF_SCOPE',
+          message: err.detail.reason,
+          hint: err.detail.hint,
+        },
+      });
       return;
     }
     const msg = err.message ?? '';

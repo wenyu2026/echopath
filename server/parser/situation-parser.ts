@@ -82,7 +82,93 @@ export interface ParseResult {
   attempts: number;
 }
 
+/**
+ * 判断输入是否「不在本产品范围内」。
+ *
+ * ⚠️ 实测发现的尴尬：喂进「今天中午吃什么好呢，食堂人太多了」，
+ *   模型照样吐出结构化的「阶段=午餐决策 / 冲突=忍受拥挤 vs 另寻出路」，
+ *   然后检索出三位历史人物「匹配」这顿午饭。
+ *
+ *   评委随手打句玩笑话，看到的是系统一本正经地拿鲁迅比午饭 ——
+ *   比拒绝服务难看得多。所以要在**能判出来的时候**明确拒答。
+ *
+ * 刻意保守：只拦**明显**非人生抉择的输入（吃什么/买什么/天气/订票…），
+ * 判不准就放行交给模型 —— 宁可少拦，也不要误拦真实处境。
+ */
+export interface OutOfScope {
+  reason: string;
+  hint: string;
+}
+
+const OUT_OF_SCOPE_RULES: { re: RegExp; reason: string; hint: string }[] = [
+  {
+    re: /中午?吃|晚饭?吃|吃什么|点外卖|食堂.{0,4}人多|夜宵/,
+    reason: '这是日常消费选择，不是人生抉择',
+    hint: '这里找的是「和你走到过相似人生节点的人」，不是帮你决定这顿吃什么。',
+  },
+  {
+    re: /买[哪哪个什么].{0,4}(手机|电脑|车|包|鞋|衣服)|选[哪哪个].{0,4}(手机|电脑|型号|款式)/,
+    reason: '这是消费选购，不是人生抉择',
+    hint: '选购类问题有更合适的工具。这里处理的是「要不要换一条路」这类结构性取舍。',
+  },
+  {
+    re: /^今天(天气|会不会下雨)|明天(天气|会不会下雨)|要不要带伞/,
+    reason: '这是天气查询',
+    hint: '这个系统不查天气。',
+  },
+  {
+    re: /(帮我)?(订|买)(一张)?(票|机票|火车票|高铁票)|几点(发车|起飞)/,
+    reason: '这是行程查询',
+    hint: '这个系统不处理订票。',
+  },
+];
+
+/**
+ * 输入太短或没有实际信息时也拒答（避免模型硬编一个处境出来）。
+ *
+ * 实测：「烦」这种单字输入也会被解析成「阶段=情绪爆发期 / 冲突=发泄情绪 vs 寻找根因」，
+ * 然后照样匹配三位历史人物 —— 看起来像在胡编。
+ * 所以除了纯标点，还要拦「有效字符太少」的情况。
+ */
+const TOO_SHORT = /^[\s\p{P}\p{S}]{0,12}$/u;
+
+/** 去掉标点与空白后，还剩几个字符 */
+function effectiveLength(s: string): number {
+  return s.replace(/[\s\p{P}\p{S}]/gu, '').length;
+}
+
+export function detectOutOfScope(rawInput: string): OutOfScope | null {
+  const t = (rawInput ?? '').trim();
+
+  if (t.length === 0) {
+    return { reason: '没有收到任何内容', hint: '写一句你现在的处境就行，不用工整。' };
+  }
+  if (TOO_SHORT.test(t) || effectiveLength(t) < 3) {
+    return {
+      reason: '输入里没有足够的信息',
+      hint: '多加一两个细节（在做什么、纠结什么），找到的人才会像你。',
+    };
+  }
+  for (const r of OUT_OF_SCOPE_RULES) {
+    if (r.re.test(t)) return { reason: r.reason, hint: r.hint };
+  }
+  return null;
+}
+
+export class OutOfScopeError extends Error {
+  detail: OutOfScope;
+  constructor(detail: OutOfScope) {
+    super(detail.reason);
+    this.name = 'OutOfScopeError';
+    this.detail = detail;
+  }
+}
+
 export async function parseSituation(config: GatewayConfig, rawInput: string): Promise<ParseResult> {
+  // 先拦明显超出范围的输入 —— 让模型硬编一个处境出来比拒答更难堪
+  const oos = detectOutOfScope(rawInput);
+  if (oos) throw new OutOfScopeError(oos);
+
   let lastIssues: string[] = [];
   for (let attempt = 1; attempt <= 2; attempt++) {
     const userContent =
