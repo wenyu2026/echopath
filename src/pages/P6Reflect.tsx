@@ -134,7 +134,14 @@ export default function P6Reflect() {
 
         <div className="option-grid">
           {matches.map((m, i) => {
-            const txt = `${String.fromCharCode(65 + i)}：${CHOICE_LABEL[m.episode.choice.type] ?? ''} → ${m.episode.outcomes.long_term}`;
+            const lt = m.episode.outcomes.long_term ?? '';
+            // 数据显示：36 条案例里有 6 条的 long_term 是「未知：…」这类占位。
+            // 把「未知」当成一个可供选择的"结果"是说不通的 —— 人没法"不能接受"一个未知。
+            // 所以这类案例不进选项，改为单独说明，让问题保持成立。
+            const isUnknown = /^未知|^未知：|没有对照|无法证明/.test(lt);
+            if (isUnknown) return null;
+
+            const txt = `${String.fromCharCode(65 + i)}：${CHOICE_LABEL[m.episode.choice.type] ?? ''} → ${lt}`;
             return (
               <button
                 key={m.episode.episode_id}
@@ -143,7 +150,7 @@ export default function P6Reflect() {
               >
                 <strong>路径 {String.fromCharCode(65 + i)}</strong>
                 <br />
-                <span className="small muted">{m.episode.outcomes.long_term}</span>
+                <span className="small muted">{lt}</span>
               </button>
             );
           })}
@@ -154,6 +161,21 @@ export default function P6Reflect() {
             都不是
           </button>
         </div>
+
+        {/* 结果未知的案例单独说明 —— 不装成可选项 */}
+        {matches.some((m) => /^未知|^未知：|没有对照|无法证明/.test(m.episode.outcomes.long_term ?? '')) && (
+          <div className="notice" style={{ marginTop: 14, marginBottom: 0 }}>
+            <span className="tiny muted">另有案例的长期结果<strong>资料里查不到</strong>，所以不作为选项：</span>
+            {matches
+              .map((m, i) => ({ m, i }))
+              .filter(({ m }) => /^未知|^未知：|没有对照|无法证明/.test(m.episode.outcomes.long_term ?? ''))
+              .map(({ m, i }) => (
+                <div key={m.episode.episode_id} className="tiny muted" style={{ marginTop: 6 }}>
+                  路径 {String.fromCharCode(65 + i)}（{m.episode.person.name}）：{m.episode.outcomes.long_term}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
 
       {/* 问题 2 */}
