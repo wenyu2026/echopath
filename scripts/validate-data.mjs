@@ -133,6 +133,13 @@ export function validateDataset(raw, sourceFile, reviewFile, { milestone = 'fina
       if (r.negative_case === '坚持但长期受损' && ep.choice?.type !== 'persist') fail(id, '长期坚持受损须对应 persist');
       if (r.negative_case === '转向后不适合' && !['direct_switch', 'explore_then_switch'].includes(ep.choice?.type)) fail(id, '转向不适合须对应转向选择');
       if (r.negative_case === '坚持但长期受损' && string(ep.outcomes?.long_term) && ep.outcomes.long_term.startsWith('未知')) fail(id, '长期受损须有可追溯的长期结果');
+      strings(id, 'negative_outcome_fields', r.negative_outcome_fields, 1, 3);
+      for (const field of list(r.negative_outcome_fields)) {
+        const value = typeof field === 'string' ? at(ep, field) : undefined;
+        if (!['outcomes.short_term', 'outcomes.mid_term', 'outcomes.long_term'].includes(field) ||
+          !string(value) || value.startsWith('未知') || !list(r.field_sources?.[field]).length) fail(id, '负面分类须绑定已记载的结果字段');
+      }
+      if (r.negative_case === '坚持但长期受损' && !list(r.negative_outcome_fields).includes('outcomes.long_term')) fail(id, '长期受损须引用长期结果');
     }
     const bindings = object(r.field_sources) ? r.field_sources : {};
     if (!object(r.field_sources)) fail(id, 'field_sources 必须是对象');

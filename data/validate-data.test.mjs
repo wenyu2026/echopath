@@ -45,6 +45,9 @@ reject('age inconsistent with dates is rejected', d => { d.episodes[0].person.bi
 reject('negative keywords alone do not satisfy coverage', (d, s, r) => {
   for (const row of r.episodes) row.negative_case = 'none';
 }, /缺少负面案例/);
+reject('negative classifications need a sourced outcome', (d, s, r) => {
+  r.episodes.find(x => x.negative_case === '坚持但长期受损').negative_outcome_fields = ['outcomes.made_up'];
+}, /负面分类须绑定/);
 reject('four choice types are enforced', d => { for (const ep of d.episodes) ep.choice.type = 'direct_switch'; }, /至少覆盖四种/);
 reject('missing demo direction is rejected', (d, s, r) => { for (const row of r.episodes) row.demo_questions = ['转专业']; }, /缺少 Demo 方向/);
 reject('human signoff cannot be claimed without reviewer', (d, s, r) => { r.episodes[0].human_review = 'approved'; }, /须记录审查者/);

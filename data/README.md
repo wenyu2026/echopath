@@ -2,6 +2,18 @@
 
 本集交付顺序为首批 12 条，再扩充到 36 条。原有三个种子 ID 保持不变；公共 `DecisionEpisode` 类型不变。数据仍放在 `episodes.json` 的 `episodes` 数组内。
 
+当前为 **36 条事件 / 18 位人物 / 36 个外部来源 + 1 个本地建模说明**。首批 12 条提交为 `b72cda5`；完整覆盖与审查重点见 [REVIEW.md](REVIEW.md)。
+
+| 维度 | 数量 |
+|---|---:|
+| 转专业 | 9 |
+| 考研还是就业 | 11 |
+| 大厂还是小公司/创业 | 16 |
+| direct_switch / explore_then_switch | 18 / 8 |
+| persist / dual_track | 2 / 4 |
+| abandon / explore_then_persist | 3 / 1 |
+| 坚持但长期受损 / 转向后不适合 | 1 / 5 |
+
 ## 文件与复核入口
 
 | 文件 | 内容 |

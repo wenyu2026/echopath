@@ -35,6 +35,17 @@
       "limitations": "事后自述与开放转录；动机按本人表述处理，不当作现场心理记录。"
     },
     {
+      "source_id": "LX-SELECT",
+      "title": "《自选集》自序（1932）",
+      "publisher": "鲁迅；维基文库转录",
+      "url": "https://zh.wikisource.org/zh-hans/《自選集》自序",
+      "type": "self_writing",
+      "locator": "我做小说，是开手于一九一八年",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "事后回忆；不是逐日决策日志。"
+    },
+    {
       "source_id": "LX-MUSEUM",
       "title": "鲁迅生平陈列：画出国人的魂灵",
       "publisher": "上海鲁迅纪念馆",
@@ -178,6 +189,28 @@
       "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
     },
     {
+      "source_id": "VR-AUTO",
+      "title": "Venkatraman Ramakrishnan — Biographical",
+      "publisher": "Nobel Prize / Venki Ramakrishnan",
+      "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/",
+      "type": "self_writing",
+      "locator": "1976 UCSD、1978 Yale、1999 LMB",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "直接打开受站点限制；已核对搜索索引中的长段正文，合并前建议人类复核原页。事后自述。"
+    },
+    {
+      "source_id": "VR-BIO",
+      "title": "About Venki Ramakrishnan",
+      "publisher": "Nobel Prize Inspiration Initiative",
+      "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/",
+      "type": "biography",
+      "locator": "1976 PhD；UCSD two years；1999 LMB；2000 ribosome structure",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+    },
+    {
       "source_id": "KK-ROCK",
       "title": "Katalin Karikó",
       "publisher": "Rockefeller University / Evelyn Strauss",
@@ -187,6 +220,61 @@
       "accessed_on": "2026-10-02",
       "access_method": "page",
       "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+    },
+    {
+      "source_id": "KK-BION",
+      "title": "Katalin Karikó and Drew Weissman awarded Nobel Prize",
+      "publisher": "BioNTech",
+      "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html",
+      "type": "biography",
+      "locator": "2013 入职；2014 联合论文；2022 转外部顾问",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "雇主新闻稿，有宣传目的；不据此断言个人收入、幸福或职业最优解。"
+    },
+    {
+      "source_id": "FA-AUTO",
+      "title": "Frances H. Arnold — Biographical",
+      "publisher": "Nobel Prize / Frances Arnold",
+      "url": "https://www.nobelprize.org/prizes/chemistry/2018/arnold/biographical/",
+      "type": "self_writing",
+      "locator": "1979—1980 SERI；January 1981 Berkeley；January 1987 Caltech faculty",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "原页直接访问受限；已核对索引正文。事后自述，需人类复核。"
+    },
+    {
+      "source_id": "JG-AUTO",
+      "title": "Sir John B. Gurdon — Biographical",
+      "publisher": "Nobel Prize / John Gurdon",
+      "url": "https://www.nobelprize.org/prizes/medicine/2012/gurdon/biographical/",
+      "type": "self_writing",
+      "locator": "1952 Oxford admission / 1953 Zoology；1960 邀请；Post-Doctoral Work",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "原页直接访问受限；已核对索引正文。1960 是邀约年份，赴美确切年份未据此锁定。"
+    },
+    {
+      "source_id": "JG-INTERVIEW",
+      "title": "Sir John Gurdon: Godfather of cloning",
+      "publisher": "Journal of Cell Biology / PMC",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2315664/",
+      "type": "interview",
+      "locator": "Caltech bacteriophage postdoc 与一年后回到胚胎研究",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "2008 年回顾访谈；不能将不擅长某一实验等同于整体科研能力不足。"
+    },
+    {
+      "source_id": "JD-BIO",
+      "title": "James Dyson",
+      "publisher": "Dyson",
+      "url": "https://www.dyson.com/james-dyson",
+      "type": "biography",
+      "locator": "2014 electric vehicle；2019 halted",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "企业创始人介绍，有宣传选择偏差。"
     },
     {
       "source_id": "JD-CLOSE",
@@ -200,6 +288,94 @@
       "limitations": "管理层当时声明；员工安置是承诺，不当作已实现的结果。"
     },
     {
+      "source_id": "SB-INVESTOR",
+      "title": "Slack",
+      "publisher": "Andreessen Horowitz / John O’Farrell",
+      "url": "https://a16z.com/announcement/slack/",
+      "type": "biography",
+      "locator": "October 2012 Glitch failure；40 to 8；$4m；Slack development",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "投资人回顾，有利益关系；产品上市不证明所有员工或投资人均获益。"
+    },
+    {
+      "source_id": "SB-ORIGIN",
+      "title": "What is Slack and how does it work?",
+      "publisher": "Slack",
+      "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work",
+      "type": "biography",
+      "locator": "internal chat tool for Glitch",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "公司回顾仅支持内部工具起源；该页把游戏关闭写为 2013，与当时记录和投资人所述 2012 冲突，不用于关闭年份。"
+    },
+    {
+      "source_id": "SB-LAUNCH",
+      "title": "Slack, The Newest Enterprise Social Network, Is The Latest Effort From Flickr Co-Founder Stewart Butterfield",
+      "publisher": "TechCrunch",
+      "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/",
+      "type": "biography",
+      "locator": "2013-08-14 发布报道",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "仅用于发布年份，产品当时仍在有限测试阶段。"
+    },
+    {
+      "source_id": "EY-BIO",
+      "title": "Eric S. Yuan",
+      "publisher": "Zoom Investor Relations",
+      "url": "https://investors.zoom.us/board-member-management/eric-yuan",
+      "type": "biography",
+      "locator": "1997 WebEx、2007 Cisco、June 2011 Zoom",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+    },
+    {
+      "source_id": "EY-2023",
+      "title": "A Message from Eric Yuan, CEO of Zoom",
+      "publisher": "Eric Yuan / Zoom",
+      "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/",
+      "type": "self_writing",
+      "locator": "2023-02-07 裁员约 1300 人、15%；承担责任",
+      "accessed_on": "2026-10-02",
+      "access_method": "search_index",
+      "limitations": "CEO 对员工的声明，不是独立调查，不能归咎于单次创办决定。"
+    },
+    {
+      "source_id": "SA-INTERVIEW",
+      "title": "How Sara Blakely Started Spanx",
+      "publisher": "Sara Blakely / Inc.",
+      "url": "https://www.inc.com/sara-blakely/how-sara-blakley-started-spanx.html",
+      "type": "interview",
+      "locator": "2012 视频文字：传真机销售、积蓄、夜间周末、一年打样",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "创始人回忆，未确认准确离职日期。"
+    },
+    {
+      "source_id": "SA-INVESTOR",
+      "title": "Behind the Deal: Blackstone’s Investment in SPANX",
+      "publisher": "Blackstone",
+      "url": "https://www.blackstone.com/insights/article/blackstones-investment-in-spanx/",
+      "type": "biography",
+      "locator": "2000 创办；2021 多数股权投资",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "投资人公告；不使用估值推算本人到手财富。"
+    },
+    {
+      "source_id": "FK-CHRON",
+      "title": "Chronik",
+      "publisher": "S. Fischer Verlag / FranzKafka.de",
+      "url": "https://www.franzkafka.de/leben/chronik",
+      "type": "biography",
+      "locator": "1908、1912、1922、1923、1924 年条目",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "出版社年表；不据年表推断疾病与迁居的因果关系。"
+    },
+    {
       "source_id": "CN-AUTO",
       "title": "Christiane Nüsslein-Volhard — Biographical",
       "publisher": "Nobel Prize / Christiane Nüsslein-Volhard",
@@ -209,6 +385,17 @@
       "accessed_on": "2026-10-02",
       "access_method": "search_index",
       "limitations": "原页直接访问受限；已核对索引正文。课程不合预期属于本人评价。"
+    },
+    {
+      "source_id": "AE-UZH",
+      "title": "Albert Einstein",
+      "publisher": "University of Zurich",
+      "url": "https://www.uzh.ch/en/researchinnovation/excellence/nobelprize/einstein",
+      "type": "biography",
+      "locator": "1900 无大学助教职位；1902—1909 专利局；1905 博士；1909 教职",
+      "accessed_on": "2026-10-02",
+      "access_method": "page",
+      "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
     },
     {
       "source_id": "MODEL-V1",
