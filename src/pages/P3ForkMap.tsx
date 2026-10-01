@@ -26,6 +26,10 @@ export default function P3ForkMap() {
   const { matches, meta } = result;
   const types = new Set(matches.map((m) => m.episode.choice.type));
 
+  // 用户实际等待 = 理解处境（parser）+ 检索重排（retrieval）
+  // 只报后者会少报近一个数量级，跟"不隐藏过程"的主张自相矛盾
+  const totalSeconds = (((meta.parser_elapsed_ms ?? 0) + meta.elapsed_ms) / 1000).toFixed(1);
+
   function openEpisode(i: number) {
     setReachable(4);
     nav(`/episode/${i}`);
@@ -63,9 +67,28 @@ export default function P3ForkMap() {
           <span className="pipe-node">结构重排 {meta.after_rerank} 条</span>
           <span className="pipe-arrow">→</span>
           <span className="pipe-node final">多样性采样 {matches.length} 条</span>
-          <span className="spacer" />
-          <span className="tiny muted">耗时 {(meta.elapsed_ms / 1000).toFixed(1)}s</span>
         </div>
+
+        {/*
+          ⚠️ 耗时必须报**用户实际等的时间**，不是只报检索那一段。
+          实测：原来只显示 meta.elapsed_ms（检索 298ms），
+          而用户实际等了 2.6s（解析 2336ms + 检索 298ms）—— 少报了 8.8 倍。
+          页面顶部还写着「我们不隐藏过程」，最显眼的数字却在藏 90% 的时间。
+        */}
+        <div className="timing" style={{ marginTop: 12 }}>
+          <span className="tiny muted">本次耗时</span>{' '}
+          <strong style={{ fontSize: 15 }}>{totalSeconds}s</strong>
+          {typeof meta.parser_elapsed_ms === 'number' && (
+            <span className="tiny muted" style={{ marginLeft: 10 }}>
+              其中：理解你的处境 {(meta.parser_elapsed_ms / 1000).toFixed(1)}s
+              　检索与重排 {(meta.elapsed_ms / 1000).toFixed(1)}s
+            </span>
+          )}
+          <span className="tiny muted" style={{ marginLeft: 10 }}>
+            （不含网络往返；数据越多、这步越慢）
+          </span>
+        </div>
+
         <p className="tiny muted" style={{ marginTop: 12, marginBottom: 0 }}>
           匹配靠的是<strong>结构相似</strong>（阶段 / 困境 / 约束 / 目标 / 可逆性），
           不是文本相似。所以三条案例覆盖了不同的选择方向：{' '}
