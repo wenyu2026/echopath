@@ -10,10 +10,10 @@
  * 忘了起后端、密钥过期、数据没同步、缓存是旧的这类小事。
  * 这些都能在 30 秒内查完，但不查就要在评委面前查。
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -99,7 +99,36 @@ check(
   cacheHasError ? '快照里混进了错误响应 —— 跑 npm run refresh:cache' : scenarioCount < 3 ? '缺场景，跑 npm run build:cache' : '',
 );
 
-/* ---------- 4. 构建能过 ---------- */
+/* ---------- 4. 离线快照是否比逻辑代码旧 ---------- */
+// 踩过一次：改了 dimensions.ts 的维度算法后忘了重生成快照，
+// 结果「实时」与「离线」两条路径给出不同分数 —— 评委一对比就露馅。
+{
+  const watch = [
+    join(root, 'server', 'retrieval', 'dimensions.ts'),
+    join(root, 'server', 'retrieval', 'diversity.ts'),
+    join(root, 'server', 'counter-analogy', 'counter-analogy.ts'),
+    join(root, 'server', 'evidence', 'evidence-writer.ts'),
+    join(root, 'data', 'episodes.json'),
+  ];
+  const cacheTs = join(root, 'src', 'data', 'demoCache.ts');
+  let stale = '';
+  if (existsSync(cacheTs)) {
+    const cacheTime = statSync(cacheTs).mtimeMs;
+    for (const f of watch) {
+      if (existsSync(f) && statSync(f).mtimeMs > cacheTime) {
+        stale = `${basename(f)} 比快照新`;
+        break;
+      }
+    }
+  }
+  check(
+    '离线快照不比逻辑代码旧',
+    !stale,
+    stale ? `${stale} —— 跑 npm run refresh:cache 重新生成（需后端在跑）` : '',
+  );
+}
+
+/* ---------- 5. 构建能过 ---------- */
 const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
