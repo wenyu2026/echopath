@@ -39,8 +39,11 @@ AI 不会自动被 GitHub 消息唤醒。**唯一可靠的补偿办法是把检�
 在以下 4 个节点，**必须先跑这两条命令**，再继续任何工作：
 
 ```bash
+# ① 主通道：谁被阻塞了（即时可靠，实测 1.4s）
+gh issue list --label "agent:blocked" --state open
+
+# ② 辅助通道：有没有人 @ 我（⚠️ 有约 5 秒索引延迟）
 gh issue list --search "mentions:@me" --state open
-gh pr list --search "review-requested:@me"
 ```
 
 | 节点 | 说明 |
@@ -52,6 +55,17 @@ gh pr list --search "review-requested:@me"
 
 > ### 🚫 铁律：没检查过 Issue / PR，禁止声称完成。
 > 说 `DONE` 之前不查，等于把队友永久挂起。
+
+### ⚠️ 两条通道的实测特性（别踩）
+
+| 通道 | 实测结果 |
+|---|---|
+| **Labels 过滤** | ✅ **即时可靠**（1.4s），协议的**主通道** |
+| `mentions:@me` | ⚠️ **有约 5 秒索引延迟**。刚发的提及可能查不到，**别据此断定"没人找我"** |
+| `review-requested:@me` | ❌ **已废弃，不要用**。GitHub 不允许给自己的 PR 设 reviewer，全队共用账号时**永远返回空**，会造成"没人要我 review"的假象 |
+
+**推论**：**待办与阻塞一律用 Label 表达，不依赖 @提及。**
+@提及只是礼貌通知，**不是可靠信号**。
 
 ---
 
@@ -106,9 +120,14 @@ PR：#<编号>
 ```
 REVIEW
 PR：#<编号>
+Review 给：member-b
 改动摘要：<具体>
 需重点看：<具体文件 / 逻辑，别写"都看看">
 ```
+
+> ⚠️ **不要依赖 GitHub 的 reviewer 功能**（实测：全队共用账号时它永远为空）。
+> 需要谁 review，就**在这里写清名字 + 给 PR 打上 `agent:review` 标签**，
+> 并让对应的人 `gh pr list --label agent:review` 来认领。
 
 ---
 
@@ -214,6 +233,35 @@ user.email = 290060464+wenyu2026@users.noreply.github.com
 
 > 用 noreply 邮箱的原因：真实邮箱绑在另一个 GitHub 账号上，
 > 直接用它会导致**贡献算错人**，且泄露邮箱。
+
+### 🚨 当前限制：全队共用同一个 GitHub 账号
+
+现状：GitHub 上**只有 `wenyu2026` 一个账号**，4 个人（含各自的 AI）都通过它操作。
+这带来三个**无法靠配置绕过**的限制：
+
+| 限制 | 后果 |
+|---|---|
+| `@wenyu2026` 无法区分是谁 | **不能靠 @提及 指派任务** |
+| 不能给自己 PR 设 reviewer | `review-requested:@me` **永远为空** |
+| 4 人共用同一份 gh 凭据 | GitHub 上的操作**无法追溯到具体是谁** |
+
+**应对方式（已内建到本协议）：**
+
+1. **身份靠文字声明，不靠 GitHub 账号**
+   每个成员在自己电脑的仓库里执行一次（**只影响本机，不提交**）：
+   ```bash
+   git config user.name "member-a"
+   ```
+   这样 commit 的**作者名**能区分人（邮箱保持统一的 noreply 不变，贡献仍算对账号）。
+
+2. **待办靠 Label，不靠 @提及**（见第 2 节）
+   `agent:blocked` / `agent:review` / `agent:handoff` / `agent:done`
+
+3. **Issue 里写清「Review 给：member-x」**，并用标签让人来认领。
+
+> **有办法根治**：给 3 位队友各建 GitHub 账号，加为仓库协作者。
+> 之后 @提及、reviewer、贡献图都会正常工作。
+> 需要的话让我来配 —— 但**不建也能跑**，上面 3 条已足够。
 
 ---
 
