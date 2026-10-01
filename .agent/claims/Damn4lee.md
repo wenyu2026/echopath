@@ -6,10 +6,15 @@
 
 | 字段 | 内容 |
 |---|---|
-| 当前任务 | #14 检索链路 / #15 反类比 |
-| 正在进行 | 待开始 |
+| 当前任务 | #14 检索链路（DONE_LOCAL）→ #15 反类比（规则文档待审） |
+| 正在进行 | 分支 `Damn4lee/t2-retrieval`：阶段一已实现并验证；待审核 `server/RULES-evidence-counter-analogy.md` 后开工阶段二 |
 | 我占用的根文件 | — |
 | 最近更新 | 2026-10-02 |
+
+## 技术栈决定（2026-10-02 实测对比后）
+
+**Node/TS（Node 24 原生跑 TS，零第三方依赖）**。对比记录：`server/_bench/BENCH-RESULT.md`。
+规避的 strip-only 限制：不用 constructor 参数属性、不用 `interface extends T['field']`。
 
 ---
 
