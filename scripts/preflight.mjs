@@ -336,7 +336,33 @@ check(
   check('README 里的命令与 package.json 一致', issues.length === 0, issues.slice(0, 3).join(' / '));
 }
 
-/* ---------- 9. 构建能过 ---------- */const buildRes = buildCheck();
+/* ---------- 9. 静态资源不能还留着脚手架自带的痕迹 ---------- */
+// 踩过：public/favicon.svg 一直是 create-vite 自带的紫色 logo（#863bff），
+// 与本产品毫无关系。评委打开标签页看到的是一个 Vite 图标 ——
+// 小，但属于典型的"没做完"信号。
+{
+  const problems = [];
+  const favPath = join(root, 'public', 'favicon.svg');
+  if (!existsSync(favPath)) {
+    problems.push('没有 public/favicon.svg（标签页会 404）');
+  } else {
+    const svg = readFileSync(favPath, 'utf8');
+    // create-vite 自带图标的特征色
+    const SCAFFOLD_MARKERS = ['863bff', '41d1ff', 'bd34fe'];
+    for (const m of SCAFFOLD_MARKERS) {
+      if (svg.toLowerCase().includes(m)) {
+        problems.push(`favicon 还是脚手架自带的图标（含 #${m}）`);
+        break;
+      }
+    }
+    if (svg.length > 6000) {
+      problems.push(`favicon 有 ${Math.round(svg.length / 1024)}KB —— 多半是脚手架那个复杂 logo`);
+    }
+  }
+  check('静态资源无脚手架残留', problems.length === 0, problems.join(' / '));
+}
+
+/* ---------- 10. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */
