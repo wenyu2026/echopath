@@ -1,0 +1,70 @@
+name: 任务
+description: 创建一个可执行的协作任务
+title: "[任务] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        填之前先想清楚：**这个任务怎么算做完？** 写不出验收标准就说明任务还没想清楚。
+
+  - type: input
+    id: owner
+    attributes:
+      label: Owner
+      description: 谁负责（member-a / b / c / d）
+      placeholder: member-a
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: 要做什么
+      description: 具体到可直接动手，别写"优化一下""搞好看点"
+      placeholder: |
+        实现登录页的表单校验：
+        - 用户名 3-20 字符
+        - 密码至少 8 位含数字
+    validations:
+      required: true
+
+  - type: textarea
+    id: accept
+    attributes:
+      label: 验收标准
+      description: 怎么算做完？给出可执行的验证步骤
+      placeholder: |
+        1. npm run dev 打开 /login
+        2. 输入 2 字符用户名 → 提示"至少 3 字符"
+        3. 输入合法值 → 按钮可点击
+    validations:
+      required: true
+
+  - type: input
+    id: files
+    attributes:
+      label: 影响文件
+      description: 会改哪些文件？⚠️ 若涉及根文件（package.json / src/main.tsx / vite.config.ts）必须写明
+      placeholder: frontend/pages/Login.tsx, src/components/Form.tsx
+    validations:
+      required: true
+
+  - type: input
+    id: depends
+    attributes:
+      label: 依赖
+      description: 依赖哪个 Issue？没有就写 None
+      placeholder: "#12（需要后端先给出 /api/login 接口）"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 开工前确认
+      options:
+        - label: 我已确认影响文件不在别人责任区内，或已发 CHANGE_REQUEST
+          required: true
+        - label: 我不会把 package-lock.json 提交进 PR（除非我是 member-d）
+          required: true
