@@ -903,3 +903,32 @@ input:focus, textarea:focus, select:focus {
   flex: 1 1 100%;
   margin-left: 2px;
 }
+
+/* 证据分层的「已在上方展示过」汇总行
+   —— 避免与时间轴重复，只交代性质与条数 */
+.layer-summary {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--bg-sunken);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.9;
+}
+.layer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 2px 9px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.layer-summary .layer-dot {
+  width: 6px;
+  height: 6px;
+}

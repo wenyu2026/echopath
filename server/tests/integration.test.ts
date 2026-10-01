@@ -341,6 +341,46 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ⑩ 证据分层不能与时间轴重复
+   ------------------------------------------------------------
+   走查发现 P4 一屏之内同样的文字出现两遍：
+   outcomes 在时间轴展示过、又在 interpretations 层列一次；
+   reflection.unknowns 更是 3/3 完全重复。
+   分层区的价值是交代「哪部分有来源」，不是复述正文。
+   ============================================================ */
+
+test('证据分层：已被时间轴展示过的层必须走汇总，不再逐条重复', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceLayers.tsx'), 'utf8');
+
+  assert.ok(
+    /SHOWN_ABOVE[\s\S]{0,80}'interpretations'/.test(src),
+    'interpretations 层应被标记为"已在时间轴展示"',
+  );
+  assert.ok(
+    /SHOWN_ABOVE[\s\S]{0,80}'unknowns'/.test(src),
+    'unknowns 层应被标记为"已在时间轴展示"',
+  );
+  assert.ok(src.includes('layer-summary'), '应有汇总行代替逐条重复');
+  assert.ok(
+    /detailed\s*=\s*LAYER_META\.filter/.test(src),
+    '应有 detailed / summarized 的拆分逻辑',
+  );
+});
+
+test('证据分层：真正的新信息（带来源的史实/本人表述/AI 类比）仍要完整列出', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceLayers.tsx'), 'utf8');
+
+  // facts / self_claims / ai_inferences 不得进入汇总集合
+  const block = src.slice(src.indexOf('const SHOWN_ABOVE'));
+  for (const k of ['facts', 'self_claims', 'ai_inferences']) {
+    assert.ok(
+      !new RegExp(`SHOWN_ABOVE[^;]*'${k}'`, 's').test(block),
+      `${k} 属于新信息，不能走汇总（否则等于把来源信息藏起来）`,
+    );
+  }
+});
+
+/* ============================================================
    ⑨ 模型输出的小瑕疵要在显示前清掉
    ------------------------------------------------------------
    实测见到过 goals 里出现「止损止损」这种叠词。不影响程序正确性，
