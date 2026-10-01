@@ -44,7 +44,7 @@ $hits = @($all | Where-Object {
 if ($hits.Count -eq 0) {
     Write-Host ""
     Write-Host ("  ✅ 没有找到与 '{0}' 相关的 Issue —— 可以建新任务。" -f $Keyword) -ForegroundColor Green
-    Write-Host "     建完后记得：打上 member-xxx 标签，或写上「负责人：member-xxx」。" -ForegroundColor DarkGray
+    Write-Host "     建完后记得：设置 assignee，并打上用户名标签（如 bo200712）。" -ForegroundColor DarkGray
     Write-Host ""
     exit 0
 }

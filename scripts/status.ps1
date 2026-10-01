@@ -31,7 +31,7 @@ function Get-Issues($state, $extra) {
     return ($json | ConvertFrom-Json)
 }
 
-$members = @('member-a','member-b','member-c','member-d')
+$members = @('bo200712','Damn4lee','fu6868','wenyu2026')
 
 Write-Host ""
 Write-Host "════════════════════════════════════════════════════════" -ForegroundColor Cyan
@@ -54,7 +54,7 @@ foreach ($state in @('open','closed')) {
         $names = @($i.labels | ForEach-Object { $_.name })
 
         # 成员：优先取 GitHub assignee（一人一号后这才是权威来源），
-        #       其次取 member-x 标签，最后从标题推断
+        #       其次取用户名标签，最后从标题推断
         $who = ''
         if ($i.assignees -and @($i.assignees).Count -gt 0) {
             $who = (@($i.assignees) | ForEach-Object { $_.login }) -join '+'

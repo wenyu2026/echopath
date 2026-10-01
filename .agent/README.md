@@ -7,10 +7,10 @@
   README.md          ← 本文件
   DELEGATION.md      ← 给队友 AI 的部署提示词（直接复制粘贴）
   claims/
-    member-a.md      ← 一人一份，各写各的责任区
-    member-b.md
-    member-c.md
-    member-d.md
+    bo200712.md      ← 一人一份，各写各的责任区
+    Damn4lee.md
+    fu6868.md
+    wenyu2026.md
 ```
 
 ## 为什么不放一个总表
@@ -27,7 +27,7 @@
 
 ```bash
 # 看所有人正在干什么
-cat .agent/claims/member-*.md
+cat .agent/claims/*.md
 
 # 只找谁占用了某个根文件
 grep -r "package.json" .agent/claims/

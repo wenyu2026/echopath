@@ -30,13 +30,13 @@ Closes #
 
 ## 自检（全部必须勾选）
 
-- [ ] 我**没有**提交 `package-lock.json`（除非我是 member-d）
+- [ ] 我**没有**提交 `package-lock.json`（除非我是 wenyu2026）
 - [ ] 提交前跑过 `gh issue list --label "agent:blocked" --state open`
 - [ ] 提交前跑过 `gh issue list --search "mentions:@me" --state open`
 - [ ] 没碰别人责任区，或已在 Issue 发过 `CHANGE_REQUEST` 并得到 `OK`
 - [ ] 没提交 `.env` 或任何密钥
 - [ ] 一个 PR 只做一件事，未混入无关改动
-- [ ] 已给本 PR 打上 `agent:review` 标签，并在 Issue 写明「Review 给：member-x」
+- [ ] 已给本 PR 打上 `agent:review` 标签，并在 Issue 写明「Review 给：@某人」
 
 > ⚠️ **不要用** GitHub 的 reviewer 功能。实测全队共用账号时
 > `review-requested:@me` **永远返回空**，会造成"没人要我 review"的假象。

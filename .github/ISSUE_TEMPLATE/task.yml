@@ -12,8 +12,8 @@ body:
     id: owner
     attributes:
       label: Owner
-      description: 谁负责（member-a / b / c / d）
-      placeholder: member-a
+      description: 谁负责（bo200712 / Damn4lee / fu6868 / wenyu2026）
+      placeholder: bo200712
     validations:
       required: true
 
@@ -66,5 +66,5 @@ body:
       options:
         - label: 我已确认影响文件不在别人责任区内，或已发 CHANGE_REQUEST
           required: true
-        - label: 我不会把 package-lock.json 提交进 PR（除非我是 member-d）
+        - label: 我不会把 package-lock.json 提交进 PR（除非我是 wenyu2026）
           required: true

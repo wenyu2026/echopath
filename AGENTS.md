@@ -4,7 +4,7 @@
 > 所有 Claude / Codex / Gemini 开工前必须完整读一遍。
 > 读完第一件事：去你被分配的 Issue 里发 `CHECKIN`。
 
-版本：v1.0　｜　适用：学军黑客松 2026　｜　成员：4 人（member-a / b / c / d）
+版本：v1.0　｜　适用：学军黑客松 2026　｜　成员：4 人（bo200712 / Damn4lee / fu6868 / wenyu2026）
 
 ---
 
@@ -77,8 +77,8 @@ gh issue list --search "mentions:@me" --state open
 
 ```
 CHECKIN
-负责人：member-a
-分支：member-a/<简述>
+负责人：bo200712
+分支：bo200712/<简述>
 计划：<2-3 句，说清怎么做>
 预计：<大概什么时候能有初版>
 ```
@@ -89,7 +89,7 @@ CHECKIN
 
 ```
 BLOCKED
-等谁：@member-b
+等谁：@Damn4lee
 等什么：<具体到接口名 / 字段 / 文件路径，别写"等你那边好">
 我还能做：<不依赖对方的部分；真的没有就写"无">
 ```
@@ -99,7 +99,7 @@ BLOCKED
 ### HANDOFF — 交接给别人
 
 ```
-HANDOFF → @member-c
+HANDOFF → @fu6868
 已完成：<具体到文件 / 函数>
 你继续：<具体到要做什么>
 注意：<我踩过的坑，别再踩>
@@ -109,7 +109,7 @@ HANDOFF → @member-c
 
 ```
 DONE
-分支：member-a/xxx
+分支：bo200712/xxx
 PR：#<编号>
 验收：<怎么验证，给出可复制执行的命令或步骤>
 影响文件：<文件列表>
@@ -120,7 +120,7 @@ PR：#<编号>
 ```
 REVIEW
 PR：#<编号>
-Review 给：member-b
+Review 给：Damn4lee
 改动摘要：<具体>
 需重点看：<具体文件 / 逻辑，别写"都看看">
 ```
@@ -133,18 +133,18 @@ Review 给：member-b
 
 ## 4. 区域划分（互不重叠）
 
-| 成员 | 负责路径 |
-|---|---|
-| **member-a** | `frontend/**`　`src/components/**` |
-| **member-b** | `backend/**`　`src/api/**` |
-| **member-c** | `model/**`　`inference/**` |
-| **member-d** | `shared/**`　`deploy/**` |
+| 成员 | 角色 | 负责路径 |
+|---|---|---|
+| **bo200712** | D 前端 | `src/pages/**`　`src/components/**`　`src/App.tsx` |
+| **Damn4lee** | C AI/后端 | `server/**`　`src/ai/**` |
+| **fu6868** | B 数据 | `data/**`　`scripts/validate-data.mjs` |
+| **wenyu2026** | A 产品/集成 | `src/main.tsx`　`src/types/**`　根配置文件 |
 
 **改动别人地盘 = 必须先在 Issue 发 `CHANGE_REQUEST`，等对方回 `OK` 再动手。**
 
 ```
-CHANGE_REQUEST → @member-b
-想改：backend/routes/user.ts
+CHANGE_REQUEST → @Damn4lee
+想改：server/retrieval/search.ts
 原因：<为什么必须改>
 改法：<具体改什么>
 ```
@@ -159,15 +159,15 @@ CHANGE_REQUEST → @member-b
 
 | 文件 | 唯一 owner |
 |---|---|
-| `package-lock.json` | **只有 member-d 能提交** |
+| `package-lock.json` | **只有 wenyu2026 能提交** |
 | `package.json` | 谁加依赖谁改，PR 里注明 |
 | `src/main.tsx` | 同一时间只许一人改 |
-| `vite.config.ts` / `tsconfig.json` | member-d |
+| `vite.config.ts` / `tsconfig.json` | wenyu2026 |
 | `.env.example` | 谁加变量谁改 |
 
 ### 🚫 锁文件铁律
 
-**除了 member-d，任何人都不准提交 `package-lock.json`。**
+**除了 wenyu2026，任何人都不准提交 `package-lock.json`。**
 
 你在自己分支跑完 `npm install` 后，**只提交 `package.json`，把锁文件的改动丢掉**：
 
@@ -185,7 +185,7 @@ git checkout -- package-lock.json
 > 三方各自生成一份 → 必然冲突 → 强行 merge → **玄学 bug**（本地能跑、别人跑不了）。
 > 让**一个产者**统一生成一次，是唯一能根治的办法。
 
-**member-d 的职责**：定期在 main 上跑 `npm install --package-lock-only` 并提交，
+**wenyu2026 的职责**：定期在 main 上跑 `npm install --package-lock-only` 并提交，
 保证锁文件始终与 `package.json` 一致。
 
 ---
@@ -194,9 +194,9 @@ git checkout -- package-lock.json
 
 **分支命名**
 ```
-member-a/<简述>     如 member-a/login-page
-member-b/<简述>     如 member-b/user-api
-member-c/实验性分支可用 exp/ 前缀
+bo200712/<简述>     如 bo200712/login-page
+Damn4lee/<简述>     如 Damn4lee/user-api
+fu6868/实验性分支可用 exp/ 前缀
 ```
 
 **铁律**
@@ -216,7 +216,7 @@ docs: 补充 API 说明
 
 - 🚫 **AI 不许自己 merge。** 必须由**人类**点 merge。
 - PR 描述必须填模板（`.github/PULL_REQUEST_TEMPLATE.md`）
-- 🚫 PR 里**禁止出现 `package-lock.json`**（除非你是 member-d）
+- 🚫 PR 里**禁止出现 `package-lock.json`**（除非你是 wenyu2026）
 - 提 PR 后在对应 Issue 发 `REVIEW`
 - PR 尽量小：**一个 PR 只做一件事**，超过 400 行考虑拆
 
@@ -234,34 +234,33 @@ user.email = 290060464+wenyu2026@users.noreply.github.com
 > 用 noreply 邮箱的原因：真实邮箱绑在另一个 GitHub 账号上，
 > 直接用它会导致**贡献算错人**，且泄露邮箱。
 
-### 🚨 当前限制：全队共用同一个 GitHub 账号
+### ✅ 一人一号（已完成）
 
-现状：GitHub 上**只有 `wenyu2026` 一个账号**，4 个人（含各自的 AI）都通过它操作。
-这带来三个**无法靠配置绕过**的限制：
+GitHub 上现在有 **4 个独立账号**，每人用自己的账号操作：
 
-| 限制 | 后果 |
+| 账号 | 角色 | 权限 |
+|---|---|---|
+| **wenyu2026** | A 产品/集成 | admin（队长） |
+| **bo200712** | D 前端 | write |
+| **Damn4lee** | C AI/后端 | write |
+| **fu6868** | B 数据 | write |
+
+**这解决了三个之前做不到的事：**
+
+| 能力 | 说明 |
 |---|---|
-| `@wenyu2026` 无法区分是谁 | **不能靠 @提及 指派任务** |
-| 不能给自己 PR 设 reviewer | `review-requested:@me` **永远为空** |
-| 4 人共用同一份 gh 凭据 | GitHub 上的操作**无法追溯到具体是谁** |
+| ✅ **@提及能精确到人** | `@bo200712` 只有他能收到通知 |
+| ✅ **assignee 能区分成员** | 用 GitHub 原生功能指派任务，不用再靠标签 |
+| ✅ **reviewer 功能恢复** | PR 可以正式请求某人 review |
 
-**应对方式（已内建到本协议）：**
+**每人只需在自己电脑上配置一次身份**（换成自己的）：
 
-1. **身份靠文字声明，不靠 GitHub 账号**
-   每个成员在自己电脑的仓库里执行一次（**只影响本机，不提交**）：
-   ```bash
-   git config user.name "member-a"
-   ```
-   这样 commit 的**作者名**能区分人（邮箱保持统一的 noreply 不变，贡献仍算对账号）。
+```bash
+git config user.name "你的GitHub用户名"
+git config user.email "你注册GitHub的邮箱"
+```
 
-2. **待办靠 Label，不靠 @提及**（见第 2 节）
-   `agent:blocked` / `agent:review` / `agent:handoff` / `agent:done`
-
-3. **Issue 里写清「Review 给：member-x」**，并用标签让人来认领。
-
-> **有办法根治**：给 3 位队友各建 GitHub 账号，加为仓库协作者。
-> 之后 @提及、reviewer、贡献图都会正常工作。
-> 需要的话让我来配 —— 但**不建也能跑**，上面 3 条已足够。
+> ⚠️ 提交前确认身份正确，否则贡献会算错人。
 
 ---
 
@@ -298,7 +297,7 @@ Get-NetTCPConnection -State Listen -LocalPort 7890   # 有输出 = Clash 在跑
 | 闸门 | 时机 | 挡什么 | 工具 |
 |---|---|---|---|
 | ① **建 Issue 前查重** | 派活时 | 两人拿同一个任务 | `scripts/dup-check.ps1` |
-| ② **开工前 CHECKIN** | 领活时 | 同时开工同一件事 | 发 CHECKIN + 打 `member-x` 标签 |
+| ② **开工前 CHECKIN** | 领活时 | 同时开工同一件事 | 发 CHECKIN + 设置 assignee |
 | ③ **PR 时查重** | 合代码时 | 写了两份重复代码 | 人工 review + `dup-check` 搜旧 Issue |
 
 ### 工具 1：全队任务视图（开工前必看）
@@ -319,27 +318,33 @@ powershell -ExecutionPolicy Bypass -File .\scripts\dup-check.ps1 -Keyword "登�
 同时搜 open 和 closed。**closed 也要搜**，因为「已经做完的事」最容易被重复做一遍 ——
 尤其是工具函数、接口、配置这类容易各写一份的东西。
 
-### 🔴 成员身份靠 Label，不靠 assignee
+### 🔴 成员身份：用 assignee，标签只是辅助
 
-**重要**：全队共用一个 GitHub 账号（见第 8 节），`--assignee` 无法区分成员。
-所以**每个任务必须打上 `member-a/b/c/d` 标签**：
+**一人一号之后，GitHub 原生的 assignee 就是权威来源。**
 
 ```bash
-gh issue create --title "..." --label "task" --label "member-a"
+# 建任务时直接指派
+gh issue create --title "..." --label "task" --assignee bo200712
+
+# 查看指派给自己的
+gh issue list --assignee "@me"
 ```
 
-看板脚本正是靠这个标签识别负责人的。不打标签 = 显示「未认领」= 别人不知道你在做。
+**同时保留用户名标签**（`bo200712` / `Damn4lee` / `fu6868` / `wenyu2026`）作为**冗余冗余保险** ——
+万一 assignee 没设，看板脚本还能靠标签认出负责人。
+
+**两个都设 = 最稳。** 只设一个也行，但别一个都不设。
 
 ### 🚫 最容易重复的四类东西（重点防）
 
 | 类型 | 例子 | 防法 |
 |---|---|---|
 | **工具函数** | 日期格式化、请求封装、校验 | **先搜** `dup-check.ps1 -Keyword "utils"`，有就复用 |
-| **接口定义** | `User`、`ApiResponse` 类型 | 归 `shared/**`，**由 member-d 统一维护** |
+| **接口定义** | `Situation`、`DecisionEpisode` 类型 | 归 `src/types/**`，**由 wenyu2026 统一维护** |
 | **配置** | vite / tsconfig / env | 唯一 owner 制（见第 5 节） |
-| **同一个页面/功能** | 两个人都写登录页 | CHECKIN 先到先得 |
+| **同一个页面/功能** | 两个人都写同一页 | CHECKIN 先到先得 |
 
-**发现别人在做同一件事，立即停下并发 `BLOCKED`**，说明"这事 member-x 在做，我改做别的"——
+**发现别人在做同一件事，立即停下并发 `BLOCKED`**，说明"这事 @某人 在做，我改做别的"——
 **不要闷头做完再对比**，那是纯浪费。
 
 ### 合并流程（代码层面）
@@ -347,7 +352,7 @@ gh issue create --title "..." --label "task" --label "member-a"
 ```bash
 git checkout main
 git pull                                    # 1. 先同步，避免基于旧代码
-git merge member-a/xxx                      # 2. 合并
+git merge bo200712/xxx                      # 2. 合并
 # 3. 有冲突 → 停在 Issue 发 BLOCKED，别硬resolve
 npm run build                               # 4. 合并后必须验证能构建
 git push
