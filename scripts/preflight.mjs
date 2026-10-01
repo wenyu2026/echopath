@@ -154,7 +154,7 @@ check(
         else if (norm(ids.get(ev.source_id)) !== norm(ev.url)) dangling++;
       }
     }
-  } catch (e) {
+  } catch {
     dangling = -1;
   }
 
