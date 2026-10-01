@@ -11,10 +11,10 @@
  * 保证上台可演示」。演示当天现场网络不可控，这一层不能省。
  */
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Situation, RetrievalResponse } from '../types/episode';
 import { mockRetrieval, mockSituation } from '../data/mock';
-import { demoCache } from '../data/demoCache';
+import { demoCache, pickScenario } from '../data/demoCache';
 
 /** 后端地址：默认同源 /api，可用 VITE_API_BASE 覆盖 */
 const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined) ?? '';
@@ -62,6 +62,57 @@ type Ctx = {
 
 const AppCtx = createContext<Ctx | null>(null);
 
+/* ============================================================
+   会话持久化（演示保护）
+   ------------------------------------------------------------
+   为什么需要：演示时误按 F5、或演示中途切页面刷新，
+   原来所有状态都在内存里 → 直接归零，要在评委面前重走一遍流程。
+   写进 sessionStorage 后刷新可恢复，关掉标签页则自动清空
+   （不污染下一次演示）。
+   ============================================================ */
+
+const SESSION_KEY = 'echopath.session.v1';
+
+interface Persisted {
+  journey: Journey;
+  situation: Situation | null;
+  result: RetrievalResponse | null;
+  reachable: number;
+  /** 也要持久化：刷新后如果丢掉这句，页面会把缓存数据当成实时结果（不诚实） */
+  mode?: RunMode;
+  offlineReason?: string | null;
+}
+
+function loadSession(): Persisted | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw) as Persisted;
+    // 基本形状校验：坏数据宁可丢弃，也不要让页面崩在评委面前
+    if (typeof p !== 'object' || p === null) return null;
+    if (p.journey && typeof p.journey !== 'object') return null;
+    if (p.result && !Array.isArray(p.result.matches)) return null;
+    return {
+      journey: p.journey ?? {},
+      situation: p.situation ?? null,
+      result: p.result ?? null,
+      reachable: typeof p.reachable === 'number' ? p.reachable : 0,
+      mode: p.mode === 'offline' ? 'offline' : 'live',
+      offlineReason: p.offlineReason ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function saveSession(p: Persisted): void {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(p));
+  } catch {
+    // 隐私模式 / 配额满 —— 存不下就算了，不能因此让功能不可用
+  }
+}
+
 /** 把 P1 的问答拼成后端要的 raw_input */
 function buildNarrative(journey: Journey): string {
   return Object.values(journey)
@@ -91,25 +142,43 @@ async function postJson<T>(path: string, payload: unknown, timeoutMs = REQUEST_T
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [journey, setJourney] = useState<Journey>({});
-  const [situation, setSituation] = useState<Situation | null>(null);
-  const [result, setResult] = useState<RetrievalResponse | null>(null);
+  // 首次挂载时恢复上次会话（刷新不丢进度）
+  const restored = useMemo(loadSession, []);
+
+  const [journey, setJourney] = useState<Journey>(restored?.journey ?? {});
+  const [situation, setSituation] = useState<Situation | null>(restored?.situation ?? null);
+  const [result, setResult] = useState<RetrievalResponse | null>(restored?.result ?? null);
   const [loadingSituation, setLoadingSituation] = useState(false);
   const [loadingRetrieval, setLoadingRetrieval] = useState(false);
-  const [mode, setMode] = useState<RunMode>('live');
-  const [offlineReason, setOfflineReason] = useState<string | null>(null);
-  const [reachable, setReachable] = useState(0);
+  const [mode, setMode] = useState<RunMode>(restored?.mode ?? 'live');
+  const [offlineReason, setOfflineReason] = useState<string | null>(restored?.offlineReason ?? null);
+  const [reachable, setReachable] = useState(restored?.reachable ?? 0);
+
+  // 任何状态变化都同步到 sessionStorage
+  useEffect(() => {
+    saveSession({ journey, situation, result, reachable, mode, offlineReason });
+  }, [journey, situation, result, reachable, mode, offlineReason]);
 
   const value = useMemo<Ctx>(() => {
-    /** 统一的降级：记录原因，返回离线数据 */
+    /**
+     * 统一的降级：记录原因，返回离线数据。
+     *
+     * v2：按用户实际填的内容挑场景，而不是一律给场景 1。
+     * 演示问题 2/3 时断网，如果显示场景 1 的结果，
+     * 「输入」和「结果」对不上，看上去像系统串了 —— 比没有数据更糟。
+     */
     function fallback(reason: string, pick: 'situation' | 'retrieval'): void {
       console.error(`[offline fallback] ${reason}`);
       setMode('offline');
       setOfflineReason(reason);
+
+      const scenario = pickScenario(buildNarrative(journey));
+      console.error(`[offline fallback] 命中场景 ${scenario.id}：${scenario.name}`);
+
       if (pick === 'situation') {
-        setSituation(structuredClone(demoCache.situation ?? mockSituation));
+        setSituation(structuredClone(scenario.situation ?? demoCache.situation ?? mockSituation));
       } else {
-        setResult(structuredClone(demoCache.retrieval ?? mockRetrieval));
+        setResult(structuredClone(scenario.retrieval ?? demoCache.retrieval ?? mockRetrieval));
       }
     }
 
@@ -190,6 +259,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setReachable(0);
         setMode('live');
         setOfflineReason(null);
+        // 主动重开时清掉持久化，避免下次打开又看到上一个人的处境
+        try {
+          sessionStorage.removeItem(SESSION_KEY);
+        } catch {
+          /* 忽略 */
+        }
       },
     };
   }, [journey, situation, result, loadingSituation, loadingRetrieval, mode, offlineReason, reachable]);
