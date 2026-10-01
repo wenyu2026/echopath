@@ -932,3 +932,36 @@ input:focus, textarea:focus, select:focus {
   width: 6px;
   height: 6px;
 }
+
+/* 证据抽屉：可点击的原文链接 + 引用块
+   —— 抽屉的承诺是「能追溯」，所以必须真的点得动 */
+.evidence-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.evidence-link {
+  font-size: 12px;
+  color: var(--now);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+}
+.evidence-link:hover {
+  border-bottom-color: var(--now);
+}
+.evidence-link .tiny {
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.evidence-quote {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-left: 2px solid var(--line-strong);
+  background: var(--bg-sunken);
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+}

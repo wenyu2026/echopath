@@ -365,6 +365,51 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ⑪ 证据抽屉必须是「真的能点开验证」
+   ------------------------------------------------------------
+   抽屉的整个承诺是「每个关键事实都能追溯到具体来源」，
+   但原来只显示 source_id（如 LX-SENDAI）—— 用户根本无从验证。
+   数据里本来就有 url，只是没渲染。
+   ============================================================ */
+
+test('证据抽屉：必须把 evidence.url 渲染成可点击外链', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
+
+  assert.ok(src.includes('href={e.url}'), '有 url 的证据必须渲染成链接');
+  assert.ok(src.includes('target="_blank"'), '外链应新窗口打开（演示时不能把页面顶掉）');
+  assert.ok(/rel="[^"]*noreferrer/.test(src), '外链应带 rel=noreferrer（安全与隐私）');
+  assert.ok(src.includes('打开原文'), '链接文案要让评委一眼看出能点');
+});
+
+test('证据抽屉：AI 推断不能给出假链接，要说明为什么没有', () => {
+  const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
+
+  assert.ok(src.includes('ai_inference'), '应识别 AI 推断类型');
+  assert.ok(
+    src.includes('无外部来源') || src.includes('AI 建模产物'),
+    'AI 推断应明确说明「没有外部来源」，而不是留空白让人以为漏了',
+  );
+});
+
+test('证据数据：至少一半的来源带可点击 url（保证抽屉不是空壳）', () => {
+  const episodes = loadEpisodes();
+  let total = 0;
+  let withUrl = 0;
+  for (const e of episodes) {
+    for (const ev of e.evidence ?? []) {
+      total++;
+      if (ev.url) withUrl++;
+    }
+  }
+  assert.ok(total > 0, '应有多条 evidence');
+  // AI 推断类天然没有 url（36 条里约 1/3），所以门槛设在 40%
+  assert.ok(
+    withUrl / total >= 0.4,
+    `带 url 的证据比例过低（${withUrl}/${total}）—— 证据抽屉会变成点不动的空壳`,
+  );
+});
+
+/* ============================================================
    ⑩ 证据分层不能与时间轴重复
    ------------------------------------------------------------
    走查发现 P4 一屏之内同样的文字出现两遍：
