@@ -337,17 +337,19 @@ check(
 }
 
 /* ---------- 9. 静态资源不能还留着脚手架自带的痕迹 ---------- */
-// 踩过：public/favicon.svg 一直是 create-vite 自带的紫色 logo（#863bff），
-// 与本产品毫无关系。评委打开标签页看到的是一个 Vite 图标 ——
-// 小，但属于典型的"没做完"信号。
+// 踩过两次：
+//   ① public/favicon.svg 一直是 create-vite 自带的紫色 logo（#863bff）
+//   ② public/icons.svg 是脚手架带来的社交图标（bluesky 等），5031 字节，**无人引用**
+// 这类残留小，但属于典型的「没做完」信号 —— 而且会随构建一起发出去。
 {
   const problems = [];
+
+  // 9a. favicon 有没有被换掉
   const favPath = join(root, 'public', 'favicon.svg');
   if (!existsSync(favPath)) {
     problems.push('没有 public/favicon.svg（标签页会 404）');
   } else {
     const svg = readFileSync(favPath, 'utf8');
-    // create-vite 自带图标的特征色
     const SCAFFOLD_MARKERS = ['863bff', '41d1ff', 'bd34fe'];
     for (const m of SCAFFOLD_MARKERS) {
       if (svg.toLowerCase().includes(m)) {
@@ -359,7 +361,46 @@ check(
       problems.push(`favicon 有 ${Math.round(svg.length / 1024)}KB —— 多半是脚手架那个复杂 logo`);
     }
   }
-  check('静态资源无脚手架残留', problems.length === 0, problems.join(' / '));
+
+  // 9b. public/ 下有没有无人引用的死文件
+  let pubFiles = [];
+  try {
+    pubFiles = readdirSync(join(root, 'public'), { withFileTypes: true })
+      .filter((e) => e.isFile())
+      .map((e) => e.name);
+  } catch {
+    /* public/ 不存在就算了 */
+  }
+  if (pubFiles.length > 0) {
+    const srcText = (() => {
+      let all = readFileSync(join(root, 'index.html'), 'utf8');
+      const collect = (dir, depth = 0) => {
+        if (depth > 5) return;
+        let entries;
+        try {
+          entries = readdirSync(dir, { withFileTypes: true });
+        } catch {
+          return;
+        }
+        for (const e of entries) {
+          const p = join(dir, e.name);
+          if (e.isDirectory()) {
+            if (!SKIP_DIRS.has(e.name)) collect(p, depth + 1);
+          } else if (/\.(tsx?|html)$/.test(e.name)) {
+            all += readFileSync(p, 'utf8');
+          }
+        }
+      };
+      collect(join(root, 'src'));
+      return all;
+    })();
+
+    for (const f of pubFiles) {
+      if (!srcText.includes(f)) problems.push(`public/${f} 无人引用（死文件，会随构建发出去）`);
+    }
+  }
+
+  check('静态资源无脚手架残留 / 死文件', problems.length === 0, problems.join(' / '));
 }
 
 /* ---------- 10. 构建能过 ---------- */const buildRes = buildCheck();
