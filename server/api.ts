@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import type { Situation } from '../src/types/episode.ts';
 import { parseSituation } from './parser/situation-parser.ts';
+import { validateSituationShape } from './shared/situation-contract.ts';
 import { mockEmbedder, realEmbedder } from './embedding/embed.ts';
 import { loadEpisodes } from './retrieval/load-episodes.ts';
 import { buildEpisodeIndex, retrieve, type RetrieveDeps } from './retrieval/retrieve.ts';
@@ -70,20 +71,39 @@ function json(res: ServerResponse, status: number, payload: unknown): void {
   res.end(body);
 }
 
-function readBody(req: IncomingMessage, limit = 64 * 1024): Promise<ParsedBody> {
+/** 请求体上限。超了返回 413 而不是把连接掐掉 */
+export const MAX_BODY_BYTES = 64 * 1024;
+
+class BodyTooLarge extends Error {
+  constructor() {
+    super(`请求体超过 ${Math.round(MAX_BODY_BYTES / 1024)}KB`);
+    this.name = 'BodyTooLarge';
+  }
+}
+
+function readBody(req: IncomingMessage, limit = MAX_BODY_BYTES): Promise<ParsedBody> {
   return new Promise((resolve, reject) => {
     let size = 0;
+    let aborted = false;
     const chunks: Buffer[] = [];
+
     req.on('data', (c: Buffer) => {
+      if (aborted) return;
       size += c.length;
       if (size > limit) {
-        reject(new Error('请求体超过 64KB'));
-        req.destroy();
+        // ⚠️ 健壮性修复：原来是 reject() + req.destroy()。
+        //    destroy() 会把连接直接掐掉，客户端看到的是「连接被重置」（curl 里是 000），
+        //    而不是一个能读懂的 413 —— 排查时完全不知道发生了什么。
+        //    改成：停止读取、保留连接，让上层回一个明确的 413。
+        aborted = true;
+        reject(new BodyTooLarge());
         return;
       }
       chunks.push(c);
     });
+
     req.on('end', () => {
+      if (aborted) return;
       if (chunks.length === 0) return resolve({});
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')) as ParsedBody);
@@ -91,6 +111,7 @@ function readBody(req: IncomingMessage, limit = 64 * 1024): Promise<ParsedBody> 
         reject(new Error('请求体不是合法 JSON'));
       }
     });
+
     req.on('error', reject);
   });
 }
@@ -129,8 +150,28 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (route === 'POST /api/retrieve') {
       const body = await readBody(req);
       if (!body.situation) throw new Error('缺少 situation');
+
+      // ⚠️ 健壮性修复：原来直接把 body.situation 丢给 retrieve()，
+      //    缺字段时会在深处抛 `Cannot read properties of undefined`，返回 500 且信息没用。
+      //
+      //    这里用**宽松校验**（validateSituationShape），不是严格的 validateSituation：
+      //    后者是为 Situation Parser 的输出写的（LLM schema 保证条数），
+      //    而这条路由收到的是**用户在 P2 手动改过的处境** —— 用户可以删到只剩 1 条约束。
+      //    拿严格规则卡会把编辑功能和 What-if 一起搞坏。
+      const v = validateSituationShape(body.situation);
+      if (!v.ok) {
+        json(res, 400, {
+          error: {
+            code: 'INVALID_SITUATION',
+            message: `situation 不合法：${v.issues.map((i) => `${i.field} ${i.message}`).join('；')}`,
+            issues: v.issues,
+          },
+        });
+        return;
+      }
+
       const d = await deps();
-      const response = await retrieve(body.situation, { narrative: body.narrative }, d);
+      const response = await retrieve(v.situation, { narrative: body.narrative }, d);
       json(res, 200, response);
       return;
     }
@@ -175,8 +216,21 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
     json(res, 404, { error: { code: 'NOT_FOUND', message: `未知路由 ${route}` } });
   } catch (e) {
-    console.error(`[api] ${route} 失败:`, (e as Error).message);
-    json(res, 500, { error: { code: 'INTERNAL', message: (e as Error).message } });
+    const err = e as Error;
+    console.error(`[api] ${route} 失败:`, err.message);
+
+    // 把几类可预期的客户端错误映射成合适的状态码 —— 全都回 500
+    // 会让调用方以为是服务端炸了，排查方向直接跑偏
+    if (err instanceof BodyTooLarge) {
+      json(res, 413, { error: { code: 'BODY_TOO_LARGE', message: err.message } });
+      return;
+    }
+    const msg = err.message ?? '';
+    if (msg.includes('缺少 ') || msg.includes('不是合法 JSON')) {
+      json(res, 400, { error: { code: 'BAD_REQUEST', message: msg } });
+      return;
+    }
+    json(res, 500, { error: { code: 'INTERNAL', message: msg } });
   }
 }
 

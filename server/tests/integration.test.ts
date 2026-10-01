@@ -14,6 +14,7 @@ import { dirname, join } from 'node:path';
 
 import { loadEpisodes } from '../retrieval/load-episodes.ts';
 import { selectDiverse } from '../retrieval/diversity.ts';
+import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
 import {
   categoryMatch,
   bigramOverlap,
@@ -177,4 +178,76 @@ test('持久化：AppState 存了 mode 与 offlineReason，且读取时有形状
   assert.ok(src.includes('offlineReason'), '应持久化 offlineReason');
   assert.ok(src.includes('Array.isArray(p.result.matches)'), '读取时应有形状校验，坏数据不能崩页面');
   assert.ok(src.includes('removeItem'), 'reset() 应清空持久化');
+});
+
+/* ============================================================
+   ⑥ 输入校验：严格版给 Parser 用，宽松版给用户编辑用
+   ------------------------------------------------------------
+   这里有一个差点踩进去的坑：把给 LLM 输出用的严格校验
+   直接接到 POST /api/retrieve 上，会把「用户在 P2 删掉几条约束」
+   变成 400 —— 编辑功能和 What-if 一起坏掉。
+   ============================================================ */
+
+test('校验：宽松版接受用户编辑过的处境（条数/长度不该被卡）', () => {
+  const edited = {
+    stage: '大三',
+    dilemma: '就业 vs 考研',
+    options: ['就业'],
+    constraints: [],
+    goals: ['稳定'],
+    unknowns: ['只有一条'],
+    risk: 'medium',
+    reversibility: 'medium',
+  };
+  const r = validateSituationShape(edited);
+  assert.ok(r.ok, `用户编辑过的处境不该被拒：${r.ok ? '' : JSON.stringify(r.issues)}`);
+});
+
+test('校验：宽松版仍拦下会读崩的形状', () => {
+  assert.ok(!validateSituationShape(null).ok, 'null 必须拦');
+  assert.ok(!validateSituationShape([]).ok, '数组不是 situation，必须拦');
+  assert.ok(!validateSituationShape({ stage: 'x' }).ok, '缺 dilemma 必须拦');
+
+  const badEnum = {
+    stage: 'x', dilemma: 'a vs b', options: [], constraints: [], goals: [], unknowns: [],
+    risk: 'INVALID', reversibility: 'medium',
+  };
+  assert.ok(!validateSituationShape(badEnum).ok, '非法枚举必须拦');
+
+  const badArray = {
+    stage: 'x', dilemma: 'a vs b', options: '不是数组', constraints: [], goals: [], unknowns: [],
+    risk: 'medium', reversibility: 'medium',
+  };
+  assert.ok(!validateSituationShape(badArray).ok, '非数组必须拦');
+});
+
+test('校验：严格版仍然卡条数（Parser 输出用）', () => {
+  const tooFew = {
+    stage: '大三',
+    dilemma: '就业 vs 考研',
+    options: ['就业'],
+    constraints: ['c1'],
+    goals: ['g1'],
+    unknowns: ['u1'],
+    risk: 'medium',
+    reversibility: 'medium',
+  };
+  assert.ok(!validateSituation(tooFew).ok, '严格版应因条数不足而拒绝');
+  assert.ok(validateSituationShape(tooFew).ok, '宽松版应接受同样的输入');
+});
+
+/* ============================================================
+   ⑦ API 层：错误码映射
+   ============================================================ */
+
+test('API：可预期的客户端错误不应一律回 500', () => {
+  const raw = readFileSync(join(root, 'server', 'api.ts'), 'utf8');
+  // 去掉注释再断言 —— 否则「解释为什么不能 destroy」的注释本身会把测试判失败
+  const src = raw.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+
+  assert.ok(src.includes('INVALID_SITUATION'), '非法 situation 应有专门错误码');
+  assert.ok(src.includes('BODY_TOO_LARGE'), '超长 body 应有专门错误码');
+  assert.ok(src.includes('413'), '超长 body 应返回 413，而不是把连接掐掉');
+  assert.ok(src.includes('validateSituationShape'), '/api/retrieve 应使用宽松校验');
+  assert.ok(!/req\.destroy\(\)/.test(src), '超限时不该 destroy 连接（客户端只会看到连接重置）');
 });
