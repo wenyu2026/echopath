@@ -1,0 +1,251 @@
+# AGENTS.md — 全队 AI 统一协作规则
+
+> **本文件是唯一事实来源。**
+> 所有 Claude / Codex / Gemini 开工前必须完整读一遍。
+> 读完第一件事：去你被分配的 Issue 里发 `CHECKIN`。
+
+版本：v1.0　｜　适用：学军黑客松 2026　｜　成员：4 人（member-a / b / c / d）
+
+---
+
+## 0. 一句话说清
+
+**GitHub 是唯一协作总线。**
+
+```
+Issue 派活  →  Branch 隔离  →  PR 集成  →  人来 merge
+```
+
+不引入任何额外服务。所有沟通留在 Issue 评论和 PR 里，**不要用聊天窗口传技术决定**——
+聊天记录会丢，Issue 不会。
+
+---
+
+## 1. 开工前必做（强制，不许跳过）
+
+1. 完整读本文件
+2. 读你被分配的 Issue（任务、验收标准、依赖）
+3. 读 `.agent/claims/` 下**所有人**的责任区文件，确认你要改的文件归谁
+4. 在 Issue 里发 `CHECKIN`
+
+**第 3 步最容易被跳过，也最容易出事**——不看清责任区就动手，必踩别人地盘。
+
+---
+
+## 2. ⚠️ 四个强制检查节点
+
+AI 不会自动被 GitHub 消息唤醒。**唯一可靠的补偿办法是把检查写成硬性动作。**
+
+在以下 4 个节点，**必须先跑这两条命令**，再继续任何工作：
+
+```bash
+gh issue list --search "mentions:@me" --state open
+gh pr list --search "review-requested:@me"
+```
+
+| 节点 | 说明 |
+|---|---|
+| ① 开始任何任务前 | 确认没人正在等你 / 没新指派 |
+| ② 每次 commit 前 | 确认依赖方没变更接口 |
+| ③ 提 PR 前 | 确认没有重复劳动 |
+| ④ **说 DONE 之前** | **最关键** |
+
+> ### 🚫 铁律：没检查过 Issue / PR，禁止声称完成。
+> 说 `DONE` 之前不查，等于把队友永久挂起。
+
+---
+
+## 3. 消息格式（写在 Issue 评论里）
+
+固定用这 5 个词**全大写**开头。格式统一，人才扫得快，AI 才解析得准。
+
+### CHECKIN — 领取任务
+
+```
+CHECKIN
+负责人：member-a
+分支：member-a/<简述>
+计划：<2-3 句，说清怎么做>
+预计：<大概什么时候能有初版>
+```
+
+### BLOCKED — 卡住了
+
+**必须写全三项，缺一项等于没说。**
+
+```
+BLOCKED
+等谁：@member-b
+等什么：<具体到接口名 / 字段 / 文件路径，别写"等你那边好">
+我还能做：<不依赖对方的部分；真的没有就写"无">
+```
+
+> 写"我还能做"是为了**不让整条流水线停摆**。即使只写"我去补文档"也比空着强。
+
+### HANDOFF — 交接给别人
+
+```
+HANDOFF → @member-c
+已完成：<具体到文件 / 函数>
+你继续：<具体到要做什么>
+注意：<我踩过的坑，别再踩>
+```
+
+### DONE — 完成
+
+```
+DONE
+分支：member-a/xxx
+PR：#<编号>
+验收：<怎么验证，给出可复制执行的命令或步骤>
+影响文件：<文件列表>
+```
+
+### REVIEW — 请求审查
+
+```
+REVIEW
+PR：#<编号>
+改动摘要：<具体>
+需重点看：<具体文件 / 逻辑，别写"都看看">
+```
+
+---
+
+## 4. 区域划分（互不重叠）
+
+| 成员 | 负责路径 |
+|---|---|
+| **member-a** | `frontend/**`　`src/components/**` |
+| **member-b** | `backend/**`　`src/api/**` |
+| **member-c** | `model/**`　`inference/**` |
+| **member-d** | `shared/**`　`deploy/**` |
+
+**改动别人地盘 = 必须先在 Issue 发 `CHANGE_REQUEST`，等对方回 `OK` 再动手。**
+
+```
+CHANGE_REQUEST → @member-b
+想改：backend/routes/user.ts
+原因：<为什么必须改>
+改法：<具体改什么>
+```
+
+> 区域是**约定**，不是锁。目的不是禁止跨界，而是**跨界前先打声招呼**。
+
+---
+
+## 5. 🔥 根文件规则（最容易炸的地方）
+
+下面这些文件**不属于任何人的区域**，是冲突重灾区，单独定规矩：
+
+| 文件 | 唯一 owner |
+|---|---|
+| `package-lock.json` | **只有 member-d 能提交** |
+| `package.json` | 谁加依赖谁改，PR 里注明 |
+| `src/main.tsx` | 同一时间只许一人改 |
+| `vite.config.ts` / `tsconfig.json` | member-d |
+| `.env.example` | 谁加变量谁改 |
+
+### 🚫 锁文件铁律
+
+**除了 member-d，任何人都不准提交 `package-lock.json`。**
+
+你在自己分支跑完 `npm install` 后，**只提交 `package.json`，把锁文件的改动丢掉**：
+
+```bash
+# 推荐做法：完全不生成锁文件
+npm install --no-save <包名>       # 临时试用
+npm pkg set dependencies.<包名>=<版本>   # 改 package.json
+
+# 已生成锁文件了？丢弃它
+git checkout -- package-lock.json
+```
+
+**为什么要这么严：**
+> 锁文件是机器生成的，几百行 diff **人眼根本看不出对错**。
+> 三方各自生成一份 → 必然冲突 → 强行 merge → **玄学 bug**（本地能跑、别人跑不了）。
+> 让**一个产者**统一生成一次，是唯一能根治的办法。
+
+**member-d 的职责**：定期在 main 上跑 `npm install --package-lock-only` 并提交，
+保证锁文件始终与 `package.json` 一致。
+
+---
+
+## 6. 分支与提交
+
+**分支命名**
+```
+member-a/<简述>     如 member-a/login-page
+member-b/<简述>     如 member-b/user-api
+member-c/实验性分支可用 exp/ 前缀
+```
+
+**铁律**
+- 🚫 **禁止直接 push `main` / `master`**
+- 🚫 **禁止 `git push --force` 到共享分支**（自己未合并的私有分支可以）
+- commit 信息用英文动词开头：`feat:` `fix:` `docs:` `chore:` `refactor:`
+
+```
+feat: 增加登录页表单校验
+fix: 修复用户接口的空指针
+docs: 补充 API 说明
+```
+
+---
+
+## 7. PR 规则
+
+- 🚫 **AI 不许自己 merge。** 必须由**人类**点 merge。
+- PR 描述必须填模板（`.github/PULL_REQUEST_TEMPLATE.md`）
+- 🚫 PR 里**禁止出现 `package-lock.json`**（除非你是 member-d）
+- 提 PR 后在对应 Issue 发 `REVIEW`
+- PR 尽量小：**一个 PR 只做一件事**，超过 400 行考虑拆
+
+---
+
+## 8. 提交身份
+
+已全局配好，**别改**：
+
+```
+user.name  = wenyu2026
+user.email = 290060464+wenyu2026@users.noreply.github.com
+```
+
+> 用 noreply 邮箱的原因：真实邮箱绑在另一个 GitHub 账号上，
+> 直接用它会导致**贡献算错人**，且泄露邮箱。
+
+---
+
+## 9. 环境铁律（赛场特有，务必遵守）
+
+| 事项 | 规则 |
+|---|---|
+| **GitHub 访问** | **必须走 Clash 代理（127.0.0.1:7890）**，直连必失败（实测 21s 超时） |
+| 代理配置 | 已写入 git 全局配置，只对 github 域名生效，Gitee 仍直连 |
+| **Clash 挂了怎么办** | GitHub 立刻不通。先检查 7890 端口是否在监听 |
+| npm 源 | 腾讯云（项目 `.npmrc` 已配，克隆后自动生效） |
+| `.env` 与密钥 | 🚫 **永不提交**（`.gitignore` 已挡，别用 `-f` 绕过） |
+| 不要选的方案 | 需要 Docker / 本地原生编译 / Java / .NET 的 —— 环境里没有 |
+
+**代理不通时的自检命令：**
+```powershell
+Get-NetTCPConnection -State Listen -LocalPort 7890   # 有输出 = Clash 在跑
+```
+
+---
+
+## 10. 三条最重要的铁律（记不住别的，记这三条）
+
+1. **锁文件只有一个人能提交** → 不守这条，PR 会一直冲突
+2. **说 DONE 之前必须查 Issue / PR** → 不守这条，AI 会互相等到死
+3. **AI 不许 merge，人点头才合** → 不守这条，main 会烂
+
+---
+
+## 附：本协议自身的修改
+
+改 `AGENTS.md` 时**必须同步更新 `GEMINI.md` 里的哈希**（那里有说明），否则 PR 打回。
+
+原因：不同 AI 读不同文件，一旦两份规则不一致，就会**各按各的干**——
+这是多 AI 协作最阴的失败模式。
