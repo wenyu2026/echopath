@@ -61,6 +61,13 @@ type Ctx = {
   outOfScope: { reason: string; hint: string } | null;
   clearOutOfScope: () => void;
 
+  /**
+   * 用户在 P1 里到底写没写过内容。
+   * 全跳过时后端仍会返回一份处境（那是**系统给的通用起点**，
+   * 不是"从你的回答里抽出来的"），P2 的措辞必须区分这两种情况。
+   */
+  situationFromUserInput: boolean;
+
   reachable: number;
   setReachable: (n: number) => void;
 
@@ -305,6 +312,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<RunMode>(restored?.mode ?? 'live');
   const [offlineReason, setOfflineReason] = useState<string | null>(restored?.offlineReason ?? null);
   const [outOfScope, setOutOfScope] = useState<{ reason: string; hint: string } | null>(null);
+  const [situationFromUserInput, setSituationFromUserInput] = useState(true);
   const [reachable, setReachable] = useState(restored?.reachable ?? 0);
 
   // 任何状态变化都同步到 sessionStorage
@@ -349,9 +357,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setLoadingSituation(true);
         setOutOfScope(null);
         const narrative = buildNarrative(journey);
+
+        // ⚠️ 用户一个字都没写时，不能拿一句兜底文案当"他的回答"。
+        //    实测：全跳过 6 问时，后端会从「我想换个方向…」编出完整的处境卡
+        //    （阶段=方向抉择期 / 约束=已有沉没成本…），而 P2 却写着
+        //    「我们从你的回答里抽出了这些结构」—— 把系统编的内容算在用户头上。
+        //    这里如实记录"有没有真的说过话"，供 P2 决定措辞。
+        const hasUserInput = narrative.trim().length > 0;
+        setSituationFromUserInput(hasUserInput);
+
         try {
           const res = await postJson<{ situation: Situation }>('/api/situation', {
-            raw_input: narrative || '我想换个方向，但不确定该不该换。',
+            raw_input: hasUserInput ? narrative : '我想换个方向，但不确定该不该换。',
           });
           setSituation(res.situation);
           setMode('live');
@@ -415,6 +432,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       outOfScope,
       clearOutOfScope: () => setOutOfScope(null),
 
+      situationFromUserInput,
+
       reachable,
       setReachable,
 
@@ -433,7 +452,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       },
     };
-  }, [journey, situation, result, loadingSituation, loadingRetrieval, mode, offlineReason, reachable, outOfScope]);
+  }, [journey, situation, result, loadingSituation, loadingRetrieval, mode, offlineReason, reachable, outOfScope, situationFromUserInput]);
 
   return <AppCtx.Provider value={value}>{children}</AppCtx.Provider>;
 }

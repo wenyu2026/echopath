@@ -20,7 +20,7 @@ const ARRAY_FIELDS: { key: keyof Situation; label: string }[] = [
 ];
 
 export default function P2Crossroads() {
-  const { situation, setSituation, runRetrieval, loadingRetrieval, mode, offlineReason, setReachable } = useApp();
+  const { situation, setSituation, runRetrieval, loadingRetrieval, mode, offlineReason, setReachable, situationFromUserInput } = useApp();
   const nav = useNavigate();
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
@@ -68,10 +68,21 @@ export default function P2Crossroads() {
   return (
     <div>
       <h1>这是你现在站的路口</h1>
-      <p className="muted" style={{ marginTop: 8, marginBottom: 24 }}>
-        我们从你的回答里抽出了这些结构。
-        <strong>如果哪里不对，直接改</strong> —— 你的处境由你定义，不是由系统定义。
-      </p>
+      {situationFromUserInput ? (
+        <p className="muted" style={{ marginTop: 8, marginBottom: 24 }}>
+          我们从你的回答里抽出了这些结构。
+          <strong>如果哪里不对，直接改</strong> —— 你的处境由你定义，不是由系统定义。
+        </p>
+      ) : (
+        /* 全跳过 6 问的情况：不能把系统编的内容说成"从你的回答里抽出来的" */
+        <div className="notice warn" style={{ marginTop: 8, marginBottom: 24 }}>
+          <strong>你没有填写任何内容</strong>
+          <br />
+          下面是一份<strong>通用起点</strong>，不是从你的话里读出来的 ——
+          它只是让你先看到流程长什么样。
+          <strong>把它改成你自己的处境</strong>，后面的案例才会真的像你。
+        </div>
+      )}
 
       {mode === 'offline' && (
         <div className="notice warn" style={{ marginBottom: 18 }}>

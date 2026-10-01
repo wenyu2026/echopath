@@ -366,6 +366,50 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
 });
 
 /* ============================================================
+   ⑲ 用户什么都没写时，不能把系统编的内容说成"你的回答"
+   ------------------------------------------------------------
+   实测：全跳过 6 问时，后端仍会从一句兜底文案
+   （「我想换个方向，但不确定该不该换。」）编出完整处境卡：
+     阶段=方向抉择期 / 冲突=维持现状 vs 更换方向 / 约束=已有沉没成本…
+   而 P2 写着「我们从你的回答里抽出了这些结构」——
+   把系统编的内容算在用户头上。
+   ============================================================ */
+
+test('诚实性：全跳过时必须说明那是通用起点，不是"从你的回答里抽的"', () => {
+  const p2 = readFileSync(join(root, 'src', 'pages', 'P2Crossroads.tsx'), 'utf8');
+  const state = readFileSync(join(root, 'src', 'state', 'AppState.tsx'), 'utf8');
+
+  assert.ok(
+    /situationFromUserInput/.test(state),
+    'AppState 必须记录"用户到底写没写过内容"',
+  );
+  assert.ok(
+    /hasUserInput\s*=\s*narrative\.trim\(\)\.length\s*>\s*0/.test(state),
+    '应从 narrative 是否为空推出 hasUserInput',
+  );
+  assert.ok(
+    /raw_input:\s*hasUserInput\s*\?\s*narrative/.test(state),
+    '没有用户输入时不应把兜底文案当作"他的回答"直接发出去',
+  );
+  assert.ok(
+    /situationFromUserInput\s*\?/.test(p2),
+    'P2 必须按"有没有用户输入"分两种措辞',
+  );
+  assert.ok(
+    /通用起点|不是从你的话里读出来的/.test(p2),
+    '全跳过时要明说是通用起点，不能说成从用户回答里抽的',
+  );
+});
+
+test('诚实性：有用户输入时仍保留原来的措辞（不要因噎废食）', () => {
+  const p2 = readFileSync(join(root, 'src', 'pages', 'P2Crossroads.tsx'), 'utf8');
+  assert.ok(
+    /我们从你的回答里抽出了这些结构/.test(p2),
+    '有输入时这句话是对的，应保留',
+  );
+});
+
+/* ============================================================
    ⑱ 「看证据来源（N）」的 N 不能把 AI 推断算进去
    ------------------------------------------------------------
    原来按钮写的是 ep.evidence.length，但每条案例的 evidence 里
