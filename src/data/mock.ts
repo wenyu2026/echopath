@@ -238,11 +238,68 @@ export const mockRetrieval: RetrievalResponse = {
    P1 来时路的引导问题
    ============================================================ */
 
-export const journeyQuestions = [
-  { id: 'q1', label: '你现在处在什么阶段？', placeholder: '比如：大二，专业是材料科学' },
-  { id: 'q2', label: '过去两年你主要在做什么？', placeholder: '比如：专业课 + 实验室打杂，参加过两次竞赛' },
-  { id: 'q3', label: '现在让你动摇的是什么？', placeholder: '比如：发现自己对专业课毫无兴趣，反而一直在自学设计' },
-  { id: 'q4', label: '你对新方向了解到什么程度？', placeholder: '比如：看了两个月的教程，没做过真实项目' },
-  { id: 'q5', label: '现实约束有哪些？', placeholder: '比如：家里希望我稳定就业，转专业要降级一年' },
-  { id: 'q6', label: '你最不能接受的结局是什么？', placeholder: '比如：毕业后做着完全不喜欢的工作，又不敢再改' },
-];
+/**
+ * ⚠️ v2 改进：问题与示例改成**分阶段**的。
+ *
+ * 原来六问的 placeholder 全是校园场景
+ * （「专业课 + 实验室打杂」「转专业要降级一年」）。
+ * 但产品自己准备的第三个演示场景是「大厂还是小厂/创业」——
+ * 一个职场处境。评委试那个场景时，会看到一堆只在大学里成立的问题，
+ * 立刻露出「这套东西只做过学生」的马脚。
+ *
+ * 现在按第一问的回答粗分三类，给出对应措辞与例子：
+ *   校园 / 职场 / 其他
+ * 判定用关键词，判不出来就退回中性措辞（不假装知道）。
+ */
+
+export type JourneyStage = 'school' | 'career' | 'general';
+
+export interface JourneyQuestion {
+  id: string;
+  label: string;
+  placeholder: string;
+}
+
+const QUESTIONS: Record<JourneyStage, JourneyQuestion[]> = {
+  school: [
+    { id: 'q1', label: '你现在处在什么阶段？', placeholder: '比如：大二，专业是材料科学' },
+    { id: 'q2', label: '过去两年你主要在做什么？', placeholder: '比如：专业课 + 实验室打杂，参加过两次竞赛' },
+    { id: 'q3', label: '现在让你动摇的是什么？', placeholder: '比如：发现自己对专业课毫无兴趣，反而一直在自学设计' },
+    { id: 'q4', label: '你对新方向了解到什么程度？', placeholder: '比如：看了两个月的教程，没做过真实项目' },
+    { id: 'q5', label: '现实约束有哪些？', placeholder: '比如：家里希望我稳定就业，转专业要降级一年' },
+    { id: 'q6', label: '你最不能接受的结局是什么？', placeholder: '比如：毕业后做着完全不喜欢的工作，又不敢再改' },
+  ],
+  career: [
+    { id: 'q1', label: '你现在处在什么阶段？', placeholder: '比如：工作五年，在一家小公司做产品' },
+    { id: 'q2', label: '这几年你主要积累了什么？', placeholder: '比如：三年 to B 产品经验，带过两个人，没做过从 0 到 1' },
+    { id: 'q3', label: '现在让你动摇的是什么？', placeholder: '比如：学得快但看不到晋升路径，不确定留下来是不是在浪费时间' },
+    { id: 'q4', label: '你对新方向了解到什么程度？', placeholder: '比如：和那边的人聊过两次，但没实际做过' },
+    { id: 'q5', label: '现实约束有哪些？', placeholder: '比如：目前存款不多，无家庭负担，但断供半年就撑不住' },
+    { id: 'q6', label: '你最不能接受的结局是什么？', placeholder: '比如：三年后还在原地，却已经错过了能换的窗口' },
+  ],
+  general: [
+    { id: 'q1', label: '你现在处在什么阶段？', placeholder: '比如：三十岁出头，做着一份说不上喜欢也说不上讨厌的工作' },
+    { id: 'q2', label: '过去这段时间你主要在做什么？', placeholder: '比如：一直在本职上投入，副业只是零散试过几次' },
+    { id: 'q3', label: '现在让你动摇的是什么？', placeholder: '比如：隐约觉得该变，但说不清具体该转向哪里' },
+    { id: 'q4', label: '你对新方向了解到什么程度？', placeholder: '比如：只是听说过，还没认真了解过' },
+    { id: 'q5', label: '现实约束有哪些？', placeholder: '比如：要照顾家里，能承受的试错成本有限' },
+    { id: 'q6', label: '你最不能接受的结局是什么？', placeholder: '比如：一直没变，最后连想变的念头都没有了' },
+  ],
+};
+
+/** 从第一问的回答粗判属于哪类处境 */
+export function detectJourneyStage(stageAnswer: string): JourneyStage {
+  const t = (stageAnswer ?? '').trim();
+  if (!t) return 'general';
+  if (/大学|学院|专业|在校|大一|大二|大三|大四|研究生|读研|本科|读书|学生|留学|高考/.test(t)) return 'school';
+  if (/工作|职场|在职|入职|公司|岗位|转行|创业|自由职业|年经验|毕业[0-9一二三四五六七八九十]|career/i.test(t)) return 'career';
+  return 'general';
+}
+
+/** 按处境取问题列表。判不出类别时给中性措辞，不假装知道 */
+export function getJourneyQuestions(stageAnswer: string): JourneyQuestion[] {
+  return QUESTIONS[detectJourneyStage(stageAnswer)];
+}
+
+/** 兼容：默认给校园版（原来的行为），供不关心分支的调用方使用 */
+export const journeyQuestions = QUESTIONS.school;

@@ -8,17 +8,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
-import { journeyQuestions } from '../data/mock';
+import { getJourneyQuestions } from '../data/mock';
 
 export default function P1Journey() {
   const { journey, setJourneyAnswer, buildSituation, loadingSituation, setReachable } = useApp();
   const nav = useNavigate();
   const [idx, setIdx] = useState(0);
 
-  const q = journeyQuestions[idx];
+  // 按第一问的回答切换问题措辞（校园 / 职场 / 中性）
+  // —— 否则评委试「大厂还是小厂」场景时，会看到只在大学里成立的问题
+  const questions = getJourneyQuestions(journey.q1 ?? '');
+
+  const q = questions[idx];
   const value = journey[q.id] ?? '';
-  const filled = journeyQuestions.filter((x) => (journey[x.id] ?? '').trim().length > 0).length;
-  const isLast = idx === journeyQuestions.length - 1;
+  const filled = questions.filter((x) => (journey[x.id] ?? '').trim().length > 0).length;
+  const isLast = idx === questions.length - 1;
 
   async function next() {
     if (!isLast) {
@@ -44,7 +48,7 @@ export default function P1Journey() {
       {/* 进度 */}
       <div className="row tiny muted" style={{ marginBottom: 8 }}>
         <span>
-          第 {idx + 1} / {journeyQuestions.length} 问
+          第 {idx + 1} / {questions.length} 问
         </span>
         <span className="spacer" />
         <span>已回答 {filled} 项</span>
@@ -52,7 +56,7 @@ export default function P1Journey() {
       <div className="dim-track" style={{ marginBottom: 26 }}>
         <div
           className="dim-fill"
-          style={{ width: `${((idx + 1) / journeyQuestions.length) * 100}%` }}
+          style={{ width: `${((idx + 1) / questions.length) * 100}%` }}
         />
       </div>
 
@@ -95,7 +99,7 @@ export default function P1Journey() {
           <div className="card-head">
             <span className="card-sub">你已填写的</span>
           </div>
-          {journeyQuestions
+          {questions
             .filter((x) => (journey[x.id] ?? '').trim())
             .map((x) => (
               <div className="situation-row" key={x.id}>

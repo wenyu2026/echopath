@@ -17,6 +17,7 @@ import { selectDiverse } from '../retrieval/diversity.ts';
 import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
 import { normalizeSituationFields } from '../parser/situation-parser.ts';
+import { getJourneyQuestions, detectJourneyStage } from '../../src/data/mock.ts';
 import {
   categoryMatch,
   bigramOverlap,
@@ -362,6 +363,67 @@ test('校验：严格版仍然卡条数（Parser 输出用）', () => {
   };
   assert.ok(!validateSituation(tooFew).ok, '严格版应因条数不足而拒绝');
   assert.ok(validateSituationShape(tooFew).ok, '宽松版应接受同样的输入');
+});
+
+/* ============================================================
+   ⑬ P1 的引导问题不能只有校园版
+   ------------------------------------------------------------
+   产品自己准备的第三个演示场景是「大厂还是小厂/创业」—— 一个职场处境。
+   但六问的 placeholder 全是校园场景（「专业课 + 实验室打杂」
+   「转专业要降级一年」）。
+   评委试那个场景时会看到一堆只在大学里成立的问题，
+   立刻露出「这套东西只做过学生」的马脚。
+   ============================================================ */
+
+test('P1 问题：按处境切换措辞（校园 / 职场 / 中性）', () => {
+  const school = getJourneyQuestions('大二，专业是材料科学');
+  const career = getJourneyQuestions('工作五年，在一家小公司做产品');
+  const general = getJourneyQuestions('');
+
+  assert.equal(school.length, 6, '六问');
+  assert.equal(career.length, 6, '六问');
+  assert.equal(general.length, 6, '六问');
+
+  // 校园版与职场版的第二问必须不同 —— 这是「只在大学里成立」最明显的那句
+  assert.notEqual(
+    school[1].label,
+    career[1].label,
+    '校园版和职场版的第二问不该一模一样',
+  );
+  assert.ok(
+    /两年|专业课|竞赛|实验室/.test(school[1].label + school[1].placeholder),
+    '校园版应含校园语汇',
+  );
+  assert.ok(
+    !/两年|专业课|竞赛|实验室/.test(career[1].label + career[1].placeholder),
+    `职场版不该出现校园语汇：${career[1].label} / ${career[1].placeholder}`,
+  );
+  assert.ok(
+    !/两年|专业课|竞赛|实验室/.test(general[1].label + general[1].placeholder),
+    '中性版也不该出现校园语汇',
+  );
+});
+
+test('P1 问题：判不出处境时退回中性措辞，不假装知道', () => {
+  const s = detectJourneyStage('');
+  assert.equal(s, 'general', '空输入应归为中性，而不是默认校园');
+
+  // 各类关键词都要能判对
+  assert.equal(detectJourneyStage('大三'), 'school');
+  assert.equal(detectJourneyStage('在读研究生'), 'school');
+  assert.equal(detectJourneyStage('工作五年'), 'career');
+  assert.equal(detectJourneyStage('想转行'), 'career');
+  assert.equal(detectJourneyStage('三十岁出头'), 'general');
+});
+
+test('P1 问题：切换后 id 保持一致（否则已填答案会对不上）', () => {
+  const school = getJourneyQuestions('大二');
+  const career = getJourneyQuestions('工作五年');
+  assert.deepEqual(
+    school.map((q) => q.id),
+    career.map((q) => q.id),
+    '两套问题的 id 必须一致 —— 否则用户切回上一问时答案会丢',
+  );
 });
 
 /* ============================================================
