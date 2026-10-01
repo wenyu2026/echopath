@@ -141,15 +141,56 @@ export function normalizeSituationFields(parsed: unknown): unknown {
   return obj;
 }
 
-/** 「止损止损」→「止损」；「A A」→「A」。只处理完全重复的相邻片段 */
-function dedupeAdjacent(s: string): string {
-  if (s.length < 2) return s;
-  // 整体由同一个片段重复两次构成
+/**
+ * 中文里合法的叠词 —— 这些**不能**被当成"手滑重复"删掉。
+ * 「好好想想」「慢慢来」都是正常表达，删了反而错。
+ */
+const LEGIT_REDUPLICATION = new Set([
+  '好好', '慢慢', '渐渐', '刚刚', '常常', '天天', '年年', '人人', '个个', '种种',
+  '件件', '处处', '时时', '偏偏', '明明', '白白', '偷偷', '悄悄', '轻轻', '深深',
+  '远远', '多多', '高高', '低低', '大大', '小小', '长长', '短短', '快快', '早早',
+  '紧紧', '松松', '牢牢', '稳稳', '静静', '亲亲', '多多', '少少',
+]);
+
+/**
+ * 去掉相邻重复的片段。
+ *
+ * ⚠️ 实测教训：第一版只处理「整串重复」（ABAB → AB）和「空格分隔重复」，
+ *   但真正出问题的形态是**句子中间的重复词**：
+ *     【目标】在意的目标有具体交集：「止损止损」（…）
+ *   所以必须能处理任意位置的相邻重复。
+ *
+ * 保守清理：不改写、不同义替换，只删明显重复的那一份。
+ * 合法的中文叠词走白名单放行。
+ */
+function dedupeAdjacent(input: string): string {
+  if (!input) return input;
+  if (LEGIT_REDUPLICATION.has(input.trim())) return input;
+  let s = input;
+
+  // 整体由同一片段重复两次构成
   if (s.length % 2 === 0) {
     const h = s.length / 2;
     if (s.slice(0, h) === s.slice(h)) return s.slice(0, h);
   }
-  // 空格分隔的重复词：「止损 止损」→「止损」
+
+  // 任意位置的相邻重复词：长窗口优先，避免先删短窗口把正常词切坏
+  for (let len = 6; len >= 2; len--) {
+    let i = 0;
+    let guard = 0;
+    while (i + len * 2 <= s.length && guard++ < 1000) {
+      const a = s.slice(i, i + len);
+      const b = s.slice(i + len, i + len * 2);
+      // 只认「含实词」的重复，避免把连续标点/空白也合并掉
+      if (a === b && /[\u4e00-\u9fa5A-Za-z0-9]/.test(a)) {
+        s = s.slice(0, i) + a + s.slice(i + len * 2);
+      } else {
+        i++;
+      }
+    }
+  }
+
+  // 空格分隔的重复词
   const parts = s.split(/\s+/);
   if (parts.length >= 2 && parts.every((p) => p === parts[0])) return parts[0];
   return s;

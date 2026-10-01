@@ -1,324 +1,61 @@
 {
   "situation": {
     "constraints": [
+      "毕业两年处于成长期",
       "存款不多",
-      "无家庭负担",
-      "小公司无晋升路径",
-      "大厂岗位方向窄"
+      "无家庭负担"
     ],
-    "dilemma": "小厂全能成长 vs 大厂平台定岗",
+    "dilemma": "去大厂做螺丝钉 vs 留小厂无晋升",
     "goals": [
-      "提升长期竞争力",
-      "拓展成长空间",
-      "追求职业晋升"
+      "提升成长空间",
+      "增强长期竞争力",
+      "薪资涨幅"
     ],
     "options": [
-      "留小公司积累",
-      "跳槽大厂定岗",
-      "继续观望机会"
+      "跳槽去大厂",
+      "留任现公司",
+      "寻求折中平台"
     ],
     "reversibility": "medium",
     "risk": "medium",
-    "stage": "毕业两年/职业成长期",
+    "stage": "职场起步期",
     "unknowns": [
-      "大厂内部转岗可能性",
-      "窄方向的市场需求度",
-      "小公司未来发展上限"
+      "大厂具体业务发展前景",
+      "窄岗位的可迁移性",
+      "现公司未来变数"
     ]
   },
   "matches": [
     {
       "episode": {
-        "episode_id": "ramakrishnan_1999_lmb",
+        "episode_id": "may_2006_resume_phd",
         "person": {
-          "name": "文卡特拉曼·拉马克里希南",
+          "name": "布赖恩·梅",
           "tags": [
-            "大厂还是小公司/创业",
-            "科研机构转换"
+            "考研还是就业",
+            "重返研究"
           ]
         },
         "time": {
-          "year": 1999,
-          "stage": "科研机构转换"
+          "year": 2006,
+          "stage": "重返研究"
         },
         "prior_path": [
-          "在美国 Utah 开展核糖体研究。"
+          "博士研究已中断约三十年；仍从事音乐。"
         ],
         "decision_state": {
-          "dilemma": "留在原机构 vs 迁往英国 LMB",
+          "dilemma": "继续仅做音乐 vs 恢复博士研究",
           "options": [
-            "留在原机构",
-            "迁往英国 LMB"
+            "继续仅做音乐",
+            "恢复博士研究"
           ],
           "constraints": [
-            "涉及家庭迁移",
-            "新团队资源需重建"
+            "需补读多年文献",
+            "既有工作仍在继续"
           ],
           "goals": [
-            "加强科研协作",
-            "集中研究投入"
-          ],
-          "risk": "high",
-          "reversibility": "medium"
-        },
-        "choice": {
-          "type": "direct_switch",
-          "actions": [
-            "1999 年转至英国 LMB。"
-          ]
-        },
-        "outcomes": {
-          "short_term": "据自述，接受约四成减薪并迁移研究生活。",
-          "mid_term": "2000 年取得核糖体亚基结构研究进展。",
-          "long_term": "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。"
-        },
-        "reflection": {
-          "unknowns": [
-            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-            "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
-            "未核实本人对这次选择的直接评价；不补写励志语录。"
-          ]
-        },
-        "evidence": [
-          {
-            "source_id": "VR-AUTO",
-            "type": "self_writing",
-            "claim": "1999 迁移与约 40% 薪酬下降的自述。",
-            "url": "https://www.nobelprize.org/prizes/chemistry/2009/ramakrishnan/biographical/"
-          },
-          {
-            "source_id": "VR-BIO",
-            "type": "biography",
-            "claim": "2000 结构工作及 2009 奖项。",
-            "url": "https://www.nobelprize.org/events/nobel-prize-inspiration-initiative/germany-2021-2/about-venki-ramakrishnan/"
-          },
-          {
-            "source_id": "MODEL-V1",
-            "type": "ai_inference",
-            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。"
-          }
-        ],
-        "retrieval_tags": [
-          "大厂还是小公司/创业",
-          "direct_switch"
-        ]
-      },
-      "dimensions": {
-        "stage_match": 0.5,
-        "path_match": 0.02207122800737376,
-        "dilemma_match": 0.4955283858046487,
-        "constraint_match": 0.25,
-        "goal_match": 0.25,
-        "reversibility_match": 1,
-        "difference_penalty": 0.35
-      },
-      "why_similar": [
-        "【阶段】人生阶段接近（对方当时：科研机构转换）",
-        "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：留在原机构 vs 迁往英国 LMB）"
-      ],
-      "why_different": [
-        "【约束差异】你面对「ceiling」类约束（小公司无晋升路径）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-        "【未知】无法比较「窄方向的市场需求度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-      ],
-      "why_different_detail": [
-        {
-          "text": "【约束差异】你面对「ceiling」类约束（小公司无晋升路径）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-          "kind": "structure",
-          "basis": "constraints 对比",
-          "refs": [
-            "decision_state.constraints"
-          ]
-        },
-        {
-          "text": "【未知】无法比较「窄方向的市场需求度」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-          "kind": "unknown",
-          "basis": "数据缺失（episode 无对应字段）"
-        }
-      ],
-      "evidence_layers": {
-        "facts": [
-          "2000 结构工作及 2009 奖项。（VR-BIO）"
-        ],
-        "self_claims": [
-          "1999 迁移与约 40% 薪酬下降的自述。（VR-AUTO）"
-        ],
-        "interpretations": [
-          "据自述，接受约四成减薪并迁移研究生活。（outcomes.short_term）",
-          "2000 年取得核糖体亚基结构研究进展。（outcomes.mid_term）",
-          "2009 年获诺贝尔化学奖；无法证明换机构是唯一原因。（outcomes.long_term）"
-        ],
-        "ai_inferences": [],
-        "unknowns": [
-          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-          "两个科研机构不是大厂与初创公司的直接对照，专业平台与长期资助更重要。",
-          "未核实本人对这次选择的直接评价；不补写励志语录。"
-        ]
-      }
-    },
-    {
-      "episode": {
-        "episode_id": "butterfield_2013_slack_pivot",
-        "person": {
-          "name": "斯图尔特·巴特菲尔德",
-          "tags": [
-            "大厂还是小公司/创业",
-            "失败后转产品"
-          ]
-        },
-        "time": {
-          "year": 2013,
-          "stage": "失败后转产品"
-        },
-        "prior_path": [
-          "Glitch 关闭后仍保有部分资金和小团队，曾内部使用沟通工具。"
-        ],
-        "decision_state": {
-          "dilemma": "退回剩余资金 vs 转做协作工具",
-          "options": [
-            "退回剩余资金",
-            "转做协作工具"
-          ],
-          "constraints": [
-            "团队已缩减",
-            "外部需求尚待验证"
-          ],
-          "goals": [
-            "重用已验证工具",
-            "寻找新市场"
-          ],
-          "risk": "high",
-          "reversibility": "medium"
-        },
-        "choice": {
-          "type": "explore_then_switch",
-          "actions": [
-            "把内部沟通工具发展为面向其他团队的 Slack。"
-          ]
-        },
-        "outcomes": {
-          "short_term": "从内部使用进入对外产品验证。",
-          "mid_term": "逐渐取得企业客户，获得后续融资。",
-          "long_term": "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。"
-        },
-        "reflection": {
-          "unknowns": [
-            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-            "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
-            "未核实本人对这次选择的直接评价；不补写励志语录。"
-          ]
-        },
-        "evidence": [
-          {
-            "source_id": "SB-INVESTOR",
-            "type": "biography",
-            "claim": "剩余团队和资金、客户与上市回顾。",
-            "url": "https://a16z.com/announcement/slack/"
-          },
-          {
-            "source_id": "SB-ORIGIN",
-            "type": "biography",
-            "claim": "Slack 起源于游戏团队内部沟通工具。",
-            "url": "https://slack.com/resources/why-use-slack/what-is-slack-and-how-does-it-work"
-          },
-          {
-            "source_id": "SB-LAUNCH",
-            "type": "biography",
-            "claim": "2013 年发布测试产品。",
-            "url": "https://techcrunch.com/2013/08/14/say-hello-to-slack-the-newest-enterprise-social-network-and-the-latest-effort-from-flickr-co-founder-stewart-butterfields-tiny-speck/"
-          },
-          {
-            "source_id": "MODEL-V1",
-            "type": "ai_inference",
-            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。已有投资关系、现金与协作团队是特殊条件；不是零资源转行。"
-          }
-        ],
-        "retrieval_tags": [
-          "大厂还是小公司/创业",
-          "explore_then_switch"
-        ]
-      },
-      "dimensions": {
-        "stage_match": 0.5,
-        "path_match": 0.189841401660814,
-        "dilemma_match": 0.4572422425881724,
-        "constraint_match": 0.15,
-        "goal_match": 0.15,
-        "reversibility_match": 1,
-        "difference_penalty": 0.44999999999999996
-      },
-      "why_similar": [
-        "【阶段】人生阶段接近（对方当时：失败后转产品）",
-        "【困境结构】双方核心冲突同属「稳定 vs 冒险」型（对方当时的困境：退回剩余资金 vs 转做协作工具）"
-      ],
-      "why_different": [
-        "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-        "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
-      ],
-      "why_different_detail": [
-        {
-          "text": "【约束差异】你面对「家庭」类约束（无家庭负担）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-          "kind": "structure",
-          "basis": "constraints 对比",
-          "refs": [
-            "decision_state.constraints"
-          ]
-        },
-        {
-          "text": "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
-          "kind": "unknown",
-          "basis": "数据缺失（episode 无对应字段）"
-        }
-      ],
-      "evidence_layers": {
-        "facts": [
-          "剩余团队和资金、客户与上市回顾。（SB-INVESTOR）",
-          "Slack 起源于游戏团队内部沟通工具。（SB-ORIGIN）",
-          "2013 年发布测试产品。（SB-LAUNCH）"
-        ],
-        "self_claims": [],
-        "interpretations": [
-          "从内部使用进入对外产品验证。（outcomes.short_term）",
-          "逐渐取得企业客户，获得后续融资。（outcomes.mid_term）",
-          "2019 年上市；并非此前游戏坚持到底得到成功，而是关闭旧项目后重做产品。（outcomes.long_term）"
-        ],
-        "ai_inferences": [],
-        "unknowns": [
-          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-          "已有投资关系、现金与协作团队是特殊条件；不是零资源转行。",
-          "未核实本人对这次选择的直接评价；不补写励志语录。"
-        ]
-      }
-    },
-    {
-      "episode": {
-        "episode_id": "murakami_1978_bar_and_writing",
-        "person": {
-          "name": "村上春树",
-          "tags": [
-            "大厂还是小公司/创业",
-            "经营与创作"
-          ]
-        },
-        "time": {
-          "year": 1978,
-          "stage": "经营与创作"
-        },
-        "prior_path": [
-          "与妻子经营爵士酒吧。"
-        ],
-        "decision_state": {
-          "dilemma": "维持经营 vs 营业外写作",
-          "options": [
-            "维持经营",
-            "营业外写作"
-          ],
-          "constraints": [
-            "店务占用时间",
-            "文学能力尚待验证"
-          ],
-          "goals": [
-            "保持现金来源",
-            "试做新的创作"
+            "完成遗留研究",
+            "保持音乐活动"
           ],
           "risk": "medium",
           "reversibility": "medium"
@@ -326,66 +63,63 @@
         "choice": {
           "type": "dual_track",
           "actions": [
-            "在继续经营酒吧期间开始写小说。"
+            "2006 年恢复博士研究，整理旧资料并补读文献。"
           ]
         },
         "outcomes": {
-          "short_term": "利用营业结束后的时间完成第一部小说。",
-          "mid_term": "1979 年首作获新人奖；1981 年卖店转为专职写作。",
-          "long_term": "此后写作《寻羊冒险记》；首轮尝试不是预先排定的三年转型计划。"
+          "short_term": "2007 年提交论文并取得博士学位。",
+          "mid_term": "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+          "long_term": "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
         },
         "reflection": {
           "unknowns": [
             "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-            "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
-            "首作带来的收入及具体离店日期未知。"
-          ],
-          "self_comment": "他在回忆中把 1978 年的一场棒球赛视为开始写小说的契机。"
+            "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+            "未核实本人对这次选择的直接评价；不补写励志语录。",
+            "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+            "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+          ]
         },
         "evidence": [
           {
-            "source_id": "HM-SELF",
-            "type": "self_writing",
-            "claim": "1978 开始写作、1979 首作获奖，之后卖店及继续创作。",
-            "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/"
+            "source_id": "BM-LJMU",
+            "type": "biography",
+            "claim": "2006 恢复和 2007 完成。",
+            "url": "https://www.ljmu.ac.uk/about-us/bicentenary/our-people/brian-may/brian-may-profile"
           },
           {
-            "source_id": "HM-1981",
+            "source_id": "BM-IMPERIAL",
             "type": "biography",
-            "claim": "卖店转向职业写作的年份为 1981 年。",
-            "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04"
+            "claim": "旧研究材料、文献补读及论文提交。",
+            "url": "https://www.imperial.ac.uk/news/30594/annual-alumni-lecture-2007/"
           },
           {
             "source_id": "MODEL-V1",
             "type": "ai_inference",
-            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。"
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。"
           }
         ],
         "retrieval_tags": [
-          "大厂还是小公司/创业",
+          "考研还是就业",
           "dual_track"
-        ],
-        "next_episode_ids": [
-          "murakami_1981_fulltime_writing"
         ]
       },
       "dimensions": {
-        "stage_match": 0.5,
-        "path_match": 0,
-        "dilemma_match": 0.45533035557626517,
+        "stage_match": 0.9,
+        "path_match": 0.06977881128744395,
+        "dilemma_match": 0.362704013984961,
         "constraint_match": 0.4,
         "goal_match": 0.15,
         "reversibility_match": 1,
-        "difference_penalty": 0.75
+        "difference_penalty": 0.35
       },
       "why_similar": [
-        "【阶段】人生阶段接近（对方当时：经营与创作）",
-        "【约束】现实约束有重叠（对方的约束：店务占用时间、文学能力尚待验证）"
+        "【阶段】人生阶段接近（对方当时：重返研究）",
+        "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
       ],
       "why_different": [
         "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
-        "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-        "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+        "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
       ],
       "why_different_detail": [
         {
@@ -397,50 +131,302 @@
           ]
         },
         {
-          "text": "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）",
-          "kind": "era",
-          "basis": "ai_inference（模型外部知识）",
-          "refs": [
-            "time.year"
-          ]
-        },
-        {
-          "text": "【未知】无法比较「大厂内部转岗可能性」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
           "kind": "unknown",
           "basis": "数据缺失（episode 无对应字段）"
         }
       ],
       "evidence_layers": {
         "facts": [
-          "卖店转向职业写作的年份为 1981 年。（HM-1981）"
+          "2006 恢复和 2007 完成。（BM-LJMU）",
+          "旧研究材料、文献补读及论文提交。（BM-IMPERIAL）"
         ],
-        "self_claims": [
-          "1978 开始写作、1979 首作获奖，之后卖店及继续创作。（HM-SELF）",
-          "他在回忆中把 1978 年的一场棒球赛视为开始写小说的契机。（reflection.self_comment，本人自述）"
-        ],
+        "self_claims": [],
         "interpretations": [
-          "利用营业结束后的时间完成第一部小说。（outcomes.short_term）",
-          "1979 年首作获新人奖；1981 年卖店转为专职写作。（outcomes.mid_term）",
-          "此后写作《寻羊冒险记》；首轮尝试不是预先排定的三年转型计划。（outcomes.long_term）"
+          "2007 年提交论文并取得博士学位。（outcomes.short_term）",
+          "未知：所用来源没有系统评估取得学位后数年的机会成本。（outcomes.mid_term）",
+          "未知：不能从取得博士学位推断长远收入、幸福或研究影响。（outcomes.long_term）"
         ],
-        "ai_inferences": [
-          "【⚠️ AI 类比·时代制度】案例发生在 1978 年（约 48 年前）：当时的职业转换不存在今天这样的门槛体系与市场信号（成绩门槛、延毕成本、就业行情等）。此条为模型外部知识推断，案例数据没有直接证据，不可作为事实引用（依据：ai_inference）"
-        ],
+        "ai_inferences": [],
         "unknowns": [
           "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
-          "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
-          "首作带来的收入及具体离店日期未知。"
+          "博士恢复依赖原课题仍有价值和学校具体安排，不等同于重新参加统考。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。",
+          "未知：所用来源没有系统评估取得学位后数年的机会成本。",
+          "未知：不能从取得博士学位推断长远收入、幸福或研究影响。"
+        ]
+      }
+    },
+    {
+      "episode": {
+        "episode_id": "yuan_2011_zoom",
+        "person": {
+          "name": "袁征",
+          "tags": [
+            "大厂还是小公司/创业",
+            "大公司转创业"
+          ]
+        },
+        "time": {
+          "year": 2011,
+          "stage": "大公司转创业"
+        },
+        "prior_path": [
+          "1997 年进入 WebEx，2007 年随收购进入 Cisco，任工程管理职务。"
+        ],
+        "decision_state": {
+          "dilemma": "留在 Cisco vs 另建通信产品",
+          "options": [
+            "留在 Cisco",
+            "另建通信产品"
+          ],
+          "constraints": [
+            "需另组团队",
+            "已有职业机会成本"
+          ],
+          "goals": [
+            "自主做产品",
+            "建立新的组织"
+          ],
+          "risk": "high",
+          "reversibility": "medium"
+        },
+        "choice": {
+          "type": "direct_switch",
+          "actions": [
+            "2011 年创办 Zoom。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "从大公司工程管理转为新公司创办者。",
+          "mid_term": "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。",
+          "long_term": "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
+            "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
+          ],
+          "self_comment": "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。"
+        },
+        "evidence": [
+          {
+            "source_id": "EY-BIO",
+            "type": "biography",
+            "claim": "WebEx/Cisco 履历和 2011 年创办 Zoom。",
+            "url": "https://investors.zoom.us/board-member-management/eric-yuan"
+          },
+          {
+            "source_id": "EY-2023",
+            "type": "self_writing",
+            "claim": "2023 裁员及 CEO 对过快扩张的反思。",
+            "url": "https://www.zoom.com/en/blog/a-message-from-eric-yuan-ceo-of-zoom/"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。"
+          }
+        ],
+        "retrieval_tags": [
+          "大厂还是小公司/创业",
+          "direct_switch"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.9,
+        "path_match": 0.13195662601304864,
+        "dilemma_match": 0.5204707532982897,
+        "constraint_match": 0.15,
+        "goal_match": 0.15,
+        "reversibility_match": 1,
+        "difference_penalty": 0.44999999999999996
+      },
+      "why_similar": [
+        "【阶段】人生阶段接近（对方当时：大公司转创业）",
+        "【可逆性】双方对这次选择的可逆性判断一致（都是「中」）—— 都还留着退路"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "WebEx/Cisco 履历和 2011 年创办 Zoom。（EY-BIO）"
+        ],
+        "self_claims": [
+          "2023 裁员及 CEO 对过快扩张的反思。（EY-2023）",
+          "2023 年员工信中，他为公司增长后的判断失误承担责任；不是对 2011 年离职的一句成功总结。（reflection.self_comment，本人自述）"
+        ],
+        "interpretations": [
+          "从大公司工程管理转为新公司创办者。（outcomes.short_term）",
+          "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。（outcomes.mid_term）",
+          "2023 年 Zoom 宣布裁员约 1300 人；规模增长之后仍有组织收缩代价。（outcomes.long_term）"
+        ],
+        "ai_inferences": [],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "管理经验、产业关系与融资能力不能假设普通职员也具备；裁员不可单因归于创办决定。",
+          "未知：这些来源没有逐年给出最初数年的个人生活与薪酬结果。"
+        ]
+      }
+    },
+    {
+      "episode": {
+        "episode_id": "butterfield_2012_close_glitch",
+        "person": {
+          "name": "斯图尔特·巴特菲尔德",
+          "tags": [
+            "大厂还是小公司/创业",
+            "创业项目止损"
+          ]
+        },
+        "time": {
+          "year": 2012,
+          "stage": "创业项目止损"
+        },
+        "prior_path": [
+          "Tiny Speck 经营网络游戏 Glitch，增长没有达到预期。"
+        ],
+        "decision_state": {
+          "dilemma": "继续投入游戏 vs 关闭并缩小团队",
+          "options": [
+            "继续投入游戏",
+            "关闭并缩小团队"
+          ],
+          "constraints": [
+            "产品需求不足",
+            "团队依赖融资"
+          ],
+          "goals": [
+            "限制后续损失",
+            "寻找人员出路"
+          ],
+          "risk": "high",
+          "reversibility": "low"
+        },
+        "choice": {
+          "type": "abandon",
+          "actions": [
+            "2012 年决定关闭 Glitch，缩减团队。"
+          ]
+        },
+        "outcomes": {
+          "short_term": "游戏关闭，投资人回顾称团队由约四十人缩至八人。",
+          "mid_term": "剩余团队探索工作沟通工具，之后形成 Slack。",
+          "long_term": "2019 年 Slack 上市；这不改变原游戏失败及裁员的事实。"
+        },
+        "reflection": {
+          "unknowns": [
+            "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+            "尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。",
+            "未核实本人对这次选择的直接评价；不补写励志语录。"
+          ]
+        },
+        "evidence": [
+          {
+            "source_id": "SB-INVESTOR",
+            "type": "biography",
+            "claim": "2012 项目失败、团队缩减及后续 Slack。",
+            "url": "https://a16z.com/announcement/slack/"
+          },
+          {
+            "source_id": "MODEL-V1",
+            "type": "ai_inference",
+            "claim": "decision_state 全部字段、time.stage、choice.type、人物/检索标签及 Demo 方向是 AI 建模；未发生选项不代表本人实际考虑过。尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。"
+          }
+        ],
+        "retrieval_tags": [
+          "大厂还是小公司/创业",
+          "abandon"
+        ],
+        "next_episode_ids": [
+          "butterfield_2013_slack_pivot"
+        ]
+      },
+      "dimensions": {
+        "stage_match": 0.9,
+        "path_match": 0.2177057168661322,
+        "dilemma_match": 0.443689326966037,
+        "constraint_match": 0.2575,
+        "goal_match": 0.15,
+        "reversibility_match": 0.75,
+        "difference_penalty": 0.49999999999999994
+      },
+      "why_similar": [
+        "【阶段】人生阶段接近（对方当时：创业项目止损）",
+        "【可逆性】双方对这次选择的可逆性判断一致（都是「低」）—— 都还留着退路"
+      ],
+      "why_different": [
+        "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+        "【可逆性差异】你的选择可逆性为「中」，对方当时评估为「低」——对方几乎没有退路，其代价结构比你的情形更重（依据：reversibility 字段对比）",
+        "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）"
+      ],
+      "why_different_detail": [
+        {
+          "text": "【约束差异】你面对「经济」类约束（存款不多）；案例记录中没有这部分内容，无法确认对方当时是否面对同样约束——这个案例帮不了你评估这方面的代价（依据：constraints 对比）",
+          "kind": "structure",
+          "basis": "constraints 对比",
+          "refs": [
+            "decision_state.constraints"
+          ]
+        },
+        {
+          "text": "【可逆性差异】你的选择可逆性为「中」，对方当时评估为「低」——对方几乎没有退路，其代价结构比你的情形更重（依据：reversibility 字段对比）",
+          "kind": "structure",
+          "basis": "reversibility 字段对比",
+          "refs": [
+            "decision_state.reversibility"
+          ]
+        },
+        {
+          "text": "【未知】无法比较「大厂具体业务发展前景」：案例资料里查不到对方在这方面的记录，任何结论都只能是推测——「查不到」不等于「事实上没有」，我们选择承认不知道；你可以在 What-if 里补充这个信息再看匹配变化（依据：数据缺失）",
+          "kind": "unknown",
+          "basis": "数据缺失（episode 无对应字段）"
+        }
+      ],
+      "evidence_layers": {
+        "facts": [
+          "2012 项目失败、团队缩减及后续 Slack。（SB-INVESTOR）"
+        ],
+        "self_claims": [],
+        "interpretations": [
+          "游戏关闭，投资人回顾称团队由约四十人缩至八人。（outcomes.short_term）",
+          "剩余团队探索工作沟通工具，之后形成 Slack。（outcomes.mid_term）",
+          "2019 年 Slack 上市；这不改变原游戏失败及裁员的事实。（outcomes.long_term）"
+        ],
+        "ai_inferences": [],
+        "unknowns": [
+          "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+          "尚有投资资金与投资人支持的退出不同于资金耗尽的普通创业者；保留成员的后续收益不代表被裁者。",
+          "未核实本人对这次选择的直接评价；不补写励志语录。"
         ]
       }
     }
   ],
   "meta": {
     "candidates_recalled": 36,
-    "after_metadata_filter": 31,
+    "after_metadata_filter": 29,
     "after_rerank": 3,
-    "dropped_by_metadata": 5,
+    "dropped_by_metadata": 7,
     "forced_diversity": false,
-    "elapsed_ms": 223,
+    "elapsed_ms": 273,
     "weights": {
       "stage_match": 0.15,
       "path_match": 0.2,
@@ -449,7 +435,7 @@
       "goal_match": 0.15,
       "reversibility_match": 0.05
     },
-    "parser_elapsed_ms": 3989,
-    "parser_tokens": 531
+    "parser_elapsed_ms": 2450,
+    "parser_tokens": 524
   }
 }

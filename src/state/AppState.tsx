@@ -89,19 +89,55 @@ interface Persisted {
  * 为什么需要：后端在解析阶段已经会去掉叠词（「止损止损」→「止损」），
  * 但**已经存进 sessionStorage 的旧数据不会自动变干净** ——
  * 用户刷新后加载的是旧快照，脏数据照样显示出来。
- * 实测就撞到过：清理逻辑上线后，页面上仍然显示「止损止损」。
  *
- * 这里做同样的处理，保证「无论数据从哪来，显示前都是干净的」。
- * 只去掉相邻完全重复的整词，不做任何改写。
+ * ⚠️ 第二次实测教训：第一版只处理「整串重复」（ABAB → AB）和「空格分隔重复」，
+ *   结果**页面上仍然显示「止损止损」** —— 因为那句长这样：
+ *     【目标】在意的目标有具体交集：「止损止损」（对方的目标：…）
+ *   重复发生在**句子中间**，不是整串。所以必须能处理任意位置的相邻重复词。
+ *
+ * 策略：从长到短滑动窗口，发现「窗口与紧邻下一个窗口完全相同」就删掉一份。
+ * 保守清理：不改写、不替换，只删明显重复的那一份。
  */
-function dedupeAdjacent(s: string): string {
-  if (s.length < 2) return s;
+/** 中文里合法的叠词 —— 这些不能被当成"手滑重复"删掉 */
+const LEGIT_REDUPLICATION = new Set([
+  '好好', '慢慢', '渐渐', '刚刚', '常常', '天天', '年年', '人人', '个个', '种种',
+  '件件', '处处', '时时', '偏偏', '明明', '白白', '偷偷', '悄悄', '轻轻', '深深',
+  '远远', '多多', '高高', '低低', '大大', '小小', '长长', '短短', '快快', '早早',
+  '紧紧', '松松', '牢牢', '稳稳', '静静', '亲亲', '少少',
+]);
+
+function dedupeAdjacent(input: string): string {
+  if (!input) return input;
+  if (LEGIT_REDUPLICATION.has(input.trim())) return input;
+  let s = input;
+
+  // 1) 整串重复（最简单的情况）
   if (s.length % 2 === 0) {
     const h = s.length / 2;
     if (s.slice(0, h) === s.slice(h)) return s.slice(0, h);
   }
+
+  // 2) 任意位置的相邻重复词：长窗口优先，避免先删短窗口把正常词切坏
+  for (let len = 6; len >= 2; len--) {
+    let i = 0;
+    let guard = 0;
+    while (i + len * 2 <= s.length && guard++ < 1000) {
+      const a = s.slice(i, i + len);
+      const b = s.slice(i + len, i + len * 2);
+      // 只认「含实词」的重复，避免把连续标点/空白也合并掉
+      if (a === b && /[\u4e00-\u9fa5A-Za-z0-9]/.test(a)) {
+        s = s.slice(0, i) + a + s.slice(i + len * 2);
+        // 不前进：可能连着重复好几份
+      } else {
+        i++;
+      }
+    }
+  }
+
+  // 3) 空格分隔的重复词
   const parts = s.split(/\s+/);
   if (parts.length >= 2 && parts.every((p) => p === parts[0])) return parts[0];
+
   return s;
 }
 
@@ -119,6 +155,51 @@ function sanitizeSituation(s: Situation | null): Situation | null {
   };
 }
 
+/**
+ * 恢复旧会话时也要清检索结果。
+ *
+ * ⚠️ 补漏：上一版只清了 situation，结果**页面上仍然显示「止损止损」**。
+ *   原因：那句在 result.matches[].why_similar 里 —— 是旧后端生成的缓存文本。
+ *   同一类问题我只覆盖了一半，所以这里补齐。
+ *
+ * 只处理「像 / 不像」的理由文本（它们是给用户直接读的），
+ * 以及每个案例自己的 person / constraints 等展示字段。
+ */
+function sanitizeResult(r: RetrievalResponse | null): RetrievalResponse | null {
+  if (!r || !Array.isArray(r.matches)) return r;
+  const cleanList = (arr: unknown) =>
+    Array.isArray(arr) ? arr.map((x) => dedupeAdjacent(String(x).trim())) : arr;
+
+  return {
+    ...r,
+    situation: sanitizeSituation(r.situation) as Situation,
+    matches: r.matches.map((m) => ({
+      ...m,
+      why_similar: cleanList(m.why_similar) as string[],
+      why_different: cleanList(m.why_different) as string[],
+      // 案例内部的展示字段也可能带脏数据（AI 生成时同样会吐叠词）
+      episode: m.episode
+        ? {
+            ...m.episode,
+            person: m.episode.person
+              ? {
+                  ...m.episode.person,
+                  name: dedupeAdjacent(String(m.episode.person.name ?? '').trim()),
+                }
+              : m.episode.person,
+            decision_state: m.episode.decision_state
+              ? {
+                  ...m.episode.decision_state,
+                  constraints: cleanList(m.episode.decision_state.constraints) as string[],
+                  goals: cleanList(m.episode.decision_state.goals) as string[],
+                }
+              : m.episode.decision_state,
+          }
+        : m.episode,
+    })),
+  };
+}
+
 function loadSession(): Persisted | null {
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
@@ -131,7 +212,7 @@ function loadSession(): Persisted | null {
     return {
       journey: p.journey ?? {},
       situation: sanitizeSituation(p.situation ?? null),
-      result: p.result ?? null,
+      result: sanitizeResult(p.result ?? null),
       reachable: typeof p.reachable === 'number' ? p.reachable : 0,
       mode: p.mode === 'offline' ? 'offline' : 'live',
       offlineReason: p.offlineReason ?? null,

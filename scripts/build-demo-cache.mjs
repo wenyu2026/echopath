@@ -33,24 +33,53 @@ const apiBase = process.env.API_BASE ?? 'http://localhost:3000';
 const inputs = JSON.parse(readFileSync(join(fixtures, 'demo-inputs.json'), 'utf8'));
 
 if (fromApi) {
+  // 先全部取回来，确认都成功再落盘。
+  //
+  // 为什么：原实现边请求边写文件，中途某个 demo 失败就直接 exit(1)，
+  // 于是 fixture 目录里留下「一半新的、一半旧的」——
+  // 实测撞到过：demo1 是 05:13、demo2/3 是 05:05，
+  // 而 preflight 只看 mtime，会误判成"快照是新的"。
+  // 混着两代数据的快照比全旧更危险，因为看不出来。
+  const fetched = [];
+  let failed = 0;
   for (const d of inputs.demos) {
     process.stdout.write(`  请求 demo${d.id} … `);
-    const res = await fetch(`${apiBase}/api/consult`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ raw_input: d.raw_input }),
-    });
-    if (!res.ok) {
-      console.log(`❌ HTTP ${res.status}`);
-      process.exit(1);
+    try {
+      const res = await fetch(`${apiBase}/api/consult`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw_input: d.raw_input }),
+      });
+      if (!res.ok) {
+        console.log(`❌ HTTP ${res.status}`);
+        failed++;
+        continue;
+      }
+      const data = await res.json();
+      if (data.error) {
+        console.log(`❌ ${data.error.message}`);
+        failed++;
+        continue;
+      }
+      fetched.push({ id: d.id, data });
+      console.log(`✅ ${data.matches?.length ?? 0} 条案例`);
+    } catch (e) {
+      console.log(`❌ ${e.message}`);
+      failed++;
     }
-    const data = await res.json();
-    if (data.error) {
-      console.log(`❌ ${data.error.message}`);
-      process.exit(1);
-    }
-    writeFileSync(join(fixtures, `demo-cache-${d.id}.json`), JSON.stringify(data, null, 2), 'utf8');
-    console.log(`✅ ${data.matches?.length ?? 0} 条案例`);
+  }
+
+  if (failed > 0) {
+    console.error('');
+    console.error(`  ❌ 有 ${failed} 个场景失败 —— **不写任何文件**，保持原有快照不变。`);
+    console.error('     请确认后端在跑（npm run server）后重试。');
+    console.error('     （混着两代数据的快照比全旧更危险：看不出来。）');
+    process.exit(1);
+  }
+
+  // 全部成功，才统一落盘
+  for (const { id, data } of fetched) {
+    writeFileSync(join(fixtures, `demo-cache-${id}.json`), JSON.stringify(data, null, 2), 'utf8');
   }
 }
 

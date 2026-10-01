@@ -99,9 +99,13 @@ check(
   cacheHasError ? '快照里混进了错误响应 —— 跑 npm run refresh:cache' : scenarioCount < 3 ? '缺场景，跑 npm run build:cache' : '',
 );
 
-/* ---------- 4. 离线快照是否比逻辑代码旧 ---------- */
-// 踩过一次：改了 dimensions.ts 的维度算法后忘了重生成快照，
-// 结果「实时」与「离线」两条路径给出不同分数 —— 评委一对比就露馅。
+/* ---------- 4. 离线快照是否比逻辑代码旧 / 三份是否一致 ---------- */
+// 踩过两次：
+//  ① 改了 dimensions.ts 的维度算法后忘了重生成快照 →
+//     「实时」与「离线」两条路径给出不同分数，评委一对比就露馅。
+//  ② refresh 中途某个 demo 失败 → fixture 目录里留下「一半新、一半旧」，
+//     而按 mtime 只看最新那个会误判成"是新的"。
+//     混着两代数据的快照比全旧更危险，因为看不出来。
 {
   const watch = [
     join(root, 'server', 'retrieval', 'dimensions.ts'),
@@ -110,7 +114,26 @@ check(
     join(root, 'server', 'evidence', 'evidence-writer.ts'),
     join(root, 'data', 'episodes.json'),
   ];
+  const inputs = JSON.parse(readFileSync(join(root, 'server', 'fixtures', 'demo-inputs.json'), 'utf8'));
+  const fixturePaths = inputs.demos.map((d) => join(root, 'server', 'fixtures', `demo-cache-${d.id}.json`));
   const cacheTs = join(root, 'src', 'data', 'demoCache.ts');
+
+  // 4a) 三份 fixture 的 mtime 是否一致（生成过就算跨秒，容差 5 秒）
+  let spread = 0;
+  const existing = fixturePaths.filter((f) => existsSync(f));
+  if (existing.length >= 2) {
+    const times = existing.map((f) => statSync(f).mtimeMs);
+    spread = Math.max(...times) - Math.min(...times);
+  }
+  check(
+    '三份离线快照是同一批生成的',
+    spread <= 5000,
+    spread > 5000
+      ? `三份 fixture 时间差 ${Math.round(spread / 1000)}s —— 可能上次 refresh 中途失败了，跑 npm run refresh:cache 重来`
+      : '',
+  );
+
+  // 4b) 快照是否比逻辑代码旧
   let stale = '';
   if (existsSync(cacheTs)) {
     const cacheTime = statSync(cacheTs).mtimeMs;

@@ -491,6 +491,62 @@ test('净化：不误伤正常的多字词与短语', () => {
   assert.deepEqual(out.constraints, ['已投入两年半时间']);
 });
 
+/**
+ * ⚠️ 两次实测教训，都写进测试：
+ *   第一版只处理「整串重复」和「空格分隔重复」，
+ *   但真正出问题的形态是**句子中间的重复词**：
+ *     【目标】在意的目标有具体交集：「止损止损」（…）
+ *   结果清理上线后页面上照样显示「止损止损」。
+ */
+test('净化：句子中间的重复词也要清掉（不只是整串重复）', () => {
+  const midSentence = '【目标】在意的目标有具体交集：「止损止损」（对方的目标：限制追加投入）';
+  const out = normalizeSituationFields({
+    stage: 'x',
+    dilemma: 'a vs b',
+    options: [],
+    constraints: [],
+    goals: [midSentence],
+    unknowns: [],
+    risk: 'medium',
+    reversibility: 'medium',
+  }) as Record<string, unknown>;
+
+  const got = (out.goals as string[])[0];
+  assert.ok(!got.includes('止损止损'), `句中间的重复没被清掉：${got}`);
+  assert.ok(got.includes('「止损」'), `应保留一份：${got}`);
+});
+
+test('净化：合法的中文叠词不能被误删（好好/慢慢/偏偏）', () => {
+  const legit = ['好好想想', '慢慢来', '偏偏', '渐渐清楚'];
+  const out = normalizeSituationFields({
+    stage: 'x',
+    dilemma: 'a vs b',
+    options: legit,
+    constraints: [],
+    goals: [],
+    unknowns: [],
+    risk: 'medium',
+    reversibility: 'medium',
+  }) as Record<string, unknown>;
+
+  assert.deepEqual(out.options, legit, '「好好」「慢慢」「偏偏」是正常词，删了反而错');
+});
+
+test('净化：三连重复也要收敛成一份', () => {
+  const out = normalizeSituationFields({
+    stage: 'x',
+    dilemma: 'a vs b',
+    options: ['止损止损止损'],
+    constraints: [],
+    goals: [],
+    unknowns: [],
+    risk: 'medium',
+    reversibility: 'medium',
+  }) as Record<string, unknown>;
+
+  assert.deepEqual(out.options, ['止损'], '三连重复应收敛成一份');
+});
+
 test('API：可预期的客户端错误不应一律回 500', () => {
   const raw = readFileSync(join(root, 'server', 'api.ts'), 'utf8');
   // 去掉注释再断言 —— 否则「解释为什么不能 destroy」的注释本身会把测试判失败
