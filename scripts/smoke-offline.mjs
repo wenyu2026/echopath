@@ -404,13 +404,8 @@ try {
     returnByValue: true,
   });
   await new Promise((r) => setTimeout(r, 2500));
-  const { result: r5 } = await send('Runtime.evaluate', {
-    expression: `document.body ? document.body.innerText : ''`,
-    returnByValue: true,
-  });
-  const whatIfText = String(r5.value ?? '');
-  // 当前在 /map，What-if 在 P5；这里只验「离线时不会伪造变化」——
-  // 直接访问 P5 看它怎么说
+
+  // 直接访问 P5，看它在离线模式下怎么呈现（What-if 在 P5 底部）
   await send('Page.navigate', { url: `${BASE}/compare` });
   await new Promise((r) => setTimeout(r, 2000));
   const { result: r6 } = await send('Runtime.evaluate', {
