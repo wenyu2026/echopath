@@ -1,4 +1,8 @@
-# CHECKIN 草稿（供协调人直接发布）
+# CHECKIN 草稿（已执行 · 存档）
+
+> **2026-10-02 更新**：经协调人授权（「按当前六卡+修复状态请求交付」），B 线 Issue 已由执行人自建：
+> **Issue #32**（含 CHECKIN 与 DONE 评论），交付 PR 为 **#33**（目标 wenyu2026/landscape-demo，agent:review，Review 给 @wenyu2026）。
+> 以下为当时准备的草稿原文，留作记录。
 
 > B 线（trajectory-cards）目前没有对应 Issue。按约定不冒用他人身份领任务，
 > 以下文本供协调人（A）建 Issue 后直接粘贴为 Damn4lee 的 CHECKIN 评论；
