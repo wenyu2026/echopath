@@ -189,6 +189,24 @@ export interface SituationV2 {
   constraints: string[];
   /** 真正在意的目标，2-5 条 */
   goals: string[];
+  /**
+   * ⚠️ 他最怕发生什么 —— **单独一个字段，不要混进 unknowns**。
+   *
+   *   实测发现：这一条原来被塞进 `unknowns: ['最怕：xxx']`，
+   *   然后**后端没有任何地方读它**（全仓库 grep `fear` = 0 次）。
+   *
+   *   但它是**给「代价」排序最关键的信息** ——
+   *   「哪条代价对你最重」完全取决于你最怕什么。
+   *   比如你怕「拖两年才发现还是不喜欢」，那「时间窗口」类的代价就该排最前。
+   */
+  fear?: string;
+  /**
+   * 他为想去的方向**实际花过时间**的尝试。
+   * 用来判断「这条路保不保护他不想白费的东西」。
+   */
+  validation?: string;
+  /** 他的来时路（被调剂 / 自己选的 / 转过来的） */
+  prior_path?: string;
   risk: Level;
   reversibility: Level;
   /** 尚不明确的信息 */

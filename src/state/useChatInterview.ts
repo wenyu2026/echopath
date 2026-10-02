@@ -309,15 +309,26 @@ export function useChatInterview() {
         // ⚠️ 根因素由后端从 constraints/goals/fear 推 —— 这里先留空，
         //    后端 landscape 路由会做 normalize（空数组不会崩）
         root_factors: [],
-        constraints: [...splitList(c.constraints), ...splitList(c.prior_path)],
-        goals: [...splitList(c.goals), ...splitList(c.validation)],
+        constraints: splitList(c.constraints),
+        goals: splitList(c.goals),
+        // ⚠️ 这两个原来被塞进 constraints/goals 里凑数 ——
+        //    结果「被调剂进材料科学」被当成了"约束条件"。
+        //    它们是背景，不是条件，所以单独传。
+        prior_path: c.prior_path,
+        validation: c.validation,
+        /**
+         * ⚠️ fear 原来被塞进 unknowns（`最怕：xxx`），
+         *    然后**后端没有任何地方读它**（全仓库 grep `fear` = 0 次）。
+         *    但「最怕什么」是给代价排序最关键的信息 —— 单独传。
+         */
+        fear: c.fear,
         risk: 'medium',
         reversibility: (c.reversibility_attitude ?? '').includes('接受')
           ? 'high'
           : (c.reversibility_attitude ?? '').includes('不')
             ? 'low'
             : 'medium',
-        unknowns: c.fear ? [`最怕：${c.fear}`] : [],
+        unknowns: [],
       };
 
       try {

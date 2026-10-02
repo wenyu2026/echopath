@@ -506,6 +506,25 @@ export function isRelevantToQuote(costText: string, quote: string): boolean {
  *
  *   两者并列，用户才能判断「他的代价对我成不成立」。
  */
+/**
+ * 生成「对你而言的代价」。
+ *
+ * ⚠️ 这是第三次改。前两版都错在「没用用户的信息」：
+ *
+ *   第一版：直接从**案例自己的 constraints** 抄
+ *     → 用户是「干了十年技术的」，代价栏写着「已投入医学学习」
+ *       **把别人的约束当成了你的代价**
+ *
+ *   第二版：从**用户自己的约束**推（对了），但
+ *     · 命中率低 → 经常走兜底「现有材料不足以判断…」（卡片上出现空栏）
+ *     · 完全不看 **fear** —— 而「最怕什么」才是决定**哪条代价最重**的信息
+ *     · 案例结果那条只说「那人付出了什么」，没说「跟你可不可比」
+ *
+ *   现在（第三版）：
+ *   ① 从用户约束推「你会失去什么」—— 规则扩了一倍，覆盖学生场景
+ *   ② **用 fear 排序** —— 你最怕什么，「最重」标记就给谁
+ *   ③ 案例结果那条**必须带可比性说明** —— 他放弃的是考研，你面对的是专业门槛，不完全一样
+ */
 function buildCosts(
   cases: TaggedEpisode[],
   situation: SituationV2,
@@ -518,41 +537,64 @@ function buildCosts(
   /**
    * 约束 → 「失去什么」的翻译。
    *
-   * ⚠️ 只认**用户自己说过**的（situation.constraints / goals / 原话）。
+   * ⚠️ 只认**用户自己说过**的（situation.constraints / goals / fear / 原话）。
    *   **绝不**碰案例的 constraints —— 那是第一版的错误来源。
+   *
+   * ⚠️ 规则覆盖两类场景：
+   *   职场（原来那批）+ **学生**（原来完全没有，所以学生用户全走兜底）
    */
   const LOSS_RULES: Array<{ match: RegExp; loss: string }> = [
-    { match: /老婆|妻子|丈夫|孩子|家庭|家人|热炕头|父母|两地|分居/, loss: '家人现在的生活节奏会被打乱' },
-    { match: /房贷|月供|贷款|经济|收入|积蓄|钱|养家/, loss: '收入的稳定性会先受冲击' },
-    { match: /十年|多年|已投入|积累|资深|老员工|干了/, loss: '这些年攒下的资历，换到新地方要重新证明' },
-    { match: /稳定|铁饭碗|编制|体制|国企|事业单位/, loss: '「稳定」这件事要从头再挣一遍' },
-    { match: /时间约束|半年|一年内|窗口|期限|来不及/, loss: '留给你试错的时间很有限' },
-    { match: /年龄|岁|中年|四十|35/, loss: '换方向的可选范围比十年前窄' },
-    { match: /熟悉|习惯|舒适|环境|同事/, loss: '熟悉的环境和人际要重新建立' },
+    // ── 职场 ──
+    { match: /老婆|妻子|丈夫|孩子|热炕头|两地|分居/, loss: '家人现在的生活节奏会被打乱' },
+    { match: /房贷|月供|贷款|养家/, loss: '收入的稳定性会先受冲击' },
+    { match: /十年|多年|干了|资深|老员工/, loss: '这些年攒下的资历，换到新地方要重新证明' },
     { match: /社保|公积金|户口|看病|医疗|养老/, loss: '现有的保障衔接可能断档' },
+    { match: /年龄|中年|四十|35/, loss: '换方向的可选范围比十年前窄' },
+    // ── 学生（新增）──
+    {
+      match: /被调剂|调剂进来|不是自己选|爸妈让|家里让/,
+      loss: '「这专业不是我选的」这件事，要自己消化掉',
+    },
+    {
+      match: /已投入|读了两年|两年半|大三|大二|学制|五年/,
+      loss: '已经读进去的这段时间，要接受它可能不作数',
+    },
+    {
+      match: /家里|父母|家人|爸妈|期望/,
+      loss: '家里对「稳定毕业」的期待，你要自己去交代',
+    },
+    { match: /成绩|绩点|排名|门槛|选拔|保研|资格/, loss: '现有的成绩与资格，换个方向要重新挣' },
+    { match: /毕业|延毕|学制|时间/, loss: '毕业的节奏要往后推，同龄人先你一步' },
+    // ── 通用 ──
+    { match: /稳定|铁饭碗|编制|体制|国企|事业单位/, loss: '「稳定」这件事要从头再挣一遍' },
+    { match: /半年|一年内|窗口|期限|来不及|拖两年/, loss: '留给你试错的时间很有限' },
+    { match: /熟悉|习惯|舒适|环境|同学|同事/, loss: '熟悉的圈子和人际要重新建立' },
   ];
 
-  const userText = [...situation.constraints, ...situation.goals, userQuote ?? '']
+  const userText = [
+    ...situation.constraints,
+    ...situation.goals,
+    situation.fear ?? '',
+    situation.validation ?? '',
+    situation.prior_path ?? '',
+    userQuote ?? '',
+  ]
     .filter(Boolean)
     .join(' ');
 
   const seen = new Set<string>();
   for (const r of LOSS_RULES) {
-    if (costs.length >= 2) break;
+    if (costs.length >= 3) break;
     if (r.match.test(userText) && !seen.has(r.loss)) {
       seen.add(r.loss);
       costs.push({
         text: r.loss,
-        basis: {
-          kind: 'user_quote',
-          quote: userQuote,
-          note: '从你自己的约束推出 —— 不是从案例抄的',
-        },
+        basis: { kind: 'user_quote', quote: userQuote, note: '从你自己的情况推出' },
       });
     }
   }
 
-  /* ---------- ② 那个人实际付出了什么（从案例结果推） ---------- */
+  /* ---------- ② 那个人实际付出了什么（必须带可比性说明） ---------- */
 
   const negatives = cases
     .map((e) => ({ ep: e, outcome: humanOutcome(e, 'mid_term') }))
@@ -562,27 +604,83 @@ function buildCosts(
     );
 
   if (negatives.length > 0 && costs.length < 3) {
-    // 挑最短的 —— 最短通常最聚焦，也最好读
     const best = [...negatives].sort((a, b) => a.outcome.length - b.outcome.length)[0];
+    /**
+     * ⚠️ 必须说清「跟你可不可比」。
+     *
+     *   实测反馈：卡片上写着「走过这条路的人，实际付出的是：
+     *   放弃考研，毕业后进入一家工具软件公司做文档」——
+     *   用户说「这个跟我没关系」。
+     *
+     *   对 —— 那是**那个人的**代价。对用户有用的不是这句话本身，
+     *   而是「他付出的这一类，你会不会也付出」。
+     *   所以要把它和用户自己的 fear / constraints 对照。
+     */
+    const shared = sharedFactorNote(best.ep, situation);
     costs.push({
-      text: `走过这条路的人，实际付出的是：${best.outcome}`,
+      text: `有人走这条路，付出的是：${best.outcome}`,
       basis: {
         kind: 'structure',
-        note: `来自案例 ${best.ep.episode_id} 的结果链（不是约束）`,
+        note: shared
+          ? `${shared} —— 所以你面对的可能类似，但代价的形态不一样`
+          : '这是他个人的代价，和你的处境不完全可比',
       },
     });
   }
 
-  /* ---------- ③ 兜底：不编 ---------- */
+  /* ---------- ③ 用 fear 排序：你最怕什么，「最重」就给谁 ---------- */
+
+  /**
+   * ⚠️ 这一步是**新增的**，也是「个性化」的关键。
+   *
+   *   原来「最重」标记永远是第一条 —— 不管第一条是什么。
+   *   但「哪条代价对你最重」完全取决于**你最怕什么**：
+   *     · 怕「拖两年才发现还是不喜欢」→ 时间类代价最重
+   *     · 怕「家里失望」             → 关系类代价最重
+   *     · 怕「白读了两年」           → 沉没成本类最重
+   */
+  if (situation.fear) {
+    const f = situation.fear;
+    const weightOf = (c: PersonalizedCost): number => {
+      let w = 0;
+      if (/时间|拖|晚|推|来不及|年纪|节奏/.test(f) && /时间|毕业|节奏|晚/.test(c.text)) w += 2;
+      if (/家里|父母|家人|失望|交代/.test(f) && /家里|家人|交代|期待/.test(c.text)) w += 2;
+      if (/白读|白费|浪费|不划算|沉没/.test(f) && /不作数|白费|重新证明|重新挣/.test(c.text)) w += 2;
+      if (/不喜欢|不合适|错/.test(f) && /认可|喜欢|不适合/.test(c.text)) w += 1;
+      return w;
+    };
+    const scored = costs.map((c, i) => ({ c, i, w: weightOf(c) }));
+    const best = scored.reduce((a, b) => (b.w > a.w ? b : a));
+    if (best.w > 0) {
+      const [picked] = costs.splice(best.i, 1);
+      costs.unshift(picked);
+    }
+  }
+
+  /* ---------- ④ 兜底：不编 ---------- */
 
   if (costs.length === 0) {
     costs.push({
       text: '现有材料不足以判断这条路对你的具体代价。',
-      basis: { kind: 'unknown', note: '既没从你的约束推出，案例结果链也不完整' },
+      basis: { kind: 'unknown', note: '既没从你的情况推出，案例结果链也不完整' },
     });
   }
 
   return costs.slice(0, 3);
+}
+
+/**
+ * 判断「这条案例和用户共享哪个根因素」—— 用来给「那人付出的代价」加可比性说明。
+ *
+ * 为什么需要：只丢一句「他放弃考研去做了文档」，用户会觉得跟自己无关。
+ * 说清「他也面对过同类约束」，这句才有参考价值。
+ */
+function sharedFactorNote(ep: TaggedEpisode, situation: SituationV2): string | null {
+  const mine = new Set(situation.root_factors ?? []);
+  const his = ep.mechanism?.root_factors ?? [];
+  const shared = his.filter((f) => mine.has(f));
+  if (shared.length === 0) return null;
+  return `他也面对过「${shared.slice(0, 2).join('、')}」`;
 }
 
 /**
@@ -600,10 +698,40 @@ function buildCosts(
  *
  *   所以：保护必须从**这条路本身的做法**推，不能从用户处境推。
  */
-function buildProtects(cases: TaggedEpisode[], archetype: PathArchetypeId): string[] {
+/**
+ * 「这条路保护的是什么」。
+ *
+ * ⚠️ 重做过一次。原来**整栏是硬编码的**：
+ *
+ *     const BY_ARCHETYPE = {
+ *       direct_switch: ['不用在两条路之间长期消耗', '新方向的起步时间不会被拉长', ...],
+ *     }
+ *
+ *   实测反馈：「你给我的走法能不能更符合我的个人情况」——
+ *   因为不管你说了什么，点开「直接换方向」看到的永远是同样三句。
+ *   后面那段「从案例约束补一条」几乎从不生效（案例约束大多是数据备注）。
+ *
+ * ✅ 现在：**先看用户自己说了什么，再决定这栏写什么。**
+ *
+ *   依据（按优先级）：
+ *     ① 他明确说过的 fear / goals / constraints → 直接翻译成「这条路保护了什么」
+ *     ② 该走法的固有保护 → 只作为补足，且优先挑跟他情况相关的
+ *
+ *   效果举例：
+ *     他说「家里希望稳定毕业」+「想做自己认可的事」
+ *     → persist 这条路保护的是：
+ *        · 家里对「稳定毕业」的期待还能交代过去
+ *        · 不用放弃已经读进去的这两年
+ *        · 不用向任何人解释为什么改了主意
+ */
+function buildProtects(
+  cases: TaggedEpisode[],
+  archetype: PathArchetypeId,
+  situation: SituationV2,
+): string[] {
   /**
-   * 走法 → 它保护了什么。
-   * 这是**领域知识**：每种走法各有各的「不用失去」。
+   * 走法 → 固有保护。
+   * 这是**领域知识**，但现在只作为**补足**，不再独占整栏。
    */
   const BY_ARCHETYPE: Record<PathArchetypeId, string[]> = {
     persist: ['已有的积累继续算数', '生活与收入不必经历断档', '不用向任何人解释为什么改主意'],
@@ -617,35 +745,122 @@ function buildProtects(cases: TaggedEpisode[], archetype: PathArchetypeId): stri
       '在新方向上先拿到真实反馈再决定',
       '验证期内原有的退路仍然有效',
     ],
-    direct_switch: ['不用在两条路之间长期消耗', '新方向的起步时间不会被拉长', '做决定的心理成本一次性结清'],
+    direct_switch: [
+      '不用在两条路之间长期消耗',
+      '新方向的起步时间不会被拉长',
+      '做决定的心理成本一次性结清',
+    ],
     dual_track: ['原有收入与身份不会立刻断掉', '新方向可以在低压下试错', '不必在信息不足时做二选一'],
     abandon: ['不用继续追加投入', '可以把资源转向别处', '止损线由自己设定，而不是被拖到最后'],
     unknown: ['现有材料不足以判断这条路保护了什么'],
   };
 
-  // 先给该走法的固有保护
-  const out: string[] = [...(BY_ARCHETYPE[archetype] ?? BY_ARCHETYPE.unknown)];
+  /** 用户自己说过的话，拼成一个池子用来匹配 */
+  const userPool = [
+    ...situation.constraints,
+    ...situation.goals,
+    situation.fear ?? '',
+    situation.prior_path ?? '',
+    situation.validation ?? '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  // 再从**该路径案例自己的约束**里补一条更具体的（约束的另一面）
-  const RULES: Array<{ match: RegExp; protect: string }> = [
-    { match: /已投入|已修完|已积累|读了两年|五年学制|投入大/, protect: '已付出的时间不会白费' },
-    { match: /重新积累|从零|跨领域|没有技术基础/, protect: '不用重新证明自己' },
-    { match: /家里|家庭|父母|家人|期望/, protect: '不用向家里解释为什么改了主意' },
-    { match: /保研|资格|门槛|选拔|学制|编制/, protect: '现有资格与名额继续有效' },
-    { match: /收入|经济|薪资|薪酬|钱/, protect: '短期内收入不会掉下来' },
-    { match: /毕业|延毕|时间/, protect: '毕业节奏不用往后推' },
+  /**
+   * 用户情况 → 「这条路保护了什么」。
+   *
+   * ⚠️ 关键是**用他自己的措辞回指**，而不是换成我们的术语。
+   *   他说「家里希望稳定毕业」→ 写「家里对『稳定毕业』的期待…」
+   *   而不是写「社会支持系统不受影响」。
+   */
+  const MINE: Array<{ match: RegExp; protect: (kv: RegExpExecArray | null) => string }> = [
+    {
+      match: /家里|父母|家人|爸妈|期望/,
+      protect: () => '家里对「稳稳当当」的期待，不用现在就摊牌',
+    },
+    {
+      match: /被调剂|不是自己选/,
+      protect: () => '不用马上承认「当初那个选择本就不是我要的」',
+    },
+    {
+      match: /已投入|读了两年|两年半|大三|大二|这段时间/,
+      protect: () => '已经读进去的这段时间，暂时不用被判作不算数',
+    },
+    {
+      match: /认可|喜欢|热爱|意义|想做点/,
+      protect: () => '不用一直做你不认可的事',
+    },
+    {
+      match: /稳定|铁饭碗|编制|体制/,
+      protect: () => '「稳定」这条底线还在',
+    },
+    {
+      match: /时间|拖|来不及|晚|节奏/,
+      protect: () => '时间上不会被动等到来不及',
+    },
+    {
+      match: /成绩|绩点|门槛|保研|资格|选拔/,
+      protect: () => '现有的成绩与资格还作数',
+    },
+    {
+      match: /钱|收入|经济|养家|房贷/,
+      protect: () => '短期收入不用断',
+    },
+    {
+      match: /没做过|没系统学过|验证|试过/,
+      protect: () => '不用在还没验证过的情况下就押上全部',
+    },
   ];
 
-  const pathConstraints = cases
-    .flatMap((e) => e.decision_state.constraints)
-    .filter((x) => typeof x === 'string' && x.trim() && !isMetaNote(x));
+  const out: string[] = [];
 
-  for (const c of pathConstraints) {
-    for (const r of RULES) {
-      if (r.match.test(c) && !out.includes(r.protect)) {
-        out.push(r.protect);
-        return out.slice(0, 3);
+  // ① 先从**用户自己的情况**推 —— 最多两条
+  for (const m of MINE) {
+    if (out.length >= 2) break;
+    const hit = m.match.exec(userPool);
+    if (hit) {
+      const text = m.protect(hit);
+      if (!out.includes(text)) out.push(text);
+    }
+  }
+
+  // ② 再用该走法的固有保护补足 —— 挑跟他情况沾边的放前面
+  const inherent = BY_ARCHETYPE[archetype] ?? BY_ARCHETYPE.unknown;
+  const relevantFirst = [...inherent].sort((a, b) => {
+    const score = (s: string) => {
+      let n = 0;
+      if (/时间|节奏|晚/.test(userPool) && /时间|起步|消耗/.test(s)) n += 2;
+      if (/投入|积累|读/.test(userPool) && /积累|算数|投入/.test(s)) n += 2;
+      if (/家|父母|解释/.test(userPool) && /解释|身份|收入/.test(s)) n += 2;
+      if (/试|验证/.test(userPool) && /试|验证|反馈|筹码/.test(s)) n += 2;
+      return n;
+    };
+    return score(b) - score(a);
+  });
+
+  for (const s of relevantFirst) {
+    if (out.length >= 3) break;
+    if (!out.includes(s)) out.push(s);
+  }
+
+  // ③ 该走法的案例里如果有特别具体的约束，补一条（原来那段几乎不生效，保留但降级）
+  if (out.length < 3) {
+    const RULES: Array<{ match: RegExp; protect: string }> = [
+      { match: /已投入|已修完|已积累|读了两年|五年学制|投入大/, protect: '已付出的时间不会白费' },
+      { match: /家里|家庭|父母|家人|期望/, protect: '不用向家里解释为什么改了主意' },
+      { match: /保研|资格|门槛|选拔|学制|编制/, protect: '现有资格与名额继续有效' },
+    ];
+    const pathConstraints = cases
+      .flatMap((e) => e.decision_state.constraints)
+      .filter((x) => typeof x === 'string' && x.trim() && !isMetaNote(x));
+    for (const c of pathConstraints) {
+      for (const r of RULES) {
+        if (r.match.test(c) && !out.includes(r.protect)) {
+          out.push(r.protect);
+          break;
+        }
       }
+      if (out.length >= 3) break;
     }
   }
 
@@ -697,7 +912,7 @@ export function buildLandscape(
       id: archetype,
       title: copy.title,
       one_line: copy.one_line,
-      protects: buildProtects(cases, archetype),
+      protects: buildProtects(cases, archetype, situation),
       costs: buildCosts(cases, situation, input.user_quote),
       supporting_cases: buildSupportingCases(cases),
       // 单条案例支撑时打标，让用户知道这条路的证据厚度
