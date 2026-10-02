@@ -260,11 +260,12 @@ try {
 
   // -------------------------------------------------------------------------
   // 3. 走 P1 → P2：全程接口都会失败
+  // ⚠️ 路径必须带 /classic —— 首页现在是对话页，离线快照只在经典六页那条链路上。
   // -------------------------------------------------------------------------
   const results = [];
   const check = (name, ok, detail) => results.push({ name, ok, detail });
 
-  await send('Page.navigate', { url: `${BASE}/` });
+  await send('Page.navigate', { url: `${BASE}/classic` });
   await new Promise((r) => setTimeout(r, 1800));
 
   // 在第一个输入框里填一段"场景 2（考研 vs 就业）"的叙述 ——
@@ -306,7 +307,10 @@ try {
       returnByValue: true,
     });
     const s = st.value;
-    if (s.path !== '/') break; // 已经离开 P1
+    // ⚠️ 这里必须是 '/classic' —— 六页移到前缀下之后，
+    //    原来写死 '/' 会让循环**第一次就 break**，一题都不点。
+    //    表现是"没能停在最后一问"，然后后面 6 项全错位。
+    if (s.path !== '/classic') break; // 已经离开 P1
     if (s.n !== null && s.total !== null && s.n >= s.total) {
       reachedLast = true;
       break;
@@ -337,7 +341,7 @@ try {
       expression: `location.pathname`,
       returnByValue: true,
     });
-    if (p.value === '/crossroads') break;
+    if (p.value === '/classic/crossroads') break;
   }
 
   // ---- 检查 1：有没有走到 P2（没白屏、没卡死）----
@@ -348,7 +352,7 @@ try {
   const p2Text = String(r1.value.text ?? '');
   check(
     '后端全挂时 P1→P2 仍能走通',
-    r1.value.path === '/crossroads' && p2Text.length > 100,
+    r1.value.path === '/classic/crossroads' && p2Text.length > 100,
     `当前 ${r1.value.path}，页面 ${p2Text.trim().length} 字`,
   );
 
@@ -389,7 +393,7 @@ try {
     returnByValue: true,
   });
   const p3Text = String(r4.value.text ?? '');
-  const p3Ok = r4.value.path === '/map' && p3Text.includes('别人从这里去了哪里') && p3Text.length > 200;
+  const p3Ok = r4.value.path === '/classic/map' && p3Text.includes('别人从这里去了哪里') && p3Text.length > 200;
   check('后端全挂时 P3 分叉地图仍能渲染', p3Ok, `当前 ${r4.value.path}，页面 ${p3Text.trim().length} 字`);
 
   // ---- 检查 5：What-if 必须明说"离线模式演示不了"，而不是给假结果 ----
@@ -406,7 +410,7 @@ try {
   await new Promise((r) => setTimeout(r, 2500));
 
   // 直接访问 P5，看它在离线模式下怎么呈现（What-if 在 P5 底部）
-  await send('Page.navigate', { url: `${BASE}/compare` });
+  await send('Page.navigate', { url: `${BASE}/classic/compare` });
   await new Promise((r) => setTimeout(r, 2000));
   const { result: r6 } = await send('Runtime.evaluate', {
     expression: `document.body ? document.body.innerText : ''`,

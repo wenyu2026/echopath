@@ -14,6 +14,7 @@ import DimensionCard from '../components/DimensionCard';
 import CounterAnalogy from '../components/CounterAnalogy';
 import WhatIfPanel from '../components/WhatIfPanel';
 import { CHOICE_LABEL } from '../components/ForkMap';
+import { PATHS } from '../routes';
 
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
@@ -98,10 +99,10 @@ export default function P5Compare() {
       {situation && <WhatIfPanel baseSituation={situation} baseResult={result} onRerun={retrieveWith} />}
 
       <div className="btn-row">
-        <button className="btn btn-primary" onClick={() => { setReachable(5); nav('/reflect'); }}>
+        <button className="btn btn-primary" onClick={() => { setReachable(5); nav(PATHS.reflect); }}>
           这些和我有什么关系？→
         </button>
-        <button className="btn btn-ghost" onClick={() => nav('/map')}>
+        <button className="btn btn-ghost" onClick={() => nav(PATHS.map)}>
           ← 回到分叉地图
         </button>
       </div>

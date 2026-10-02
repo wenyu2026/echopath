@@ -12,6 +12,7 @@ import { useApp } from '../state/AppState';
 import EvidenceDrawer from '../components/EvidenceDrawer';
 import EvidenceLayers from '../components/EvidenceLayers';
 import { CHOICE_LABEL } from '../components/ForkMap';
+import { PATHS } from '../routes';
 
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
@@ -50,7 +51,7 @@ export default function P4Episode() {
         </span>
         <span className="tag">{CHOICE_LABEL[ep.choice.type] ?? ep.choice.type}</span>
         <span className="spacer" />
-        <button className="btn btn-sm btn-ghost" onClick={() => nav('/map')}>
+        <button className="btn btn-sm btn-ghost" onClick={() => nav(PATHS.map)}>
           ← 回到地图
         </button>
       </div>
@@ -200,7 +201,7 @@ export default function P4Episode() {
           </button>
         )}
         <span className="spacer" />
-        <button className="btn btn-primary" onClick={() => { setReachable(5); nav('/compare'); }}>
+        <button className="btn btn-primary" onClick={() => { setReachable(5); nav(PATHS.compare); }}>
           对比三条路的「像与不像」→
         </button>
       </div>

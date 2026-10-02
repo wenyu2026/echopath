@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
 import { CHOICE_LABEL } from '../components/ForkMap';
+import { PATHS } from '../routes';
 
 type Answer = { unacceptable: string; condition: string; action: string };
 
@@ -98,12 +99,12 @@ export default function P6Reflect() {
             className="btn"
             onClick={() => {
               reset();
-              nav('/');
+              nav(PATHS.journey);
             }}
           >
             换个处境重新开始
           </button>
-          <button className="btn btn-ghost" onClick={() => nav('/compare')}>
+          <button className="btn btn-ghost" onClick={() => nav(PATHS.compare)}>
             ← 再看一遍「像与不像」
           </button>
         </div>
@@ -214,7 +215,7 @@ export default function P6Reflect() {
         <button className="btn btn-primary" onClick={() => setDone(true)}>
           完成
         </button>
-        <button className="btn btn-ghost" onClick={() => nav('/compare')}>
+        <button className="btn btn-ghost" onClick={() => nav(PATHS.compare)}>
           ← 回到「像与不像」
         </button>
       </div>

@@ -8,6 +8,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
 import ForkMap, { CHOICE_LABEL } from '../components/ForkMap';
+import { PATHS } from '../routes';
 
 const PATH_COLORS = ['#8a5a2f', '#2f6d5a', '#6b4a8a'];
 
@@ -140,10 +141,10 @@ export default function P3ForkMap() {
       </div>
 
       <div className="btn-row">
-        <button className="btn btn-primary" onClick={() => { setReachable(5); nav('/compare'); }}>
+        <button className="btn btn-primary" onClick={() => { setReachable(5); nav(PATHS.compare); }}>
           对比「像与不像」→
         </button>
-        <button className="btn btn-ghost" onClick={() => nav('/crossroads')}>
+        <button className="btn btn-ghost" onClick={() => nav(PATHS.crossroads)}>
           ← 修改我的处境
         </button>
       </div>

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
 import type { Situation, Level } from '../types/episode';
+import { PATHS } from '../routes';
 
 const LEVEL_LABEL: Record<Level, string> = { low: '低', medium: '中', high: '高' };
 
@@ -62,7 +63,7 @@ export default function P2Crossroads() {
   async function go() {
     await runRetrieval();
     setReachable(3);
-    nav('/map');
+    nav(PATHS.map);
   }
 
   return (
@@ -270,7 +271,7 @@ export default function P2Crossroads() {
         <button className="btn btn-primary" onClick={go} disabled={loadingRetrieval}>
           {loadingRetrieval ? '正在检索相似的人生路口…' : '看看别人从这里去了哪里 →'}
         </button>
-        <button className="btn btn-ghost" onClick={() => nav('/')}>
+        <button className="btn btn-ghost" onClick={() => nav(PATHS.journey)}>
           ← 回去修改来时路
         </button>
       </div>

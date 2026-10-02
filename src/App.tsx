@@ -1,16 +1,30 @@
 /**
  * 应用外壳 + 路由
  * ============================================
- * 六个页面：P1 来时路 → P2 当前路口 → P3 分叉地图 → P4 案例详情 → P5 像与不像 → P6 回到自己
+ * ⚠️ v2 改造：产品主形态从「六页固定问卷」换成「对话式访谈」
  *
- * ⚠️ 有意不使用聊天框式界面（方案明确要求）：
- *    聊天框会让评委一眼认为"又一个 AI Chat"。
- *    这里做的是「路口 + 分叉 + 案例卡 + 证据抽屉」的地图式体验。
+ *   旧：/  = P1 来时路（固定六问）
+ *   新：/  = 对话式访谈               ← 产品主形态
+ *       /classic/* = 原来的六页流程     ← 保留，作为「另一种走法」
+ *
+ * 为什么改（用户明确要求）：
+ *   产品要的是「AI 一问一答理解你，再去数据库找相似的人」。
+ *   固定六问是「填表 → 甩给你三张卡」，形态不对。
+ *
+ * ⚠️ 六页一行没动，只是换了 URL 前缀。它们的组件、state、样式全部原样。
+ *   想回去只要把 /classic 去掉。
+ *
+ * ⚠️ 导航问题（用户反馈过）：
+ *   原来顶部那条 Stepper 只认六页路径，人在 /chat 时六项全灰、
+ *   还错误地高亮第一项 —— 看起来像"23456 都不能用"。
+ *   现在改成：**Stepper 只在经典流程里显示**，
+ *   对话页有自己的顶栏（含「经典流程」入口）。
  */
 
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { AppProvider, useApp } from './state/AppState';
 import { Stepper } from './components/Stepper';
+import { CLASSIC, classicStepOf } from './routes';
 
 import P1Journey from './pages/P1Journey';
 import P2Crossroads from './pages/P2Crossroads';
@@ -21,8 +35,18 @@ import P6Reflect from './pages/P6Reflect';
 import Landscape from './pages/Landscape';
 import Chat from './pages/Chat';
 
+/** 当前是不是在经典流程里 */
+function useInClassic(): boolean {
+  const { pathname } = useLocation();
+  return pathname === CLASSIC || pathname.startsWith(`${CLASSIC}/`);
+}
+
 function Shell() {
   const { reachable } = useApp();
+  const { pathname } = useLocation();
+  const inClassic = useInClassic();
+  // ⚠️ Stepper 的高亮必须看「现在在第几页」，不是「解锁到第几步」
+  const classicStep = classicStepOf(pathname);
 
   return (
     <div className="app">
@@ -34,22 +58,54 @@ function Shell() {
           <span className="slogan">
             不是预测你的未来，而是把别人已经走过的未来提前给你看
           </span>
+          {/* ⚠️ 导航分两种：经典流程显示六步进度条；主流程显示对等入口 */}
+          {inClassic ? (
+            <nav className="topnav">
+              <Link to="/" className="topnav-link">
+                ← 回到对话
+              </Link>
+            </nav>
+          ) : (
+            <nav className="topnav">
+              <Link to={CLASSIC} className="topnav-link">
+                六页经典流程
+              </Link>
+              <Link to="/landscape" className="topnav-link">
+                数据源演示
+              </Link>
+            </nav>
+          )}
         </div>
-        <Stepper reachable={reachable} />
+        {/* Stepper 只在经典流程里有意义 —— 主流程不是「六步」 */}
+        {inClassic && <Stepper reachable={reachable} current={classicStep} />}
       </header>
 
       <main className="page">
         <Routes>
-          <Route path="/" element={<P1Journey />} />
-          <Route path="/crossroads" element={<P2Crossroads />} />
-          <Route path="/map" element={<P3ForkMap />} />
-          <Route path="/episode/:index" element={<P4Episode />} />
-          <Route path="/compare" element={<P5Compare />} />
-          <Route path="/reflect" element={<P6Reflect />} />
-          {/* 决策地形 v2 —— 独立流程，与上面六页并存，互不影响 */}
+          {/* ---- 主流程：对话式访谈 ---- */}
+          <Route path="/" element={<Chat />} />
+
+          {/* ---- 经典六页流程（原样保留，只换了前缀）---- */}
+          <Route path={`${CLASSIC}`} element={<P1Journey />} />
+          <Route path={`${CLASSIC}/crossroads`} element={<P2Crossroads />} />
+          <Route path={`${CLASSIC}/map`} element={<P3ForkMap />} />
+          <Route path={`${CLASSIC}/episode/:index`} element={<P4Episode />} />
+          <Route path={`${CLASSIC}/compare`} element={<P5Compare />} />
+          <Route path={`${CLASSIC}/reflect`} element={<P6Reflect />} />
+
+          {/* ---- 引擎演示 ---- */}
           <Route path="/landscape" element={<Landscape />} />
-          {/* 对话式访谈 —— 产品的主形态 */}
-          <Route path="/chat" element={<Chat />} />
+
+          {/* ⚠️ 兼容老地址：以前 /crossroads 之类直接可用，现在要带 /classic。
+                 直接重定向过去，免得队友书签失效。 */}
+          <Route path="/crossroads" element={<Navigate to={`${CLASSIC}/crossroads`} replace />} />
+          <Route path="/map" element={<Navigate to={`${CLASSIC}/map`} replace />} />
+          <Route path="/compare" element={<Navigate to={`${CLASSIC}/compare`} replace />} />
+          <Route path="/reflect" element={<Navigate to={`${CLASSIC}/reflect`} replace />} />
+
+          {/* 老地址 /chat 也留着（我之前的版本用过） */}
+          <Route path="/chat" element={<Navigate to="/" replace />} />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

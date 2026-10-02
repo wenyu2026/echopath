@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../state/AppState';
 import { getJourneyQuestions } from '../data/mock';
+import { PATHS } from '../routes';
 
 export default function P1Journey() {
   const { journey, setJourneyAnswer, buildSituation, loadingSituation, setReachable, outOfScope, clearOutOfScope } = useApp();
@@ -35,7 +36,7 @@ export default function P1Journey() {
     const ok = await buildSituation();
     if (!ok) return;
     setReachable(1);
-    nav('/crossroads');
+    nav(PATHS.crossroads);
   }
 
   return (
