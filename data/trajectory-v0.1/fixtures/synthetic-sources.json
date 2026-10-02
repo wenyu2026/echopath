@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "trajectory_source_registry",
+  "_note": "synthetic 测试专用来源登记。SYN- 前缀来源不在正式库，校验器对其豁免「正式库存在性」检查；本登记不进入正式候选。",
+  "sources": {
+    "SYN-SRC-CONTEMP": {
+      "formal_ref": null,
+      "base": {
+        "title": "（synthetic）测试人物甲的同时代记载",
+        "publisher": "（synthetic）测试机构",
+        "url": "https://example.org/syn-contemp",
+        "type": "biography",
+        "locator": "（synthetic）第一章",
+        "accessed_on": "2026-10-02",
+        "access_method": "local",
+        "limitations": "（synthetic）仅用于测试。"
+      },
+      "formed_time": { "start_year": 1913, "end_year": 1913, "note": "（synthetic）事件后一年成书。" },
+      "used_by_facts": ["sf-001", "sf-002"]
+    },
+    "SYN-SRC-LATEBIO": {
+      "formal_ref": null,
+      "base": {
+        "title": "（synthetic）测试人物甲晚年权威传记",
+        "publisher": "（synthetic）大学出版社",
+        "url": "https://example.org/syn-latebio",
+        "type": "biography",
+        "locator": "（synthetic）第二章第 3 段",
+        "accessed_on": "2026-10-02",
+        "access_method": "local",
+        "limitations": "（synthetic）仅用于测试；用于验证「后世传记可支持早年客观事实」。"
+      },
+      "formed_time": { "start_year": 1990, "end_year": 1990, "note": "（synthetic）事件后 78 年出版。" },
+      "used_by_facts": ["sf-003"]
+    },
+    "SYN-SRC-SELF": {
+      "formal_ref": null,
+      "base": {
+        "title": "（synthetic）测试人物甲回忆录",
+        "publisher": "（synthetic）本人",
+        "url": "https://example.org/syn-memoir",
+        "type": "self_writing",
+        "locator": "（synthetic）第 4 节",
+        "accessed_on": "2026-10-02",
+        "access_method": "local",
+        "limitations": "（synthetic）事后回忆，用于 retrospective 测试。"
+      },
+      "formed_time": { "start_year": 1970, "end_year": 1970, "note": "（synthetic）晚年回忆。" },
+      "used_by_facts": ["sf-005", "sf-006"]
+    }
+  }
+}

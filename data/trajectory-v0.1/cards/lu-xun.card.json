@@ -1,0 +1,802 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "person_card",
+  "card_id": "card-lu_xun-v0.1",
+  "contract": {
+    "work_package": ".agent/handoffs/agent-cards-v0.1/02-two-person-work-packages.md 第 3 节",
+    "plan": ".agent/handoffs/agent-cards-v0.1/01-implementation-plan.md",
+    "baseline": "fu6868/agent-card-handoff @ 2af6b0c",
+    "formal_data": ["data/episodes.json", "data/sources.json", "data/review.json", "data/mechanisms.json"],
+    "note": "本卡只复用正式库已核材料，未引入新来源；正式 episode_id 原样引用，不修改主库。"
+  },
+  "synthetic": false,
+  "person_id": "lu_xun",
+  "person": {
+    "name": "鲁迅（周树人）",
+    "name_refs": ["f-lx-000"],
+    "birth_year": null,
+    "birth_year_unknown_reason": "正式库未含出生年出处，不据常识补写；待人工补可靠来源后再填。"
+  },
+  "scenario_tags": ["转专业", "考研还是就业", "大厂还是小公司/创业"],
+  "sampling_note": "按事件采样：1902 毕业去向（考研就业）、1904 入仙台医专（投入变化，中间状态）、1906 弃医从文（转专业）、1918 重新投入公共写作（大厂还是小公司/创业）。无变化的年份不补快照。",
+  "facts": [
+    {
+      "fact_id": "f-lx-000",
+      "text": "人物为「鲁迅（周树人）」，东北大学史料馆与东北大学页面以其留日经历为记载主体。",
+      "occurred": { "start_year": null, "end_year": null },
+      "time_scope": "timeless",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [
+        { "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" },
+        { "source_id": "LX-SENDAI", "locator": "Lu Xun studied in Sendai from 1904 to 1906" }
+      ],
+      "notes": "对应 review.json field_sources person.name（LX-TOHOKU、LX-SENDAI）。"
+    },
+    {
+      "fact_id": "f-lx-001",
+      "text": "在南京完成矿务铁路学堂学习，至 1902 年。",
+      "occurred": { "start_year": null, "end_year": 1902 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" }],
+      "notes": "对应 review.json field_sources prior_path.0 与 time.year（LX-TOHOKU）。入学年份无出处，start_year 留空。"
+    },
+    {
+      "fact_id": "f-lx-002",
+      "text": "1902 年以公费留学生身份赴日本。",
+      "occurred": { "start_year": 1902, "end_year": 1902 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" }],
+      "notes": "对应 lu_xun_1902_study_japan 的 choice.actions.0（LX-TOHOKU）。"
+    },
+    {
+      "fact_id": "f-lx-003",
+      "text": "1904 年进入仙台医学专门学校。",
+      "occurred": { "start_year": 1904, "end_year": 1904 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [
+        { "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" },
+        { "source_id": "LX-SENDAI", "locator": "Lu Xun studied in Sendai from 1904 to 1906" }
+      ],
+      "notes": "对应 review.json field_sources outcomes.mid_term（LX-TOHOKU、LX-SENDAI）。"
+    },
+    {
+      "fact_id": "f-lx-004",
+      "text": "在仙台学习为 1904—1906 年。",
+      "occurred": { "start_year": 1904, "end_year": 1906 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-SENDAI", "locator": "Lu Xun studied in Sendai from 1904 to 1906" }],
+      "notes": "结束年 1906 与退学决策同年；进入 1906 决策前视图依赖快照级 explicit_order（在学是离校的前提条件）。"
+    },
+    {
+      "fact_id": "f-lx-005",
+      "text": "第二学年离校，医学训练未完成。",
+      "occurred": { "start_year": 1906, "end_year": 1906 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" }],
+      "notes": "对应 lu_xun_1906_medicine_to_literature 的 choice.actions.0 与 outcomes.short_term（LX-TOHOKU）。这是 1906 决策的行动本身，不是其决策前事实。"
+    },
+    {
+      "fact_id": "f-lx-006",
+      "text": "1906 年离开仙台。",
+      "occurred": { "start_year": 1906, "end_year": 1906 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [
+        { "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" },
+        { "source_id": "LX-SENDAI", "locator": "Lu Xun studied in Sendai from 1904 to 1906" }
+      ],
+      "notes": "对应 lu_xun_1906_medicine_to_literature 的 outcomes.short_term（LX-TOHOKU、LX-SENDAI）。与 f-lx-005 是正式库分别记载的两条主张（结束学业 / 离开该地）。"
+    },
+    {
+      "fact_id": "f-lx-007",
+      "text": "在《呐喊》自序（1922）中，他后来把转向文艺解释为希望改变人的精神。",
+      "occurred": { "start_year": 1922, "end_year": 1922 },
+      "time_scope": "point",
+      "kind": "retrospective",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "这是后来的自我解释：陈述在 1922 年作出，不代表 1906 年当时已表达的想法。禁止进入任何决策前检索视图。"
+    },
+    {
+      "fact_id": "f-lx-008",
+      "text": "据后来自述，筹办《新生》，因人手和资金退出而未能出版。",
+      "occurred": { "start_year": null, "end_year": null },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "medium",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "事件本身（筹刊未成）是客观主张，但只来自 1922 年的事后自述，发生年份无出处；进入 1918 决策前视图依赖自序叙述顺序的 explicit_order。confidence=medium 反映单一自述来源。"
+    },
+    {
+      "fact_id": "f-lx-009",
+      "text": "受劝说，为《新青年》写小说（自序记为金心异劝写文章）。",
+      "occurred": { "start_year": null, "end_year": 1918 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "medium",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "劝说发生的具体年份无出处，end_year=1918 由「1918 年开始小说创作」约束上界；进入 1918 决策前视图依赖自序叙述顺序的 explicit_order。"
+    },
+    {
+      "fact_id": "f-lx-010",
+      "text": "1918 年开始小说创作（本人 1932 年回顾：「我做小说，是开手于一九一八年」）。",
+      "occurred": { "start_year": 1918, "end_year": 1918 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-SELECT", "locator": "我做小说，是开手于一九一八年" }],
+      "notes": "资料形成于 1932 年，但发生时间 1918 由原文直接陈述；发生时间与资料形成时间分开记录，不因出版晚排除。"
+    },
+    {
+      "fact_id": "f-lx-011",
+      "text": "写出《狂人日记》（首篇）。",
+      "occurred": { "start_year": 1918, "end_year": 1918 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "对应 lu_xun_1918_write_new_youth 的 outcomes.short_term（LX-PREFACE）。年份 1918 与 f-lx-010 一致。"
+    },
+    {
+      "fact_id": "f-lx-012",
+      "text": "1918—1922 年创作的十四篇小说后来收入《呐喊》。",
+      "occurred": { "start_year": 1918, "end_year": 1922 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "medium",
+      "source_refs": [{ "source_id": "LX-MUSEUM", "locator": "1918—1922 年十四篇小说" }],
+      "notes": "对应 lu_xun_1906_medicine_to_literature 的 outcomes.long_term（LX-MUSEUM）。来源深链 404 后仅余站点首页定位（见登记 limitations），置信度相应降为 medium。"
+    },
+    {
+      "fact_id": "f-lx-013",
+      "text": "1918—1922 年继续写作多篇小说。",
+      "occurred": { "start_year": 1918, "end_year": 1922 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "对应 lu_xun_1918_write_new_youth 的 outcomes.mid_term（LX-PREFACE）。与 f-lx-012 是两条独立主张（续写多篇 / 十四篇结集）。"
+    },
+    {
+      "fact_id": "f-lx-014",
+      "text": "1922 年作《呐喊》自序，回顾此前失败与重启过程。",
+      "occurred": { "start_year": 1922, "end_year": 1922 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
+      "notes": "对应 lu_xun_1918_write_new_youth 的 outcomes.long_term（LX-PREFACE）。自序「落款 1922」是事件性事实，与 f-lx-007（回顾内容本身）区分。"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_id": "snap-lx-1902",
+      "snapshot_kind": "decision",
+      "event_id": "ev-lx-1902",
+      "episode_id": "lu_xun_1902_study_japan",
+      "node_time": { "start_year": 1902, "end_year": 1902 },
+      "decision_time": { "start_year": 1902, "end_year": 1902 },
+      "sampling_reason": "毕业后去向决策（正式 episode：就近寻找工作 vs 赴日继续学习）。",
+      "prior_fact_ids": ["f-lx-000", "f-lx-001"],
+      "prior_order_notes": [
+        {
+          "fact_id": "f-lx-001",
+          "explicit_order": {
+            "justification": "完成学堂学业是「毕业后留学/就业」决策的前提；正式 episode 将该节点阶段记为「毕业后留学」，且赴日行为以学业完成为前提。同一年的先后由该前提关系支持，提交人工复核。",
+            "refs": ["LX-TOHOKU"],
+            "basis": "logical_precondition+episode_stage"
+          }
+        }
+      ],
+      "dimensions": {
+        "life_stage": {
+          "value": "transition",
+          "raw_text": "毕业后（正式 episode 阶段建模：毕业后留学）",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001"],
+          "confidence": "low",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1902_study_japan time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": ["study"],
+          "raw_text": "在南京完成矿务铁路学堂学习。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001"],
+          "confidence": "high",
+          "valid_time": { "start_year": null, "end_year": 1902 },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "已完成一个学堂的多年学业，尚无长期事业绑定。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "anchor_note": "锚点：medium=已有持续尝试但仍有退出空间。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无当时经济状况出处；「依赖公费机会」是建模 constraint，只说明资金非自足，不构成近期基本生活/债务/供养压力的证据，不默认 low/medium。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": ["credentials"],
+          "raw_text": "完成矿务铁路学堂学业（学力资格）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "anchor_note": "「公费资助」从行为「以公费身份赴日」回推，机会存在时点未独立定位，不作决策前资源证据（f-lx-002 是决策行动本身）。"
+        },
+        "goal_structure": {
+          "value": ["growth", "interest"],
+          "raw_text": "扩大知识来源；探索专业方向（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1902_study_japan decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "赴日学习尚未开始，无新方向体验证据。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断：依据是正式库中无体验记载且行为未发生。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1902_study_japan decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": { "description": "毕业后时点；公费留学机会（建模 constraint），无明确期限证据。", "deadline_year": null },
+          "raw_text": "依赖公费机会。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1902, "end_year": 1902 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1902_study_japan decision_state.constraints。"
+        }
+      },
+      "institutional_context": {
+        "text": "清末公费留学不是现代研究生教育，只类比继续学习与立即工作的资源取舍。",
+        "refs": ["LX-TOHOKU"],
+        "basis": "review.json analogy_boundary（lu_xun_1902_study_japan）。"
+      },
+      "unknowns": [
+        "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+        "未核实本人对这次选择的直接评价；不补写励志语录。"
+      ]
+    },
+    {
+      "snapshot_id": "snap-lx-1904",
+      "snapshot_kind": "state_change",
+      "view_export": false,
+      "event_id": null,
+      "episode_id": null,
+      "node_time": { "start_year": 1904, "end_year": 1904 },
+      "decision_time": null,
+      "sampling_reason": "投入变化事件：进入仙台医专，医学专业训练开始。无对应正式 episode，仅作时间线中间状态，不导出检索视图。",
+      "prior_fact_ids": ["f-lx-000", "f-lx-001", "f-lx-002"],
+      "prior_order_notes": [],
+      "dimensions": {
+        "life_stage": {
+          "value": "student",
+          "raw_text": "进入仙台医学专门学校。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1904 },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": ["study"],
+          "raw_text": "南京矿务铁路学堂完成后赴日，进入仙台医专。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001", "f-lx-002", "f-lx-003"],
+          "confidence": "high",
+          "valid_time": { "start_year": 1902, "end_year": 1904 },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "low",
+          "raw_text": "医学训练刚开始（就「医学」这条路径而言）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1904 },
+          "unknown_reason": null,
+          "anchor_note": "锚点：low=刚开始。与 1906 快照（high）对照展示投入积累。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无当时经济状况出处。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": ["credentials", "funding", "institution"],
+          "raw_text": "公费留学生身份；仙台医学专门学校在读。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-002", "f-lx-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1904 },
+          "unknown_reason": null
+        },
+        "goal_structure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "选择仙台医专的动机在正式库中无当时证据；《呐喊》自序的回顾性解释不作为当时已知（retrospective 排除）。"
+        },
+        "new_path_validation": {
+          "value": "tried",
+          "raw_text": "入学即开始体验医学方向。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1904 },
+          "unknown_reason": null
+        },
+        "reversibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1904 年时退学/转学的可行性与代价无证据；不沿用 1906 快照的建模值回填。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "学制与期限细节未核实（正式库 unknowns）。"
+        }
+      },
+      "institutional_context": {
+        "text": "清末公费留学与专门学校制度不同于现代高等教育。",
+        "refs": ["LX-TOHOKU", "LX-SENDAI"],
+        "basis": "由正式库 analogy_boundary（lu_xun_1902 / lu_xun_1906）归纳，措辞为本卡概括。"
+      },
+      "unknowns": ["入学动机与期限无当时证据。"]
+    },
+    {
+      "snapshot_id": "snap-lx-1906",
+      "snapshot_kind": "decision",
+      "event_id": "ev-lx-1906",
+      "episode_id": "lu_xun_1906_medicine_to_literature",
+      "node_time": { "start_year": 1906, "end_year": 1906 },
+      "decision_time": { "start_year": 1906, "end_year": 1906 },
+      "sampling_reason": "路径转换决策（正式 episode：继续学医 vs 转向文学）。",
+      "prior_fact_ids": ["f-lx-000", "f-lx-001", "f-lx-002", "f-lx-003", "f-lx-004"],
+      "prior_order_notes": [
+        {
+          "fact_id": "f-lx-004",
+          "explicit_order": {
+            "justification": "「在仙台学习 1904—1906」与 1906 退学决策同年；在学是离校（f-lx-005）的前提条件，来源记载「第二学年离校」即以在学为先。提交人工复核。",
+            "refs": ["LX-TOHOKU", "LX-SENDAI"],
+            "basis": "logical_precondition"
+          }
+        }
+      ],
+      "dimensions": {
+        "life_stage": {
+          "value": "student",
+          "raw_text": "留学期间（仙台医学专门学校第二学年）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-003", "f-lx-004"],
+          "confidence": "high",
+          "valid_time": { "start_year": 1904, "end_year": 1906 },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": ["study"],
+          "raw_text": "南京学堂完成后赴日，入仙台医专习医。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001", "f-lx-002", "f-lx-003", "f-lx-004"],
+          "confidence": "high",
+          "valid_time": { "start_year": 1902, "end_year": 1906 },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "已投入医学学习；跨领域需重新积累（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-003", "f-lx-004"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1906 },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=多年度专业训练（1904—1906 两学年专门学校训练）。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无当时经济压力出处。正式库修订记录（data/README.md 三条种子修订）明确删除了无出处的「即时经济困难」断言，本卡保持 null 而非默认中等。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库修订时同样删除了无出处的「家庭关系紧张」断言；无家庭责任记载，未知不能标 low。"
+        },
+        "resource_access": {
+          "value": ["credentials", "funding", "institution"],
+          "raw_text": "公费留学生身份；仙台医学专门学校在读。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-002", "f-lx-003", "f-lx-004"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1904, "end_year": 1906 },
+          "unknown_reason": null
+        },
+        "goal_structure": {
+          "value": ["impact", "interest"],
+          "raw_text": "探索表达方式；寻找社会作用（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1906, "end_year": 1906 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1906_medicine_to_literature decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "无文艺路径在决策前获得验证的证据；自序的动机回顾是 retrospective，不作为决策前的路径验证证据。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1906, "end_year": 1906 },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断；本条同时演示 retrospective 排除规则。"
+        },
+        "reversibility": {
+          "value": "low",
+          "raw_text": "decision_state.reversibility=low（建模）：退出后学籍与医学训练难以原地恢复。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1906, "end_year": 1906 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1906_medicine_to_literature decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据；退学具体日期与学年制度细节未核实（正式库 unknowns）。"
+        }
+      },
+      "institutional_context": {
+        "text": "晚清留日制度、文艺运动与现代校内转专业不同；不能据文学成就推断退学收益。",
+        "refs": ["LX-TOHOKU", "LX-PREFACE"],
+        "basis": "review.json analogy_boundary（lu_xun_1906_medicine_to_literature）。"
+      },
+      "unknowns": [
+        "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+        "晚清留日制度、文艺运动与现代校内转专业不同；不能据文学成就推断退学收益。",
+        "退学具体日期、即时收入与家庭反应未核实。"
+      ]
+    },
+    {
+      "snapshot_id": "snap-lx-1918",
+      "snapshot_kind": "decision",
+      "event_id": "ev-lx-1918",
+      "episode_id": "lu_xun_1918_write_new_youth",
+      "node_time": { "start_year": 1918, "end_year": 1918 },
+      "decision_time": { "start_year": 1918, "end_year": 1918 },
+      "sampling_reason": "新方向验证/重新投入决策（正式 episode：保持沉默 vs 向刊物投稿）。",
+      "prior_fact_ids": ["f-lx-000", "f-lx-001", "f-lx-002", "f-lx-003", "f-lx-004", "f-lx-005", "f-lx-006", "f-lx-008"],
+      "prior_order_notes": [
+        {
+          "fact_id": "f-lx-008",
+          "explicit_order": {
+            "justification": "《呐喊》自序（1922）的叙述顺序：筹办《新生》失败在先，金心异劝写文章、写作《狂人日记》在后。筹刊失败因此先于 1918 年投稿决策；该事实发生年份无出处，此顺序来源唯一，提交人工复核。",
+            "refs": ["LX-PREFACE"],
+            "basis": "source_narrative_order"
+          }
+        }
+      ],
+      "dimensions": {
+        "life_stage": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1906—1918 年间的职业与生活状态不在本卡事实集内（正式库三条 episode 未含该区间），不据常识补写教育部任职等信息。"
+        },
+        "prior_path": {
+          "value": ["study", "trial"],
+          "raw_text": "此前筹办《新生》未能出版，文艺活动一度受挫（正式 episode prior_path）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-001", "f-lx-003", "f-lx-005", "f-lx-008"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1902, "end_year": 1918 },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "文艺活动持续尝试（筹刊未成）但未获公开验证；医学路径已退出（f-lx-005）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-005", "f-lx-008"],
+          "confidence": "low",
+          "valid_time": { "start_year": 1906, "end_year": 1918 },
+          "unknown_reason": null,
+          "anchor_note": "锚点：medium=已有持续尝试但仍有退出空间。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1918 年经济状况无出处；不因「资助过书籍出版」等后来叙事回填。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": ["network"],
+          "raw_text": "受同人为《新青年》写稿的劝说（f-lx-009）。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-008", "f-lx-009"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1906, "end_year": 1918 },
+          "unknown_reason": null,
+          "anchor_note": "network 对应机制标注中的「社会支持」；funding/credentials 在 1918 年的状态无出处，不列入。"
+        },
+        "goal_structure": {
+          "value": ["impact", "growth"],
+          "raw_text": "尝试公共表达；参与新的合作（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1918, "end_year": 1918 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1918_write_new_youth decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "tried",
+          "raw_text": "筹办《新生》未能出版；前次合作失败，读者响应未知。",
+          "kind": "inference",
+          "evidence_refs": ["f-lx-008"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1906, "end_year": 1918 },
+          "unknown_reason": null,
+          "anchor_note": "tried=直接体验过（筹刊即尝试公共表达，且已受挫）。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）：投稿可以停止，公开表达的身份影响可逆性有限。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1918, "end_year": 1918 },
+          "unknown_reason": null,
+          "modeling_basis": "episode lu_xun_1918_write_new_youth decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "《新青年》约稿背景无期限证据；约稿时点细节未核实。"
+        }
+      },
+      "institutional_context": {
+        "text": "这是创作合作重启，只类比尝试新组织平台，不是市场创业或正式离职。",
+        "refs": ["LX-PREFACE"],
+        "basis": "review.json analogy_boundary（lu_xun_1918_write_new_youth）。"
+      },
+      "unknowns": [
+        "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
+        "这是创作合作重启，只类比尝试新组织平台，不是市场创业或正式离职。",
+        "未核实本人对这次选择的直接评价；不补写励志语录。",
+        "1906—1918 年间的生活与职业状态为资料缺口（见 partial/gaps 与 A 需求清单）。"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "ev-lx-1902",
+      "episode_id": "lu_xun_1902_study_japan",
+      "episode_source": "data/episodes.json（正式库，原样引用）",
+      "scenario": "考研还是就业",
+      "snapshot_id": "snap-lx-1902",
+      "decision_time": { "start_year": 1902, "end_year": 1902 },
+      "choice": {
+        "type": "direct_switch",
+        "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1902。",
+        "action_fact_ids": ["f-lx-002"]
+      },
+      "outcome_fact_ids": ["f-lx-003", "f-lx-005", "f-lx-010"],
+      "reflection": {
+        "retrospective_fact_ids": [],
+        "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写。",
+        "unknowns_source": "data/episodes.json#lu_xun_1902_study_japan reflection.unknowns"
+      },
+      "mechanism_id": "mech-lx-1902"
+    },
+    {
+      "event_id": "ev-lx-1906",
+      "episode_id": "lu_xun_1906_medicine_to_literature",
+      "episode_source": "data/episodes.json（正式库，原样引用）",
+      "scenario": "转专业",
+      "snapshot_id": "snap-lx-1906",
+      "decision_time": { "start_year": 1906, "end_year": 1906 },
+      "choice": {
+        "type": "direct_switch",
+        "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1906。",
+        "action_fact_ids": ["f-lx-005", "f-lx-006"]
+      },
+      "outcome_fact_ids": ["f-lx-008", "f-lx-012", "f-lx-014"],
+      "reflection": {
+        "retrospective_fact_ids": ["f-lx-007"],
+        "self_comment_note": "在《呐喊》自序中，他把转向文艺解释为希望改变人的精神；这是后来的自我解释，不作为当时已知。",
+        "unknowns_source": "data/episodes.json#lu_xun_1906_medicine_to_literature reflection.unknowns"
+      },
+      "mechanism_id": "mech-lx-1906"
+    },
+    {
+      "event_id": "ev-lx-1918",
+      "episode_id": "lu_xun_1918_write_new_youth",
+      "episode_source": "data/episodes.json（正式库，原样引用）",
+      "scenario": "大厂还是小公司/创业",
+      "snapshot_id": "snap-lx-1918",
+      "decision_time": { "start_year": 1918, "end_year": 1918 },
+      "choice": {
+        "type": "explore_then_switch",
+        "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1918。",
+        "action_fact_ids": ["f-lx-009", "f-lx-010"]
+      },
+      "outcome_fact_ids": ["f-lx-011", "f-lx-012", "f-lx-013", "f-lx-014"],
+      "reflection": {
+        "retrospective_fact_ids": [],
+        "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写。",
+        "unknowns_source": "data/episodes.json#lu_xun_1918_write_new_youth reflection.unknowns"
+      },
+      "mechanism_id": "mech-lx-1918"
+    }
+  ],
+  "mechanisms": [
+    {
+      "mechanism_id": "mech-lx-1902",
+      "event_id": "ev-lx-1902",
+      "archetype": "explore_then_persist",
+      "root_factors": ["长期方向匹配", "机会成本", "经济压力", "新路径验证不足"],
+      "mechanism_short": "借公费留学低成本试探新方向",
+      "kind": "inference",
+      "basis": "复用 data/mechanisms.json#lu_xun_1902_study_japan 正式标注（tagged_by deepseek-v4.1-flash，2026-10-02），本卡未重新标注。",
+      "vocab": "src/types/landscape.ts ROOT_FACTORS / PathArchetypeId",
+      "supporting_refs": ["f-lx-001", "f-lx-002"],
+      "note": "机制层「经济压力」指公费依赖的资源约束结构，与状态维度 economic_pressure=null（无分档证据）分属两层，不互推。"
+    },
+    {
+      "mechanism_id": "mech-lx-1906",
+      "event_id": "ev-lx-1906",
+      "archetype": "direct_switch",
+      "root_factors": ["沉没成本", "转换成本", "长期方向匹配", "再次选错风险"],
+      "mechanism_short": "弃医从文，以未验证的文艺路径替代已投入的医学",
+      "kind": "inference",
+      "basis": "复用 data/mechanisms.json#lu_xun_1906_medicine_to_literature 正式标注（tagged_by deepseek-v4.1-flash，2026-10-02），本卡未重新标注。",
+      "vocab": "src/types/landscape.ts ROOT_FACTORS / PathArchetypeId",
+      "supporting_refs": ["f-lx-003", "f-lx-004", "f-lx-005"],
+      "note": "archetype 与 choice.type 分开记录，不相互覆盖；landscape.ts 实测记录中另有 dual_track 判定的讨论，正式标注以 mechanisms.json 为准。"
+    },
+    {
+      "mechanism_id": "mech-lx-1918",
+      "event_id": "ev-lx-1918",
+      "archetype": "explore_then_persist",
+      "root_factors": ["新路径验证不足", "沉没成本", "社会支持", "机会成本"],
+      "mechanism_short": "受友人劝说，以单篇投稿试探公共表达",
+      "kind": "inference",
+      "basis": "复用 data/mechanisms.json#lu_xun_1918_write_new_youth 正式标注（tagged_by deepseek-v4.1-flash，2026-10-02），本卡未重新标注。",
+      "vocab": "src/types/landscape.ts ROOT_FACTORS / PathArchetypeId",
+      "supporting_refs": ["f-lx-008", "f-lx-009"],
+      "note": "archetype 与 choice.type（explore_then_switch）分开记录，不相互覆盖。"
+    }
+  ],
+  "unknowns": [
+    "出生年份未含在正式库中，人物年龄链缺失。",
+    "1906—1918 年间的职业、收入与家庭状态为资料缺口，1918 快照相应维度保持 null。",
+    "退学具体日期、即时收入与家庭反应未核实（正式库 unknowns 原文保留）。",
+    "LX-MUSEUM 深链 404（官网改版），仅余站点首页定位；十四篇小说的具体展览条目需到馆内检索。",
+    "f-lx-008（筹办《新生》）发生年份无出处，仅凭自序叙述顺序进入 1918 决策前视图，已列人工复核项。"
+  ],
+  "partial": {
+    "status": false,
+    "gaps": [
+      "事实 15 条处于目标区间（15–25）下限；补足需新来源（优先：1906—1918 年间经历的可靠出处、出生年），须先入正式库或由 A 协调。",
+      "三场景各需第二个可参考候选人物（扩卡阶段处理：转专业/考研就业/大厂小厂各再一至两人）。"
+    ]
+  },
+  "review": {
+    "human_review": {
+      "status": "pending",
+      "reviewed_by": null,
+      "reviewed_on": null,
+      "scope": null,
+      "checklist_file": "data/trajectory-v0.1/review/lu-xun.checklist.md",
+      "note": "机器校验通过不等于人工审核；缺真人签字保持 pending。"
+    }
+  }
+}

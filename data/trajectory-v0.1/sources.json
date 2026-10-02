@@ -1,0 +1,87 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "trajectory_source_registry",
+  "_note": [
+    "轨迹卡专用来源登记：只新增「卡片级正文定位」「资料形成时间」「用途」，来源主数据仍在 data/sources.json。",
+    "base 字段复制自 data/sources.json 对应条目；校验器会与正式文件交叉核对 title/publisher/url/type，不一致即报错。",
+    "formed_time 记录资料形成时间（如自序写作年），与事实的发生时间分开； formed_time 晚于决策不作为排除依据（发生时间才参与时间门槛）。",
+    "本登记不引入新来源；新增来源须先入正式库或由 A 协调，禁止凭记忆补出处。"
+  ],
+  "sources": {
+    "LX-TOHOKU": {
+      "formal_ref": "data/sources.json#LX-TOHOKU",
+      "base": {
+        "title": "鲁迅的仙台留学",
+        "publisher": "东北大学史料馆",
+        "url": "https://www.archives.tohoku.ac.jp/luxun/cn/story/",
+        "type": "biography",
+        "locator": "赴日与仙台入学、第二学年退学",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
+      "used_by_facts": ["f-lx-000", "f-lx-001", "f-lx-002", "f-lx-003", "f-lx-005", "f-lx-006"]
+    },
+    "LX-SENDAI": {
+      "formal_ref": "data/sources.json#LX-SENDAI",
+      "base": {
+        "title": "Chinese high school students visit Tohoku University",
+        "publisher": "东北大学",
+        "url": "https://www.tohoku.ac.jp/en/news/university_news/sakura_exchange_program.html",
+        "type": "biography",
+        "locator": "Lu Xun studied in Sendai from 1904 to 1906",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
+      "used_by_facts": ["f-lx-000", "f-lx-003", "f-lx-004", "f-lx-006"]
+    },
+    "LX-PREFACE": {
+      "formal_ref": "data/sources.json#LX-PREFACE",
+      "base": {
+        "title": "《呐喊》自序（1922）",
+        "publisher": "鲁迅；维基文库转录",
+        "url": "https://zh.wikisource.org/wiki/吶喊",
+        "type": "self_writing",
+        "locator": "自序：医学、筹办新生、金心异劝写文章",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "事后自述与开放转录；动机按本人表述处理，不当作现场心理记录。"
+      },
+      "formed_time": { "start_year": 1922, "end_year": 1922, "note": "自序落款 1922（正式库 evidence.claim 记载）。" },
+      "used_by_facts": ["f-lx-007", "f-lx-008", "f-lx-009", "f-lx-011", "f-lx-013", "f-lx-014"]
+    },
+    "LX-SELECT": {
+      "formal_ref": "data/sources.json#LX-SELECT",
+      "base": {
+        "title": "《自选集》自序（1932）",
+        "publisher": "鲁迅；维基文库转录",
+        "url": "https://zh.wikisource.org/zh-hans/《自選集》自序",
+        "type": "self_writing",
+        "locator": "我做小说，是开手于一九一八年",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "事后回忆；不是逐日决策日志。"
+      },
+      "formed_time": { "start_year": 1932, "end_year": 1932, "note": "标题年份 1932。" },
+      "used_by_facts": ["f-lx-010"]
+    },
+    "LX-MUSEUM": {
+      "formal_ref": "data/sources.json#LX-MUSEUM",
+      "base": {
+        "title": "鲁迅生平陈列：画出国人的魂灵",
+        "publisher": "上海鲁迅纪念馆",
+        "url": "https://www.luxunmuseum.cn/",
+        "type": "biography",
+        "locator": "1918—1922 年十四篇小说",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。原深链（/lxcl/index/id/5.html）2026-10-02 实测 404（官网改版），已改为站点首页；具体展览页需到馆内检索，未能定位到对应条目。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
+      "used_by_facts": ["f-lx-012"]
+    }
+  }
+}

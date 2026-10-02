@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "trajectory_manifest",
+  "contract": ".agent/handoffs/agent-cards-v0.1/02-two-person-work-packages.md §3（v0.1）",
+  "experiment": "trajectory-v0.1 隔离试验数据源：不进入正式排名，不混合旧评分；正式 episodes/sources/review/mechanisms 未改动",
+  "cards": [
+    {
+      "card_id": "card-lu_xun-v0.1",
+      "person_id": "lu_xun",
+      "card_file": "data/trajectory-v0.1/cards/lu-xun.card.json",
+      "stats": {
+        "facts": 15,
+        "snapshots": 4,
+        "events": 3
+      },
+      "scenarios": [
+        "考研还是就业",
+        "转专业",
+        "大厂还是小公司/创业"
+      ],
+      "per_scenario_episodes": {
+        "考研还是就业": [
+          "lu_xun_1902_study_japan"
+        ],
+        "转专业": [
+          "lu_xun_1906_medicine_to_literature"
+        ],
+        "大厂还是小公司/创业": [
+          "lu_xun_1918_write_new_youth"
+        ]
+      },
+      "views_file": "data/trajectory-v0.1/retrieval-views/card-lu_xun-v0.1.views.json",
+      "audit_file": "data/trajectory-v0.1/audits/card-lu_xun-v0.1.temporal-audit.json",
+      "machine_check": {
+        "status": "pass",
+        "errors": 0,
+        "warnings": [],
+        "command": "node scripts/trajectory-v0.1/validate-card.mjs data/trajectory-v0.1/cards/lu-xun.card.json"
+      },
+      "human_review": "pending",
+      "partial": {
+        "status": false,
+        "gaps": [
+          "事实 15 条处于目标区间（15–25）下限；补足需新来源（优先：1906—1918 年间经历的可靠出处、出生年），须先入正式库或由 A 协调。",
+          "三场景各需第二个可参考候选人物（扩卡阶段处理：转专业/考研就业/大厂小厂各再一至两人）。"
+        ]
+      }
+    }
+  ],
+  "test_fixtures": [],
+  "scenario_coverage": {
+    "大厂还是小公司/创业": {
+      "candidates": [
+        "lu_xun_1918_write_new_youth"
+      ],
+      "persons": [
+        "lu_xun"
+      ],
+      "second_candidate_pending": true
+    },
+    "考研还是就业": {
+      "candidates": [
+        "lu_xun_1902_study_japan"
+      ],
+      "persons": [
+        "lu_xun"
+      ],
+      "second_candidate_pending": true
+    },
+    "转专业": {
+      "candidates": [
+        "lu_xun_1906_medicine_to_literature"
+      ],
+      "persons": [
+        "lu_xun"
+      ],
+      "second_candidate_pending": true
+    }
+  },
+  "module_partial_note": "六卡目标未完成前，每场景第二候选为 pending；覆盖报告以视图为单位，不以文件数代替质量。",
+  "review_discipline": "manifest 中 human_review 为卡片自报状态；机器校验通过不改变其 pending；approved 需真人与范围，见各卡 review 块与审查清单。"
+}
