@@ -48,8 +48,21 @@ import type { TaggedEpisode } from './data-source.ts';
 export const LANDSCAPE_CONFIG = {
   /** 第一阶段召回多少人物进入第二阶段 */
   person_recall: 8,
-  /** 最终最多几条路径 */
-  max_archetypes: 4,
+  /**
+   * ⚠️ 没有「固定返回 N 条」这回事。
+   *
+   *   实测反馈：「无论我说什么你都是四种解法」——
+   *   因为原来写死了 `max_archetypes: 4`，
+   *   而聚类又是「按 archetype 固定枚举分组」（一共 6 个桶），
+   *   所以输出永远是那几个桶的前 4 名，跟用户说了什么无关。
+   *
+   *   改法：**这个用户实际聚出几种走法就给几种**。
+   *   候选里只有 2 种就显示 2 种（诚实），有 5 种就显示 5 种。
+   *   单条案例支撑的路径已经会打 caveat —— 厚度如实反映数据。
+   *
+   *   这个值是**安全上限**（防极端情况刷屏），不是「目标条数」。
+   */
+  safety_max_archetypes: 6,
   /**
    * 聚类阈值：两条案例的 root_factors Jaccard ≥ 此值即归为同一条路径。
    *
@@ -322,10 +335,27 @@ export function clusterIntoArchetypes(
     result.push({ archetype, cases: use, relevance });
   }
 
-  return result
+  /**
+   * ⚠️ 这里是「无论说什么都是四种」的修复点。
+   *
+   *   原来：`.slice(0, max_archetypes)` —— 固定砍到 4 条，
+   *        于是用户条件怎么变都是那 4 个桶。
+   *
+   *   现在分两步：
+   *     ① **相关性门槛**：与用户根因素完全不沾边的路径直接不要
+   *        （relevance 为 0 = 这条路的案例没有一个根因素和用户重合）
+   *     ② 如果剩下太多（> safety），才按支撑案例数和相关性排序截断
+   *
+   *   结果：候选里有 2 种走法就显示 2 种，有 5 种就显示 5 种。
+   */
+  const scored = result
     .filter((g) => g.cases.length >= LANDSCAPE_CONFIG.min_cases_per_archetype)
-    .sort((a, b) => b.cases.length - a.cases.length || b.relevance - a.relevance)
-    .slice(0, LANDSCAPE_CONFIG.max_archetypes);
+    // ① 与用户毫无交集的路径不展示 —— 那不是「他的可能走法」
+    .filter((g) => g.relevance > 0)
+    .sort((a, b) => b.cases.length - a.cases.length || b.relevance - a.relevance);
+
+  // ② 安全上限（而不是「目标条数」）
+  return scored.slice(0, LANDSCAPE_CONFIG.safety_max_archetypes);
 }
 
 /* ============================================================

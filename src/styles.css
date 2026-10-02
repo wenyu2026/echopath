@@ -1630,3 +1630,52 @@ input:focus, textarea:focus, select:focus {
 }
 .chat-fix-input:focus { outline: none; border-color: var(--now); }
 .chat-fix-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+/* ============================================================
+   结果区：数据来源收进 ⓘ
+   ------------------------------------------------------------
+   实测反馈：「里面那些小字为什么你也给显示出来了，前端不需要这些小字呀」
+   「36 条案例 · 18 位人物 · 隐私级别 public」这类是**给评委看的技术说明**，
+   用户不关心。收进可展开的说明里，默认不占地方。
+   ============================================================ */
+
+.chat-result-sub {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink-2, #4a4742);
+  margin: 0 0 12px;
+}
+
+.chat-source-info {
+  margin-bottom: 18px;
+  font-size: 12.5px;
+}
+.chat-source-info summary {
+  cursor: pointer;
+  color: var(--ink-3, #6b6862);
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+.chat-source-info summary::-webkit-details-marker { display: none; }
+.chat-source-info summary:hover { color: var(--now); }
+.chat-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px; height: 15px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 10px;
+  line-height: 1;
+}
+.chat-source-info[open] summary { margin-bottom: 8px; }
+.chat-source-info-body {
+  padding: 11px 14px;
+  background: var(--bg-sunken);
+  border-radius: 8px;
+  line-height: 1.75;
+  color: var(--ink-2, #4a4742);
+}

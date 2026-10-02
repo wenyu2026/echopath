@@ -320,16 +320,41 @@ export default function Chat() {
       {chat.landscape && chat.phase.kind === 'done' && (
         <div className="chat-result">
           <div className="chat-result-head">
+            {/*
+              ⚠️ 标题跟着**实际条数**走，并且说人话。
+              实测反馈：
+                · 「四种解法为什么这么固定呀，无论我说什么你都是四种」
+                  → 已改成按实际聚出的路径数（见 landscape-v2.ts）
+                · 「四种解法」这个说法也要改 —— 用户不是在要「解法」，
+                  是在看「别人走过哪几条路」
+            */}
             <h2>
-              我在 {chat.landscape.data_source.label}里找到 {chat.landscape.archetypes.length} 种走法
+              {chat.landscape.archetypes.length === 1
+                ? '在这些案例里，只看到一种明确的走法'
+                : `在这些案例里，我看到 ${chat.landscape.archetypes.length} 种不同的走法`}
             </h2>
-            <p className="tiny muted">
-              {chat.landscape.data_source.episode_count} 条案例 ·{' '}
-              {chat.landscape.data_source.person_count} 位人物 · 隐私级别{' '}
-              {chat.landscape.data_source.privacy_level}
-              <br />
-              {chat.landscape.data_source.description}
+            <p className="chat-result-sub">
+              不是给你的建议，只是别人真实走过的路。点开可以看他们后来怎么样。
             </p>
+
+            {/* ⚠️ 数据来源与规模 —— 收进 ⓘ，默认不占主视觉 */}
+            <details className="chat-source-info">
+              <summary>
+                <span className="chat-info-icon">ⓘ</span>
+                这些案例从哪来
+              </summary>
+              <div className="chat-source-info-body">
+                <div>
+                  共 {chat.landscape.data_source.episode_count} 条案例 ·{' '}
+                  {chat.landscape.data_source.person_count} 位人物 · 数据来源：
+                  {chat.landscape.data_source.label}
+                </div>
+                <div style={{ marginTop: 6 }}>{chat.landscape.data_source.description}</div>
+                <div style={{ marginTop: 6 }}>
+                  隐私级别：{chat.landscape.data_source.privacy_level}
+                </div>
+              </div>
+            </details>
           </div>
 
           <div className="land-roots" style={{ marginBottom: 18 }}>
