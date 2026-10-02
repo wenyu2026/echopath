@@ -20,7 +20,8 @@
     "tag:mechanisms": "node --env-file=.env scripts/tag-mechanisms.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "review:sheet": "node scripts/review-sheet.mjs",
-    "start": "node scripts/start-demo.mjs"
+    "start": "node scripts/start-demo.mjs",
+    "demo:verify": "node scripts/verify-landscape.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
