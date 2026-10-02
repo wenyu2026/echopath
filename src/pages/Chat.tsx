@@ -18,7 +18,6 @@ import { useChatInterview } from '../state/useChatInterview';
 import { FIELDS } from '../types/interview';
 import PathCard from '../components/PathCard';
 import CaseDrawer from '../components/CaseDrawer';
-import ReflectPanel from '../components/ReflectPanel';
 
 /** 字段 → 中文标签（右侧面板显示用） */
 const LABELS: Record<string, string> = Object.fromEntries(FIELDS.map((f) => [f.key, f.label]));
@@ -27,6 +26,10 @@ export default function Chat() {
   const chat = useChatInterview();
   const [draft, setDraft] = useState('');
   const [sourceId, setSourceId] = useState('historical');
+  /** 「改这句」正在编辑哪条消息 */
+  const [editing, setEditing] = useState<{ id: string; text: string } | null>(null);
+  /** 总结阶段「哪里不对」的输入 */
+  const [fixDraft, setFixDraft] = useState('');
   const [openCase, setOpenCase] = useState<string | null>(null);
   const [sources, setSources] = useState<Array<{ id: string; label: string }>>([]);
   const listRef = useRef<HTMLDivElement>(null);
@@ -91,6 +94,49 @@ export default function Chat() {
                 {m.role === 'user' && m.quote && (
                   <div className="chat-quote">★ 记下了你这句：「{m.quote}」</div>
                 )}
+
+                {/*
+                  ⚠️ 「改这句」—— 实测反馈：答错了只能重开，聊了 10 轮全废。
+                  回滚到这句话之前，用新内容重走。
+                */}
+                {m.role === 'user' && !busy && (
+                  <button
+                    className="chat-edit"
+                    onClick={() => setEditing({ id: m.id, text: m.text })}
+                    title="这句话说错了？改一下，从这句重新来"
+                  >
+                    ✏️ 改这句
+                  </button>
+                )}
+
+                {/* 就地编辑框 */}
+                {editing?.id === m.id && (
+                  <div className="chat-edit-box">
+                    <textarea
+                      className="chat-edit-input"
+                      value={editing.text}
+                      onChange={(e) => setEditing({ id: m.id, text: e.target.value })}
+                      rows={3}
+                      autoFocus
+                    />
+                    <div className="chat-edit-actions">
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          const t = editing.text.trim();
+                          setEditing(null);
+                          if (t) void chat.rewindTo(m.id, t);
+                        }}
+                      >
+                        从这句重来
+                      </button>
+                      <button className="btn btn-sm btn-ghost" onClick={() => setEditing(null)}>
+                        算了
+                      </button>
+                      <span className="tiny muted">这一句之后的追问都会重新问一遍</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -153,7 +199,7 @@ export default function Chat() {
             </button>
           )}
           <span className="spacer" />
-          <button className="btn btn-sm btn-ghost" onClick={chat.reset} disabled={busy}>
+          <button className="btn btn-sm btn-ghost" onClick={() => { setEditing(null); setFixDraft(''); chat.reset(); }} disabled={busy}>
             重来
           </button>
         </div>
@@ -208,9 +254,42 @@ export default function Chat() {
               <button className="btn btn-primary btn-sm" onClick={() => void chat.search(sourceId)}>
                 对，去找人 →
               </button>
-              <button className="btn btn-sm btn-ghost" onClick={chat.reset}>
-                不对，重来
-              </button>
+            </div>
+
+            {/*
+              ⚠️ 实测反馈：「你问我理解的对吗，我完全没有回答的余地呀」。
+              原来只有「对」和「全推翻重来」两个出口 ——
+              想说「大体对，但第三点理解错了」无路可走。
+              所以加这个输入框：不用精确描述，想到哪说到哪。
+            */}
+            <div className="chat-fix">
+              <div className="tiny muted" style={{ marginBottom: 6 }}>
+                哪里不对？直接说，我改完再找人
+              </div>
+              <textarea
+                className="chat-fix-input"
+                value={fixDraft}
+                placeholder="比如：我不是想换行业，是想换岗位"
+                onChange={(e) => setFixDraft(e.target.value)}
+                rows={2}
+              />
+              <div className="chat-fix-actions">
+                <button
+                  className="btn btn-sm"
+                  disabled={!fixDraft.trim() || busy}
+                  onClick={() => {
+                    const t = fixDraft.trim();
+                    if (!t) return;
+                    setFixDraft('');
+                    void chat.correctSummary(t);
+                  }}
+                >
+                  改一下，继续聊
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => { setEditing(null); setFixDraft(''); chat.reset(); }}>
+                  全部重来
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -230,7 +309,7 @@ export default function Chat() {
             <p className="chat-nodilemma-body">
               如果<strong>真遇到岔路</strong>，再回来聊一次 —— 那时候我们才该去找人。
             </p>
-            <button className="btn btn-sm btn-ghost" onClick={chat.reset}>
+            <button className="btn btn-sm btn-ghost" onClick={() => { setEditing(null); setFixDraft(''); chat.reset(); }}>
               换个处境再聊
             </button>
           </div>
@@ -273,15 +352,8 @@ export default function Chat() {
             <span>耗时 {chat.landscape.meta.elapsed_ms}ms</span>
           </div>
 
-          {/* 最后一屏：回到自己 */}
-          <ReflectPanel
-            landscape={chat.landscape}
-            userQuote={chat.bestQuote}
-            collected={chat.state?.collected ?? {}}
-          />
-
           <div className="btn-row" style={{ marginTop: 22 }}>
-            <button className="btn" onClick={chat.reset}>
+            <button className="btn" onClick={() => { setEditing(null); setFixDraft(''); chat.reset(); }}>
               换个处境再聊一次
             </button>
           </div>

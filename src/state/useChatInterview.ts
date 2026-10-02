@@ -26,6 +26,16 @@ export interface ChatMessage {
   extracted?: Array<{ field: string; value: string; confidence: number }>;
   /** 记下的用户原话 */
   quote?: string;
+  /**
+   * ⚠️ 这一轮之前的状态快照 —— 「改这句」要用。
+   *
+   *   实测反馈：「我回答问题的时候回答错误的话，没办法回退到上一个对话，只能重开」。
+   *   聊了 10 轮，一句打错就全废，这不能接受。
+   *
+   *   所以每条用户消息都存下**它发出前**的完整 state，
+   *   点「改这句」就回滚到这个快照，然后按新内容重走一遍。
+   */
+  stateBefore?: InterviewStateWire;
 }
 
 export interface InterviewStateWire {
@@ -105,9 +115,14 @@ export function useChatInterview() {
 
   /* ---------------- 提交回答 ---------------- */
   const answer = useCallback(
-    async (text: string) => {
-      if (!state || !text.trim()) return;
-      setMessages((m) => [...m, { id: uid(), role: 'user', text }]);
+    async (text: string, overrideState?: InterviewStateWire) => {
+      const base = overrideState ?? state;
+      if (!base || !text.trim()) return;
+
+      // ⚠️ 存下「这条回答发出前」的 state —— 「改这句」要回滚到这里
+      const snapshotBefore: InterviewStateWire = JSON.parse(JSON.stringify(base));
+
+      setMessages((m) => [...m, { id: uid(), role: 'user', text, stateBefore: snapshotBefore }]);
       setPhase({ kind: 'asking' });
 
       try {
@@ -119,7 +134,7 @@ export function useChatInterview() {
           done: boolean;
           stop_reason: string;
           progress: { asked: number; fields: number };
-        }>('/api/interview/answer', { state, answer: text, asked_field: askedField });
+        }>('/api/interview/answer', { state: base, answer: text, asked_field: askedField });
 
         setState(r.state);
         setProgress(r.progress);
@@ -202,6 +217,76 @@ export function useChatInterview() {
       }
     },
     [postJson],
+  );
+
+  /* ---------------- 总结阶段说「哪里不对」 ---------------- */
+
+  /**
+   * ⚠️ 实测反馈：「你问我理解的对吗，我完全没有回答的余地呀」。
+   *
+   * 原来只有两个出口：全部同意（去找人）或全部推翻（重来）。
+   * 想说「大体对，但第三点理解错了」时无路可走。
+   *
+   * 做法：把用户的更正当成**一条新的补充**发下去 ——
+   * 走后端同一条 answer 链路，抽取器会把它并进已有字段，
+   * 然后 AI 会基于新信息继续追问或重新总结。
+   */
+  const correctSummary = useCallback(
+    async (text: string) => {
+      // 回到「聊」的状态，把更正当作一条普通回答提交
+      setPhase({ kind: 'idle' });
+      await answer(text);
+    },
+    [answer],
+  );
+
+  /* ---------------- 改某一句：回滚到那之前，用新内容重走 ---------------- */
+
+  /**
+   * ⚠️ 实测反馈：「回答错误的话，没办法回退到上一个对话，只能重开」。
+   *   聊了 10 轮，一句打错就全废 —— 所以要有这个。
+   *
+   * 做法：找到那条消息，用它的 `stateBefore` 快照恢复，
+   *      把**它和它之后的**所有消息都丢掉，再用新内容重发一遍。
+   *
+   * 为什么不是「就地编辑」：那一条之后的所有轮次都是基于旧回答的，
+   * 留着会造成状态不一致（右侧面板显示的是新答案，但后续追问还是按旧的来的）。
+   */
+  const rewindTo = useCallback(
+    async (messageId: string, newText: string) => {
+      const idx = messages.findIndex((m) => m.id === messageId);
+      if (idx < 0) return;
+      const target = messages[idx];
+      if (target.role !== 'user' || !target.stateBefore) return;
+
+      // ① 回滚 state 到这条消息之前
+      const back = JSON.parse(JSON.stringify(target.stateBefore)) as InterviewStateWire;
+      setState(back);
+      setProgress({ asked: back.asked.length, fields: Object.keys(back.collected).length });
+      setNoDilemma(false);
+      setSummary('');
+      setLandscape(null);
+
+      // ② 丢掉这条及其后所有消息，并回滚「问的是哪个字段」
+      const keep = messages.slice(0, idx);
+      setMessages(keep);
+
+      // askedField 要恢复成「这条消息之前 AI 问的那个方向」
+      // —— 往前找最近的 AI 消息
+      let prevField = '';
+      for (let i = idx - 1; i >= 0; i--) {
+        const f = keep[i].field;
+        if (keep[i].role === 'ai' && f) {
+          prevField = f;
+          break;
+        }
+      }
+      setAskedField(prevField);
+
+      // ③ 用新内容重发
+      await answer(newText, back);
+    },
+    [messages, answer],
   );
 
   /* ---------------- 去检索 ---------------- */
@@ -291,6 +376,8 @@ export function useChatInterview() {
     /** 用户说过的、最能体现他在意什么的那句话 */
     bestQuote: bestQuote.current,
     answer,
+    correctSummary,
+    rewindTo,
     finishNow,
     search,
     reset,

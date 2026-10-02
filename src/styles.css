@@ -1566,3 +1566,67 @@ input:focus, textarea:focus, select:focus {
   margin: 0 0 9px;
 }
 .chat-nodilemma .btn { margin-top: 4px; }
+
+/* ============================================================
+   「改这句」+「哪里不对」
+   ------------------------------------------------------------
+   两条都是实测反馈来的：
+     · 答错了只能重开（聊了 10 轮全废）
+     · 被问「我理解得对吗」时，只有「对」和「全推翻」两个出口
+   ============================================================ */
+
+.chat-edit {
+  display: block;
+  margin-top: 9px;
+  padding: 3px 9px;
+  font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, .45);
+  background: transparent;
+  color: rgba(255, 255, 255, .9);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .14s ease;
+}
+.chat-edit:hover { background: rgba(255, 255, 255, .18); }
+
+.chat-edit-box { margin-top: 10px; }
+.chat-edit-input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, .5);
+  background: rgba(255, 255, 255, .96);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 14px;
+  line-height: 1.7;
+  font-family: inherit;
+  resize: vertical;
+}
+.chat-edit-input:focus { outline: none; border-color: var(--now); }
+.chat-edit-actions {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 8px;
+}
+.chat-edit-actions .tiny { color: rgba(255, 255, 255, .75); }
+
+/* 总结阶段「哪里不对」 */
+.chat-fix {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px dashed var(--line);
+}
+.chat-fix-input {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 13px;
+  line-height: 1.7;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--ink);
+  resize: vertical;
+}
+.chat-fix-input:focus { outline: none; border-color: var(--now); }
+.chat-fix-actions { display: flex; gap: 8px; margin-top: 8px; }

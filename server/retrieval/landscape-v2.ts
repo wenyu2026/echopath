@@ -63,34 +63,47 @@ export const LANDSCAPE_CONFIG = {
 } as const;
 
 /** 走法原型的标题与描述 —— 这是**领域内容**，不该写死在前端 */
+/**
+ * 走法原型 → 给用户看的标题与描述。
+ *
+ * ⚠️ 措辞改过一次。原来用的是「直接转向 / 先低成本试一次，验证后再转向」——
+ *   实测反馈：「这是在跟测试者说话，不是跟一个正在纠结的人说话」。
+ *
+ *   这类词（转向、验证、低成本试探）是**我们内部的分析语言**，
+ *   用户不会这么描述自己的处境。他现在心里想的是
+ *   「要不要干脆辞了」而不是「是否执行 direct_switch」。
+ *
+ *   所以标题全部改成**用户会用来描述自己的说法**，
+ *   并且第二人称 —— 读起来像有人在跟他讲话，不像系统在分类。
+ */
 const ARCHETYPE_COPY: Record<PathArchetypeId, { title: string; one_line: string }> = {
   persist: {
-    title: '守住已经建立的路径',
-    one_line: '继续，不一定因为看不见别的路，也可能因为已经拥有的东西值得保护。',
+    title: '先不动，继续把手上的事做下去',
+    one_line: '不是不敢动，而是掂量过之后觉得现在拥有的东西值得先保住。',
   },
   explore_then_persist: {
-    title: '先低成本试一次，再决定留下',
-    one_line: '用一段真实的体验做排除法 —— 试过之后选择留下，和没试过就留下不是一回事。',
+    title: '出去试一小段，试完决定留不留',
+    one_line: '用一段真实的经历做排除法 —— 试过之后选择留下，和没试过就留下不是一回事。',
   },
   explore_then_switch: {
-    title: '先低成本试一次，验证后再转向',
-    one_line: '不押上全部筹码，先花一小段时间确认新方向真的可行。',
+    title: '先小范围试水，确认行了再走',
+    one_line: '不把全部筹码一次押上，先花一小段时间看看新方向到底怎么样。',
   },
   direct_switch: {
-    title: '直接转向',
-    one_line: '不做过渡，直接换到另一条路上。代价是最集中，决断也最明确。',
+    title: '干脆一点，直接换个方向',
+    one_line: '不做过渡，说走就走。代价来得最集中，但也最不留尾巴。',
   },
   dual_track: {
-    title: '两条轨并行',
-    one_line: '不切断原来的路，同时维持新方向的投入。形式上离开、实质上没离开也算这一种。',
+    title: '两边先都抓着',
+    one_line: '原来的不断，新方向也在推进。哪怕形式上离开了、实际还在做，也算这一类。',
   },
   abandon: {
-    title: '退出这条路径',
-    one_line: '不只是换个方向，而是承认这条路的投入要止损。',
+    title: '这条路不走了，止损',
+    one_line: '不只是换个方向，而是承认之前投进去的要认赔。',
   },
   unknown: {
-    title: '证据不足以判定走法',
-    one_line: '现有材料无法确认他实际选择了哪一类做法。',
+    title: '材料不足，看不出他当时怎么选的',
+    one_line: '现有资料无法确认他实际走了哪条路。',
   },
 };
 
@@ -439,6 +452,30 @@ export function isRelevantToQuote(costText: string, quote: string): boolean {
   return false;
 }
 
+/**
+ * 生成「对你而言的代价」。
+ *
+ * ⚠️ 重做过一次。第一版是**错的**，实测暴露：
+ *
+ *   用户背景：「干了十年技术，现在纠结要不要离开」
+ *   代价栏却写着：
+ *     ·「已投入医学学习」也不会消失
+ *     ·「科学基础需要补齐」也不会消失
+ *
+ *   因为第一版直接从**案例自己的 constraints** 里抄 ——
+ *   那些约束属于鲁迅、达尔文，不属于用户。
+ *   **把别人的约束当成了你的代价。**
+ *
+ * ⚠️ 现在按「双来源」推（产品负责人拍板）：
+ *
+ *   ① **你会失去什么** ← 从**用户自己的约束/在意点**推
+ *      你说了「老婆孩子热炕头」→ 代价是「家人现在的生活节奏会被打乱」
+ *
+ *   ② **那个人实际付出了什么** ← 从**案例的结果链**里挑明确负面的
+ *      他那两年收入减半
+ *
+ *   两者并列，用户才能判断「他的代价对我成不成立」。
+ */
 function buildCosts(
   cases: TaggedEpisode[],
   situation: SituationV2,
@@ -446,59 +483,72 @@ function buildCosts(
 ): PersonalizedCost[] {
   const costs: PersonalizedCost[] = [];
 
-  // ① 首选：从结果链里挑**明确负面**的那一条（先挡掉维护备注）
-  const negatives = cases
-    .map((e) => humanOutcome(e, 'mid_term'))
-    .filter((x): x is string => x !== null && isNegativeOutcome(x));
+  /* ---------- ① 你会失去什么（从用户自己的约束推） ---------- */
 
-  if (userQuote && userQuote.trim().length > 0) {
-    const q = userQuote.trim();
+  /**
+   * 约束 → 「失去什么」的翻译。
+   *
+   * ⚠️ 只认**用户自己说过**的（situation.constraints / goals / 原话）。
+   *   **绝不**碰案例的 constraints —— 那是第一版的错误来源。
+   */
+  const LOSS_RULES: Array<{ match: RegExp; loss: string }> = [
+    { match: /老婆|妻子|丈夫|孩子|家庭|家人|热炕头|父母|两地|分居/, loss: '家人现在的生活节奏会被打乱' },
+    { match: /房贷|月供|贷款|经济|收入|积蓄|钱|养家/, loss: '收入的稳定性会先受冲击' },
+    { match: /十年|多年|已投入|积累|资深|老员工|干了/, loss: '这些年攒下的资历，换到新地方要重新证明' },
+    { match: /稳定|铁饭碗|编制|体制|国企|事业单位/, loss: '「稳定」这件事要从头再挣一遍' },
+    { match: /时间约束|半年|一年内|窗口|期限|来不及/, loss: '留给你试错的时间很有限' },
+    { match: /年龄|岁|中年|四十|35/, loss: '换方向的可选范围比十年前窄' },
+    { match: /熟悉|习惯|舒适|环境|同事/, loss: '熟悉的环境和人际要重新建立' },
+    { match: /社保|公积金|户口|看病|医疗|养老/, loss: '现有的保障衔接可能断档' },
+  ];
 
-    // ⚠️ 挂原话的前提是**语义真的相关**（概念命中，不是字符重叠）。
-    //    不相关就不挂 —— 否则每条路径都挂同一句话，「因为你刚才说」就成套话了。
-    const relevant = negatives.filter((o) => isRelevantToQuote(o, q));
+  const userText = [...situation.constraints, ...situation.goals, userQuote ?? '']
+    .filter(Boolean)
+    .join(' ');
 
-    if (relevant.length > 0) {
-      // 相关的中挑最短的 —— 最短通常最聚焦，也最好读
-      const best = [...relevant].sort((a, b) => a.length - b.length)[0];
+  const seen = new Set<string>();
+  for (const r of LOSS_RULES) {
+    if (costs.length >= 2) break;
+    if (r.match.test(userText) && !seen.has(r.loss)) {
+      seen.add(r.loss);
       costs.push({
-        text: best,
-        basis: { kind: 'user_quote', quote: q, note: '这条代价命中了你在意的那一类问题' },
+        text: r.loss,
+        basis: {
+          kind: 'user_quote',
+          quote: userQuote,
+          note: '从你自己的约束推出 —— 不是从案例抄的',
+        },
       });
     }
-    /**
-     * ⚠️ 试过「放宽兜底」但**否决了**。
-     *
-     *   为了让更多路径挂上原话，我试过：候选里没有明确负面结果时，
-     *   只要与用户原话共享概念就挂上。结果输出变成：
-     *     ★【挂你原话】 仍继续学习，1969 年取得文凭。      ← 这是进展不是代价
-     *     ★【挂你原话】 毕业后进入互联网公司做数据分析。    ← 这是结果不是代价
-     *
-     *   「代价」栏里写进展，比不写更糟 —— 用户会以为系统分不清好坏。
-     *   宁可覆盖少，也不能让这一栏说出不是代价的东西。
-     *
-     *   → 只在「明确负面」的结果上挂原话。覆盖率低就低。
-     */
   }
 
-  // ② 其次：约束会一直存在 —— 这是最稳的「代价」来源
-  for (const e of cases) {
-    const c = e.decision_state.constraints.find((x) => typeof x === 'string' && x.trim().length > 0 && !isMetaNote(x));
-    if (!c) continue;
-    const text = `即使选了这条路，「${c}」也不会消失`;
-    if (costs.some((x) => x.text === text)) continue;
+  /* ---------- ② 那个人实际付出了什么（从案例结果推） ---------- */
+
+  const negatives = cases
+    .map((e) => ({ ep: e, outcome: humanOutcome(e, 'mid_term') }))
+    .filter(
+      (x): x is { ep: TaggedEpisode; outcome: string } =>
+        x.outcome !== null && isNegativeOutcome(x.outcome),
+    );
+
+  if (negatives.length > 0 && costs.length < 3) {
+    // 挑最短的 —— 最短通常最聚焦，也最好读
+    const best = [...negatives].sort((a, b) => a.outcome.length - b.outcome.length)[0];
     costs.push({
-      text,
-      basis: { kind: 'structure', note: `来自案例 ${e.episode_id} 的约束条件` },
+      text: `走过这条路的人，实际付出的是：${best.outcome}`,
+      basis: {
+        kind: 'structure',
+        note: `来自案例 ${best.ep.episode_id} 的结果链（不是约束）`,
+      },
     });
-    if (costs.length >= 3) break;
   }
 
-  // ③ 兜底：真的没有就说不知道，不编
+  /* ---------- ③ 兜底：不编 ---------- */
+
   if (costs.length === 0) {
     costs.push({
       text: '现有材料不足以判断这条路对你的具体代价。',
-      basis: { kind: 'unknown', note: '候选案例的结果链不完整' },
+      basis: { kind: 'unknown', note: '既没从你的约束推出，案例结果链也不完整' },
     });
   }
 
