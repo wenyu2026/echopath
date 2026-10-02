@@ -49,6 +49,24 @@ export const CONFIDENCE_LEVELS = ['high', 'medium', 'low'];
 export const TIME_SCOPES = ['point', 'interval', 'timeless'];
 export const SNAPSHOT_KINDS = ['decision', 'state_change'];
 
+/**
+ * explicit_order 依据词表（v0.1，B 线建议，待 A 并入公共契约）。
+ * 强→弱：logical_precondition（状态先于其终结/接受先于给予等解析性前提）
+ *       > formal_episode_chain（正式库 episode 结构归位：prior_path / outcome 层 / next_episode_ids）
+ *       > cross_source_consistency（多个独立来源互证）
+ *       > source_narrative_order（单一事后来源的叙述顺序 —— 最弱类，必须人工裁决）
+ */
+export const ORDER_BASES = [
+  'logical_precondition',
+  'formal_episode_chain',
+  'cross_source_consistency',
+  'source_narrative_order',
+];
+/** 弱顺序证据类：只要有视图依赖它，就必须在视图上带 temporal_caveats */
+export const WEAK_ORDER_BASES = ['source_narrative_order'];
+
+export const ADJUDICATION_STATUSES = ['pending', 'confirmed', 'rejected'];
+
 /** 分档维度：value 必须是 low/medium/high，且属于建模（kind 不得为 fact） */
 export const TIER_DIMENSIONS = ['path_investment', 'economic_pressure', 'family_responsibility', 'reversibility'];
 

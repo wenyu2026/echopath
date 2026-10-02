@@ -1,0 +1,478 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "retrieval_views",
+  "card_id": "card-murakami-v0.1",
+  "person_id": "murakami",
+  "views": [
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-murakami-snap-hm-1978",
+      "person_id": "murakami",
+      "episode_id": "murakami_1978_bar_and_writing",
+      "snapshot_id": "snap-hm-1978",
+      "scenario": "大厂还是小公司/创业",
+      "decision_time": {
+        "start_year": 1978,
+        "end_year": 1978
+      },
+      "prior_fact_ids": [
+        "f-hm-000",
+        "f-hm-001"
+      ],
+      "prior_text": "人物为「村上春树」，本人自述节选与图书馆简介页以其小说家经历为记载主体。\n与妻子经营爵士酒吧。",
+      "dimensions": {
+        "life_stage": {
+          "value": "other",
+          "raw_text": "与妻子经营爵士酒吧（个体经营者；现有词表无对应档位）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1981
+          },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": [
+            "business"
+          ],
+          "raw_text": "与妻子经营爵士酒吧。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-001"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1978
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "在营小店，持续经营中；经营起始年份无出处，不标 high（多年度无法证明）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-001"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1978
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：medium=已有持续尝试但仍有退出空间（店铺可售）。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "小店经营收入无逐条出处；「保持现金来源」是决策目标层的建模，不是当时压力水平的证据，不默认 medium/low。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无供养/照护责任记载；配偶协作经营是合作关系，不是家庭责任证据，未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "skills"
+          ],
+          "raw_text": "店铺经营经验与营业后可支配时间（「店务占用时间」反证）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-001"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1978
+          },
+          "unknown_reason": null,
+          "anchor_note": "店铺资产、现金储备与伴侣协作在词表（funding/family_support 等）中无贴切档位且无独立出处，不硬塞；见 unknowns。"
+        },
+        "goal_structure": {
+          "value": [
+            "income",
+            "interest"
+          ],
+          "raw_text": "保持现金来源；试做新的创作（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1978
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode murakami_1978_bar_and_writing decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "1978 年前无小说写作记载；文学能力「尚待验证」为建模 constraint。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1978
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）：业余写作可随时停，不先动经营。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1978
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode murakami_1978_bar_and_writing decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据。"
+        }
+      },
+      "root_factors": [
+        "经济压力",
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口"
+      ],
+      "mechanism_note": "archetype=dual_track（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "小店经营与创作副业可类比双轨试验，既有店铺及伴侣协作不同于普通职员条件。",
+        "refs": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "basis": "review.json analogy_boundary（murakami_1978_bar_and_writing）。"
+      },
+      "evidence_refs": [
+        "f-hm-000",
+        "f-hm-001"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-hm-001"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-hm-001",
+          "basis": "logical_precondition",
+          "basis_detail": "在营状态先于关于该经营的去向选择；起始年份缺失不影响「决策时在经营中」这一前提。",
+          "justification": "「与妻子经营爵士酒吧」的状态先于 1978 决策：决策选项「维持经营 vs 营业外写作」本身以经营进行中为前提。经营起始年份无出处，状态与决策同年（1978 在经营中）。属解析性排序，仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-murakami-snap-hm-1981",
+      "person_id": "murakami",
+      "episode_id": "murakami_1981_fulltime_writing",
+      "snapshot_id": "snap-hm-1981",
+      "scenario": "大厂还是小公司/创业",
+      "decision_time": {
+        "start_year": 1981,
+        "end_year": 1981
+      },
+      "prior_fact_ids": [
+        "f-hm-000",
+        "f-hm-002",
+        "f-hm-003",
+        "f-hm-004",
+        "f-hm-007"
+      ],
+      "prior_text": "人物为「村上春树」，本人自述节选与图书馆简介页以其小说家经历为记载主体。\n1978 年在继续经营酒吧期间开始写小说。\n利用营业结束后的时间完成第一部小说。\n1979 年首作获新人奖。\n决定卖店时已在经营酒吧期间完成两部小说。",
+      "dimensions": {
+        "life_stage": {
+          "value": "other",
+          "raw_text": "经营者兼写作者（决策时仍在营）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1981
+          },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": [
+            "business",
+            "trial"
+          ],
+          "raw_text": "经营酒吧期间已完成两部小说（1981 episode prior_path）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-002",
+            "f-hm-003",
+            "f-hm-004",
+            "f-hm-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1981
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "三年双轨：在营小店 + 两部小说与新人奖；经营起始年无出处，不标 high。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-004",
+            "f-hm-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1981
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：medium=已有持续尝试（写作）但仍有退出空间（卖店即退出经营）。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1981 年经济压力无出处；「专职收入不确定」是对卖店后情形的建模顾虑，不是当时压力水平的证据。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无供养/照护责任记载；伴侣协作（类比边界所记）不是责任证据。"
+        },
+        "resource_access": {
+          "value": [
+            "skills"
+          ],
+          "raw_text": "两部小说与新人奖的写作记录（f-hm-004、f-hm-007）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-004",
+            "f-hm-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1981
+          },
+          "unknown_reason": null,
+          "anchor_note": "店铺资产变现价值、伴侣协作承诺均无独立出处，不映射到 funding/family_support。"
+        },
+        "goal_structure": {
+          "value": [
+            "interest",
+            "growth"
+          ],
+          "raw_text": "提高写作投入；尝试更长作品（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1981,
+            "end_year": 1981
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode murakami_1981_fulltime_writing decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "sustained",
+          "raw_text": "1978—1981 持续写作，完成两部小说并获新人奖。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-hm-003",
+            "f-hm-004",
+            "f-hm-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1978,
+            "end_year": 1981
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：sustained=持续体验过（三年双轨+公开反馈）。"
+        },
+        "reversibility": {
+          "value": "low",
+          "raw_text": "decision_state.reversibility=low（建模）：卖店断退路。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1981,
+            "end_year": 1981
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode murakami_1981_fulltime_writing decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据（卖店时点细节无逐月出处）。"
+        }
+      },
+      "root_factors": [
+        "机会成本",
+        "长期方向匹配",
+        "经济压力",
+        "身份绑定"
+      ],
+      "mechanism_note": "archetype=direct_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "此前已有作品与反馈，而且有伴侣协作；不能把退出工作当作写作成功的充分条件。",
+        "refs": [
+          "HM-SELF",
+          "HM-1981"
+        ],
+        "basis": "review.json analogy_boundary（murakami_1981_fulltime_writing）。"
+      },
+      "evidence_refs": [
+        "f-hm-000",
+        "f-hm-002",
+        "f-hm-003",
+        "f-hm-004",
+        "f-hm-007"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 4
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "known",
+          "evidence_refs": 3
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-hm-007"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-hm-007",
+          "basis": "formal_episode_chain",
+          "basis_detail": "1981 episode 的 prior_path 归位 + 1978→1981 episode 链；同源于 2015 年自述节选，故列为待审弱证据。",
+          "justification": "「经营酒吧期间已完成两部小说」与 1981 卖店决策同年收束。排序主要依据正式库结构：murakami_1981_fulltime_writing 的 prior_path.0 将其记为决策前状态，且 1978 episode 的 next_episode_ids 指向 1981 episode。自述叙述顺序仅作辅助。属顺序依赖事实，须人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    }
+  ]
+}

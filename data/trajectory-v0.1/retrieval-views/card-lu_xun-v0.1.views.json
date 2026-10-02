@@ -222,6 +222,19 @@
           "evidence_refs": 0
         }
       },
+      "order_dependent_fact_ids": [
+        "f-lx-001"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-lx-001",
+          "basis": "logical_precondition",
+          "basis_detail": "毕业状态先于毕业后的去向选择，属状态先于其后续行动的解析性前提；不依赖任何回忆文本的叙述顺序。",
+          "justification": "完成学堂学业是「毕业后留学/就业」决策的前提；正式 episode 将该节点阶段记为「毕业后留学」，且赴日行为以学业完成为前提。同一年的先后由该前提关系支持（解析性排序，非叙述顺序），仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
       "review_status": "pending",
       "synthetic": false
     },
@@ -450,6 +463,19 @@
           "evidence_refs": 0
         }
       },
+      "order_dependent_fact_ids": [
+        "f-lx-004"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-lx-004",
+          "basis": "logical_precondition",
+          "basis_detail": "在学（状态）先于离校（该状态的终结）；不涉及两个独立事件之间的叙述顺序。",
+          "justification": "「在仙台学习 1904—1906」与 1906 退学决策同年；在学状态先于其自身的终结（离校，f-lx-005）——「第二学年离校」的记载以在学为先。属状态先于终结的解析性排序，不依赖回忆叙述顺序，仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
       "review_status": "pending",
       "synthetic": false
     },
@@ -544,7 +570,7 @@
           "value": [
             "network"
           ],
-          "raw_text": "受同人为《新青年》写稿的劝说（f-lx-009）。",
+          "raw_text": "筹办《新生》时的同人合作网络（f-lx-008）；为《新青年》写稿的劝说来自同人（f-lx-009，与决策同年，不作为决策前视图证据）。",
           "kind": "inference",
           "evidence_refs": [
             "f-lx-008"
@@ -555,7 +581,7 @@
             "end_year": 1918
           },
           "unknown_reason": null,
-          "anchor_note": "network 对应机制标注中的「社会支持」；funding/credentials 在 1918 年的状态无出处，不列入。"
+          "anchor_note": "network 对应机制标注中的「社会支持」。视图导出时 f-lx-009 因与决策同年且无顺序依据被时间门槛排除，network 的存活证据为 f-lx-008（顺序依赖事实，见视图 temporal_caveats）；funding/credentials 在 1918 年的状态无出处，不列入。"
         },
         "goal_structure": {
           "value": [
@@ -677,6 +703,19 @@
           "evidence_refs": 0
         }
       },
+      "order_dependent_fact_ids": [
+        "f-lx-008"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-lx-008",
+          "basis": "formal_episode_chain",
+          "basis_detail": "排序取自正式库 episode 间结构（outcome 层 + prior_path + next_episode_ids），叙述顺序降为辅助；两处归位最终同源于 1922 自述，故仍列为最弱类待审。",
+          "justification": "筹办《新生》未成早于 1918 年投稿决策。主要依据是正式库的 episode 结构归位：该事实记为 lu_xun_1906 的 outcomes.mid_term（1906 决策后的结果层，故 start_year=1906），又被 lu_xun_1918 的 prior_path.0 记为「此前筹办《新生》未能出版」，且正式库 next_episode_ids 明确 1906→1918 的链条。《呐喊》自序（1922）的叙述顺序仅作辅助印证，不再作为独立依据。此为单一自述来源的间接排序，属本卡最弱时间证据，必须人工严格复核（QA 意见 2026-10-02：不得以回忆叙述顺序单独定性客观事件顺序）。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
       "review_status": "pending",
       "synthetic": false
     }

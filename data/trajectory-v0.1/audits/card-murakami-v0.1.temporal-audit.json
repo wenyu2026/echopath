@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-murakami-v0.1",
+  "person_id": "murakami",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-hm-1978": {
+      "view_id": "view-0.1-murakami-snap-hm-1978",
+      "episode_id": "murakami_1978_bar_and_writing",
+      "decision_time": {
+        "start_year": 1978,
+        "end_year": 1978
+      },
+      "eligible": [
+        "f-hm-000",
+        "f-hm-001"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-hm-001"
+      ],
+      "eligible_count": 2
+    },
+    "snap-hm-1981": {
+      "view_id": "view-0.1-murakami-snap-hm-1981",
+      "episode_id": "murakami_1981_fulltime_writing",
+      "decision_time": {
+        "start_year": 1981,
+        "end_year": 1981
+      },
+      "eligible": [
+        "f-hm-000",
+        "f-hm-002",
+        "f-hm-003",
+        "f-hm-004",
+        "f-hm-007"
+      ],
+      "excluded": [
+        {
+          "fact_id": "f-hm-001",
+          "reason": "unknown_interval_without_explicit_order(occurred {\"start_year\":null,\"end_year\":1981} 无法证明早于决策)"
+        }
+      ],
+      "order_dependent": [
+        "f-hm-007"
+      ],
+      "eligible_count": 5
+    }
+  }
+}

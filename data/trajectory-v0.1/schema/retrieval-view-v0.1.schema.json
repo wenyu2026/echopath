@@ -62,6 +62,29 @@
         }
       }
     },
+    "order_dependent_fact_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "靠 explicit_order 才通过时间门槛的 prior 事实——与自然合格事实不同，这些事实的先后证据较弱，匹配方可据此降权。"
+    },
+    "temporal_caveats": {
+      "type": "array",
+      "description": "逐条列出顺序依赖事实的依据类别（basis）与人工裁决状态；source_narrative_order 为最弱类。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fact_id": { "type": "string" },
+          "basis": { "enum": ["logical_precondition", "formal_episode_chain", "cross_source_consistency", "source_narrative_order", null] },
+          "basis_detail": { "type": ["string", "null"] },
+          "justification": { "type": ["string", "null"] },
+          "human_adjudication": { "enum": ["pending", "confirmed", "rejected"] }
+        }
+      }
+    },
+    "has_pending_order_review": {
+      "type": "boolean",
+      "description": "true 表示存在未经真人裁决的顺序证据；该视图不得用于正式排名，仅供隔离试验。"
+    },
     "review_status": {
       "enum": ["pending", "approved"],
       "description": "approved 需真人、时间与审核范围；机器校验通过不自动改 approved。未审核视图仅供隔离试验。"

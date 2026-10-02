@@ -15,6 +15,7 @@ import {
   RESOURCE_ACCESS_LABELS, GOAL_STRUCTURE_LABELS, NEW_PATH_VALIDATION_VALUES,
   ROOT_FACTORS, PATH_ARCHETYPE_IDS, CHOICE_TYPES, PERSON_KINDS, CONFIDENCE_LEVELS,
   TIME_SCOPES, SNAPSHOT_KINDS, TIER_DIMENSIONS, TARGETS,
+  ORDER_BASES, WEAK_ORDER_BASES, ADJUDICATION_STATUSES,
 } from './contract.mjs';
 
 function err(msg) { return { level: 'error', message: msg }; }
@@ -192,11 +193,29 @@ export function validateCard(card, ctx) {
     for (const n of s.prior_order_notes ?? []) {
       if (!factById.has(n.fact_id)) p.push(err(`${where}: prior_order_notes 悬空引用 ${n.fact_id}`));
       else if (!(s.prior_fact_ids ?? []).includes(n.fact_id)) p.push(err(`${where}: explicit_order 的 ${n.fact_id} 不在 prior_fact_ids`));
-      if (!n.explicit_order?.justification || !Array.isArray(n.explicit_order?.refs) || n.explicit_order.refs.length === 0) {
+      const eo = n.explicit_order;
+      if (!eo?.justification || !Array.isArray(eo?.refs) || eo.refs.length === 0) {
         p.push(err(`${where}: ${n.fact_id} 的 explicit_order 必须带 justification 与至少一个引用`));
       } else {
-        for (const r of n.explicit_order.refs) {
+        for (const r of eo.refs) {
           if (!ctx.registry.sources?.[r]) p.push(err(`${where}: explicit_order 引用未登记来源 ${r}`));
+        }
+        if (!ORDER_BASES.includes(eo.basis)) {
+          p.push(err(`${where}: ${n.fact_id} 的 explicit_order.basis ${JSON.stringify(eo.basis)} 不在受控词表 ${ORDER_BASES.join('/')}`));
+        }
+        if (WEAK_ORDER_BASES.includes(eo.basis) && eo.basis_detail === undefined) {
+          p.push(warn(`${where}: ${n.fact_id} 使用最弱顺序依据 source_narrative_order，建议补 basis_detail 说明边界`));
+        }
+        const adj = eo.human_adjudication;
+        if (!adj || !ADJUDICATION_STATUSES.includes(adj.status)) {
+          p.push(err(`${where}: ${n.fact_id} 的 explicit_order 必须带 human_adjudication（status: pending/confirmed/rejected）——顺序证据必须提交真人复核`));
+        } else {
+          if (adj.status === 'confirmed' && (!adj.by || !adj.on)) {
+            p.push(err(`${where}: ${n.fact_id} 的顺序裁决为 confirmed 时必须留真人签字（by/on）`));
+          }
+          if (adj.status === 'rejected') {
+            p.push(err(`${where}: ${n.fact_id} 的顺序依据已被真人驳回，必须将其移出 prior_fact_ids（可保留在卡时间线中）`));
+          }
         }
       }
     }

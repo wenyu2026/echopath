@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-darwin-v0.1",
+  "person_id": "darwin",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-cd-1825": {
+      "view_id": "view-0.1-darwin-snap-cd-1825",
+      "episode_id": "darwin_1825_medicine_trial",
+      "decision_time": {
+        "start_year": 1825,
+        "end_year": 1825
+      },
+      "eligible": [
+        "f-cd-000"
+      ],
+      "excluded": [],
+      "order_dependent": [],
+      "eligible_count": 1
+    },
+    "snap-cd-1828": {
+      "view_id": "view-0.1-darwin-snap-cd-1828",
+      "episode_id": "darwin_1828_cambridge",
+      "decision_time": {
+        "start_year": 1828,
+        "end_year": 1828
+      },
+      "eligible": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003"
+      ],
+      "excluded": [],
+      "order_dependent": [],
+      "eligible_count": 4
+    },
+    "snap-cd-1831": {
+      "view_id": "view-0.1-darwin-snap-cd-1831",
+      "episode_id": "darwin_1831_beagle",
+      "decision_time": {
+        "start_year": 1831,
+        "end_year": 1831
+      },
+      "eligible": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003",
+        "f-cd-004",
+        "f-cd-005",
+        "f-cd-006",
+        "f-cd-007"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-cd-006",
+        "f-cd-007"
+      ],
+      "eligible_count": 8
+    }
+  }
+}

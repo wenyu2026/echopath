@@ -85,3 +85,12 @@
 2. `new_path_validation: "none"` 与「有值必须有证据」规则冲突：本实现把 none 视为缺失性判断，允许无引用但要求 raw_text 说明依据。
 3. 正式库建模字段（decision_state.goals/reversibility 等）无原子事实可引：本实现加 `modeling_basis` 字段承接（值来自 review.json inference_fields 的建模层），避免「为凑证据而伪造引用」。
 4. 视图新增 `mechanism_note` 与 `synthetic` 字段（说明性/隔离标记），可由 A 裁定去留。
+
+### 5b. QA 加固引入的契约扩展（2026-10-02，待 A 并入公共契约）
+
+QA 质询「自序叙述顺序定性客观事件顺序」后，B 对 explicit_order 做了机制化加固，建议 A 采纳为 v0.2 契约内容：
+
+5. `explicit_order.basis` 受控词表：`logical_precondition`（解析性前提：状态先于终结、收到先于接受）> `formal_episode_chain`（正式库 episode 结构归位）> `cross_source_consistency`（多源互证）> `source_narrative_order`（单一事后来源叙述顺序，最弱类）。
+6. `explicit_order.human_adjudication {status: pending|confirmed|rejected, by, on}`：所有顺序证据必须经真人裁决；confirmed 需签字，rejected 的事实必须移出 prior 且导出器强制排除。
+7. 视图新增 `order_dependent_fact_ids` / `temporal_caveats` / `has_pending_order_review`：顺序依赖事实在视图上与自然合格事实显式区分，携带依据类别与裁决状态；`has_pending_order_review=true` 的视图仅供隔离试验。
+8. manifest 新增卡片级 `order_dependent_facts` 计数与 `views_with_pending_order_review` 计数。

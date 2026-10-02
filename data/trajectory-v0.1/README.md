@@ -43,5 +43,8 @@ node --test scripts/trajectory-v0.1/test/trajectory.test.mjs
 
 ## 当前状态
 
-- 首张样卡：`cards/lu-xun.card.json`（鲁迅，15 事实 / 4 快照 / 3 事件，覆盖三场景各一个可参考节点）。机器校验通过；**人工审核 pending**。
-- 每场景第二候选 pending（扩卡阶段处理）。缺口见 manifest.json 与卡片 `partial.gaps`。
+- **六张卡全部交付**：鲁迅（15 事实/4 快照/3 事件，三场景全覆盖）+ 李安、村上春树、达尔文、考里科、乔布斯（均如实标 partial 并列资料缺口）。合计 19 个决策前检索视图。
+- 三场景各 ≥2 个可参考候选（manifest.json scenario_coverage：转专业 4、考研就业 4、大厂小厂 6），second_candidate_pending 全部 false。
+- 走法覆盖：persist（李安 1984、考里科 1995）、dual_track（村上 1978、乔布斯 1972/1985）、abandon（乔布斯 1972）、direct_switch、explore_then_switch；explore_then_persist 在机制层（鲁迅 1902）。
+- **QA 加固（2026-10-02）**：explicit_order 全部改用受控依据词表（logical_precondition > formal_episode_chain > cross_source_consistency > source_narrative_order）并带 human_adjudication；顺序依赖事实在视图中单列 temporal_caveats，has_pending_order_review=true 的视图不得进正式排名。全部 11 条顺序依赖事实待真人裁决（review/weak-order-evidence.md）。
+- 机器校验全部通过；**人工审核全部 pending**（AI 不代签）。

@@ -112,12 +112,12 @@
     {
       "fact_id": "f-lx-008",
       "text": "据后来自述，筹办《新生》，因人手和资金退出而未能出版。",
-      "occurred": { "start_year": null, "end_year": null },
+      "occurred": { "start_year": 1906, "end_year": null },
       "time_scope": "interval",
       "kind": "fact",
       "confidence": "medium",
       "source_refs": [{ "source_id": "LX-PREFACE", "locator": "自序：医学、筹办新生、金心异劝写文章" }],
-      "notes": "事件本身（筹刊未成）是客观主张，但只来自 1922 年的事后自述，发生年份无出处；进入 1918 决策前视图依赖自序叙述顺序的 explicit_order。confidence=medium 反映单一自述来源。"
+      "notes": "事件本身（筹刊未成）是客观主张，但只来自 1922 年的事后自述。start_year=1906 由正式库结构归位：该事件被记为 lu_xun_1906 episode 的 outcomes.mid_term（决策后结果层），故不早于 1906 决策；结束年无出处。进入 1918 决策前视图依赖 explicit_order（formal_episode_chain），属顺序依赖事实，须人工裁决。confidence=medium 反映单一自述来源。"
     },
     {
       "fact_id": "f-lx-009",
@@ -194,9 +194,11 @@
         {
           "fact_id": "f-lx-001",
           "explicit_order": {
-            "justification": "完成学堂学业是「毕业后留学/就业」决策的前提；正式 episode 将该节点阶段记为「毕业后留学」，且赴日行为以学业完成为前提。同一年的先后由该前提关系支持，提交人工复核。",
+            "justification": "完成学堂学业是「毕业后留学/就业」决策的前提；正式 episode 将该节点阶段记为「毕业后留学」，且赴日行为以学业完成为前提。同一年的先后由该前提关系支持（解析性排序，非叙述顺序），仍提交人工复核。",
             "refs": ["LX-TOHOKU"],
-            "basis": "logical_precondition+episode_stage"
+            "basis": "logical_precondition",
+            "basis_detail": "毕业状态先于毕业后的去向选择，属状态先于其后续行动的解析性前提；不依赖任何回忆文本的叙述顺序。",
+            "human_adjudication": { "status": "pending", "by": null, "on": null, "note": null }
           }
         }
       ],
@@ -433,9 +435,11 @@
         {
           "fact_id": "f-lx-004",
           "explicit_order": {
-            "justification": "「在仙台学习 1904—1906」与 1906 退学决策同年；在学是离校（f-lx-005）的前提条件，来源记载「第二学年离校」即以在学为先。提交人工复核。",
+            "justification": "「在仙台学习 1904—1906」与 1906 退学决策同年；在学状态先于其自身的终结（离校，f-lx-005）——「第二学年离校」的记载以在学为先。属状态先于终结的解析性排序，不依赖回忆叙述顺序，仍提交人工复核。",
             "refs": ["LX-TOHOKU", "LX-SENDAI"],
-            "basis": "logical_precondition"
+            "basis": "logical_precondition",
+            "basis_detail": "在学（状态）先于离校（该状态的终结）；不涉及两个独立事件之间的叙述顺序。",
+            "human_adjudication": { "status": "pending", "by": null, "on": null, "note": null }
           }
         }
       ],
@@ -559,9 +563,11 @@
         {
           "fact_id": "f-lx-008",
           "explicit_order": {
-            "justification": "《呐喊》自序（1922）的叙述顺序：筹办《新生》失败在先，金心异劝写文章、写作《狂人日记》在后。筹刊失败因此先于 1918 年投稿决策；该事实发生年份无出处，此顺序来源唯一，提交人工复核。",
+            "justification": "筹办《新生》未成早于 1918 年投稿决策。主要依据是正式库的 episode 结构归位：该事实记为 lu_xun_1906 的 outcomes.mid_term（1906 决策后的结果层，故 start_year=1906），又被 lu_xun_1918 的 prior_path.0 记为「此前筹办《新生》未能出版」，且正式库 next_episode_ids 明确 1906→1918 的链条。《呐喊》自序（1922）的叙述顺序仅作辅助印证，不再作为独立依据。此为单一自述来源的间接排序，属本卡最弱时间证据，必须人工严格复核（QA 意见 2026-10-02：不得以回忆叙述顺序单独定性客观事件顺序）。",
             "refs": ["LX-PREFACE"],
-            "basis": "source_narrative_order"
+            "basis": "formal_episode_chain",
+            "basis_detail": "排序取自正式库 episode 间结构（outcome 层 + prior_path + next_episode_ids），叙述顺序降为辅助；两处归位最终同源于 1922 自述，故仍列为最弱类待审。",
+            "human_adjudication": { "status": "pending", "by": null, "on": null, "note": "QA 质询项：若驳回，snap-lx-1918 的 prior_path/path_investment/new_path_validation/resource_access 相应降级或转 null。" }
           }
         }
       ],
@@ -614,13 +620,13 @@
         },
         "resource_access": {
           "value": ["network"],
-          "raw_text": "受同人为《新青年》写稿的劝说（f-lx-009）。",
+          "raw_text": "筹办《新生》时的同人合作网络（f-lx-008）；为《新青年》写稿的劝说来自同人（f-lx-009，与决策同年，不作为决策前视图证据）。",
           "kind": "inference",
           "evidence_refs": ["f-lx-008", "f-lx-009"],
           "confidence": "medium",
           "valid_time": { "start_year": 1906, "end_year": 1918 },
           "unknown_reason": null,
-          "anchor_note": "network 对应机制标注中的「社会支持」；funding/credentials 在 1918 年的状态无出处，不列入。"
+          "anchor_note": "network 对应机制标注中的「社会支持」。视图导出时 f-lx-009 因与决策同年且无顺序依据被时间门槛排除，network 的存活证据为 f-lx-008（顺序依赖事实，见视图 temporal_caveats）；funding/credentials 在 1918 年的状态无出处，不列入。"
         },
         "goal_structure": {
           "value": ["impact", "growth"],
@@ -688,7 +694,7 @@
         "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1902。",
         "action_fact_ids": ["f-lx-002"]
       },
-      "outcome_fact_ids": ["f-lx-003", "f-lx-005", "f-lx-010"],
+      "outcome_fact_ids": ["f-lx-003", "f-lx-004", "f-lx-005", "f-lx-010"],
       "reflection": {
         "retrospective_fact_ids": [],
         "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写。",
@@ -708,7 +714,7 @@
         "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1906。",
         "action_fact_ids": ["f-lx-005", "f-lx-006"]
       },
-      "outcome_fact_ids": ["f-lx-008", "f-lx-012", "f-lx-014"],
+      "outcome_fact_ids": ["f-lx-008", "f-lx-012"],
       "reflection": {
         "retrospective_fact_ids": ["f-lx-007"],
         "self_comment_note": "在《呐喊》自序中，他把转向文艺解释为希望改变人的精神；这是后来的自我解释，不作为当时已知。",
@@ -728,7 +734,7 @@
         "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-lx-1918。",
         "action_fact_ids": ["f-lx-009", "f-lx-010"]
       },
-      "outcome_fact_ids": ["f-lx-011", "f-lx-012", "f-lx-013", "f-lx-014"],
+      "outcome_fact_ids": ["f-lx-011", "f-lx-013", "f-lx-014"],
       "reflection": {
         "retrospective_fact_ids": [],
         "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写。",
@@ -780,7 +786,7 @@
     "1906—1918 年间的职业、收入与家庭状态为资料缺口，1918 快照相应维度保持 null。",
     "退学具体日期、即时收入与家庭反应未核实（正式库 unknowns 原文保留）。",
     "LX-MUSEUM 深链 404（官网改版），仅余站点首页定位；十四篇小说的具体展览条目需到馆内检索。",
-    "f-lx-008（筹办《新生》）发生年份无出处，仅凭自序叙述顺序进入 1918 决策前视图，已列人工复核项。"
+    "f-lx-008（筹办《新生》）结束年份无出处（start_year=1906 由正式库 outcome 层归位）；其进入 1918 决策前视图依赖 formal_episode_chain 顺序依据，最终同源于 1922 年自述，为本卡最弱时间证据，已列人工严格复核项（QA 2026-10-02）。"
   ],
   "partial": {
     "status": false,

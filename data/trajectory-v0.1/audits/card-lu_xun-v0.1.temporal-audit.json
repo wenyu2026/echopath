@@ -18,6 +18,9 @@
         "f-lx-001"
       ],
       "excluded": [],
+      "order_dependent": [
+        "f-lx-001"
+      ],
       "eligible_count": 2
     },
     "snap-lx-1906": {
@@ -35,6 +38,9 @@
         "f-lx-004"
       ],
       "excluded": [],
+      "order_dependent": [
+        "f-lx-004"
+      ],
       "eligible_count": 5
     },
     "snap-lx-1918": {
@@ -55,6 +61,9 @@
         "f-lx-008"
       ],
       "excluded": [],
+      "order_dependent": [
+        "f-lx-008"
+      ],
       "eligible_count": 8
     }
   }

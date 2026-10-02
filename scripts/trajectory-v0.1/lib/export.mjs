@@ -60,7 +60,12 @@ export function exportViews(card) {
 
   for (const snap of card.snapshots ?? []) {
     if (snap.snapshot_kind !== 'decision') continue;
-    const ordered = new Set((snap.prior_order_notes ?? []).map((n) => n.fact_id));
+    const orderNotes = new Map((snap.prior_order_notes ?? []).map((n) => [n.fact_id, n]));
+    const ordered = new Set();
+    for (const [fid, n] of orderNotes) {
+      // 被真人驳回的顺序依据 → 该事实不进入决策前视图（保留在卡时间线）
+      if (n.explicit_order?.human_adjudication?.status !== 'rejected') ordered.add(fid);
+    }
     const eligibleIds = [];
     const excluded = [];
     for (const fid of snap.prior_fact_ids ?? []) {
@@ -113,6 +118,21 @@ export function exportViews(card) {
     }
 
     const mech = mechByEvent.get(snap.event_id);
+
+    // 顺序依赖事实：视图必须显式暴露「靠 explicit_order 才进门」的事实及其依据强弱，
+    // 不允许在视图里与自然合格的事实混成一体。
+    const orderDependent = eligibleIds.filter((fid) => orderNotes.has(fid));
+    const temporalCaveats = orderDependent.map((fid) => {
+      const eo = orderNotes.get(fid).explicit_order ?? {};
+      return {
+        fact_id: fid,
+        basis: eo.basis ?? null,
+        basis_detail: eo.basis_detail ?? null,
+        justification: eo.justification ?? null,
+        human_adjudication: eo.human_adjudication?.status ?? 'pending',
+      };
+    });
+
     views.push({
       schema_version: SCHEMA_VERSION,
       artifact_type: 'retrieval_view',
@@ -130,6 +150,9 @@ export function exportViews(card) {
       institutional_context: snap.institutional_context,
       evidence_refs: evidenceRefs,
       coverage,
+      order_dependent_fact_ids: orderDependent,
+      temporal_caveats: temporalCaveats,
+      has_pending_order_review: temporalCaveats.some((c) => c.human_adjudication === 'pending'),
       review_status: reviewStatus,
       synthetic: card.synthetic === true,
     });
@@ -140,6 +163,7 @@ export function exportViews(card) {
       decision_time: snap.decision_time,
       eligible: eligibleIds,
       excluded,
+      order_dependent: orderDependent,
       eligible_count: eligibleIds.length,
     };
   }

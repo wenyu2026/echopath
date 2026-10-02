@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-ang_lee-v0.1",
+  "person_id": "ang_lee",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-al-1984": {
+      "view_id": "view-0.1-ang_lee-snap-al-1984",
+      "episode_id": "ang_lee_1984_six_years_persist",
+      "decision_time": {
+        "start_year": 1984,
+        "end_year": 1984
+      },
+      "eligible": [
+        "f-al-000",
+        "f-al-001"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-al-001"
+      ],
+      "eligible_count": 2
+    },
+    "snap-al-1990": {
+      "view_id": "view-0.1-ang_lee-snap-al-1990",
+      "episode_id": "ang_lee_1990_script_competition",
+      "decision_time": {
+        "start_year": 1990,
+        "end_year": 1990
+      },
+      "eligible": [
+        "f-al-000",
+        "f-al-001",
+        "f-al-003"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-al-003"
+      ],
+      "eligible_count": 3
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-kariko-v0.1",
+  "person_id": "kariko",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-kk-1995": {
+      "view_id": "view-0.1-kariko-snap-kk-1995",
+      "episode_id": "kariko_1995_persist_cost",
+      "decision_time": {
+        "start_year": 1995,
+        "end_year": 1995
+      },
+      "eligible": [
+        "f-kk-000",
+        "f-kk-001"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-kk-001"
+      ],
+      "eligible_count": 2
+    },
+    "snap-kk-2013": {
+      "view_id": "view-0.1-kariko-snap-kk-2013",
+      "episode_id": "kariko_2013_biontech",
+      "decision_time": {
+        "start_year": 2013,
+        "end_year": 2013
+      },
+      "eligible": [
+        "f-kk-000",
+        "f-kk-001",
+        "f-kk-002",
+        "f-kk-003",
+        "f-kk-004",
+        "f-kk-005",
+        "f-kk-006"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-kk-006"
+      ],
+      "eligible_count": 7
+    }
+  }
+}

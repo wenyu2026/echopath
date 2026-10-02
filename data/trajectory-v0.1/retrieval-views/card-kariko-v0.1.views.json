@@ -1,0 +1,489 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "retrieval_views",
+  "card_id": "card-kariko-v0.1",
+  "person_id": "kariko",
+  "views": [
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-kariko-snap-kk-1995",
+      "person_id": "kariko",
+      "episode_id": "kariko_1995_persist_cost",
+      "snapshot_id": "snap-kk-1995",
+      "scenario": "考研还是就业",
+      "decision_time": {
+        "start_year": 1995,
+        "end_year": 1995
+      },
+      "prior_fact_ids": [
+        "f-kk-000",
+        "f-kk-001"
+      ],
+      "prior_text": "人物为「卡塔琳·考里科」，Rockefeller 大学获奖者页与 BioNTech 声明页为其记载主体。\n在宾夕法尼亚大学从事 mRNA 研究（至 1995 年决策时在职）。",
+      "dimensions": {
+        "life_stage": {
+          "value": "established",
+          "raw_text": "科研职位受挫（正式 episode 阶段建模）；已有专业积累（decision_state constraint）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1995
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_1995_persist_cost time.stage + decision_state.constraints（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "research"
+          ],
+          "raw_text": "在宾夕法尼亚大学从事 mRNA 研究。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1995
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "已有专业积累（constraint 建模）+ 在职 mRNA 研究的长期事业绑定。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1995
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=长期事业绑定。研究起始年无出处，分档主要依据「已有专业积累」的建模 constraint，故 confidence=low。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "薪资/债务无出处；「晋升与经费受限」是建模 constraint，不是收入压力水平的证据。降职（收入变化）发生在决策后，不回填决策前压力。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "credentials",
+            "skills",
+            "institution"
+          ],
+          "raw_text": "大学职位与在研机构；mRNA 研究技能与积累。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1995
+          },
+          "unknown_reason": null
+        },
+        "goal_structure": {
+          "value": [
+            "interest",
+            "stability"
+          ],
+          "raw_text": "继续验证研究；维持科研岗位（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1995,
+            "end_year": 1995
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_1995_persist_cost decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "tried",
+          "raw_text": "mRNA 研究持续进行中（直接体验过），成果尚未获制度性认可。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1995
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：tried=直接体验过。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）：离开研究岗位后重返的难度中等。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1995,
+            "end_year": 1995
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_1995_persist_cost decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "降职安排的期限细节无出处。"
+        }
+      },
+      "root_factors": [
+        "沉没成本",
+        "长期方向匹配",
+        "制度约束",
+        "身份绑定"
+      ],
+      "mechanism_note": "archetype=persist（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "科研职位制度、团队与经费环境不同于考研选择；长期受损限定于职位轨迹，不推断整体人生得失。",
+        "refs": [
+          "KK-ROCK"
+        ],
+        "basis": "review.json analogy_boundary（kariko_1995_persist_cost）。"
+      },
+      "evidence_refs": [
+        "f-kk-000",
+        "f-kk-001"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-kk-001"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-kk-001",
+          "basis": "logical_precondition",
+          "basis_detail": "在职状态先于关于该职位去向的选择；降职行为（f-kk-002）以在职为前提。",
+          "justification": "「在宾夕法尼亚大学从事 mRNA 研究」的在职状态先于 1995 年去留决策：决策选项（接受降职留研/离开研究岗位）以受雇于该岗位为前提。研究起始年无出处，end_year=1995 与决策同年。属解析性排序（在先状态），仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-kariko-snap-kk-2013",
+      "person_id": "kariko",
+      "episode_id": "kariko_2013_biontech",
+      "snapshot_id": "snap-kk-2013",
+      "scenario": "大厂还是小公司/创业",
+      "decision_time": {
+        "start_year": 2013,
+        "end_year": 2013
+      },
+      "prior_fact_ids": [
+        "f-kk-000",
+        "f-kk-001",
+        "f-kk-002",
+        "f-kk-003",
+        "f-kk-004",
+        "f-kk-005",
+        "f-kk-006"
+      ],
+      "prior_text": "人物为「卡塔琳·考里科」，Rockefeller 大学获奖者页与 BioNTech 声明页为其记载主体。\n在宾夕法尼亚大学从事 mRNA 研究（至 1995 年决策时在职）。\n1995 年接受较低职位，继续 mRNA 研究。\n1997 年开始与 Weissman 合作。\n2005、2008 年有研究进展。\n2009 年仍未获恢复原职位（恢复职位请求被拒）。\n多年从事 mRNA 研究，已有与 Weissman 的合作成果（至 2013 年决策时）。",
+      "dimensions": {
+        "life_stage": {
+          "value": "established",
+          "raw_text": "学术转产业（正式 episode 阶段建模）；长期研究者。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001",
+            "f-kk-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 2013
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_2013_biontech time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "research"
+          ],
+          "raw_text": "多年从事 mRNA 研究，已有与 Weissman 的合作成果（2013 episode prior_path）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-001",
+            "f-kk-003",
+            "f-kk-004",
+            "f-kk-005",
+            "f-kk-006"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 2013
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "多年 mRNA 研究（「多年」为正式库 2013 prior_path 原文表述）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-006"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 2013
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=多年度专业训练/长期事业绑定。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "加入前薪资与生活成本无出处（正式库 unknowns：所用声明没有完整披露加入后数年的个人职位与生活成本；此前年份同样无记载）。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；2022 年「与家人生活」的记载属决策后结果层，不回填。"
+        },
+        "resource_access": {
+          "value": [
+            "credentials",
+            "skills",
+            "institution",
+            "network"
+          ],
+          "raw_text": "长期研究积累 + 与 Weissman 的合作成果与网络（f-kk-003、f-kk-004）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-003",
+            "f-kk-004",
+            "f-kk-006"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1997,
+            "end_year": 2013
+          },
+          "unknown_reason": null
+        },
+        "goal_structure": {
+          "value": [
+            "growth",
+            "impact"
+          ],
+          "raw_text": "推进技术应用；扩大研究协作（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 2013,
+            "end_year": 2013
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_2013_biontech decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "sustained",
+          "raw_text": "mRNA 研究持续多年：1997 年合作、2005/2008 年进展（f-kk-003、f-kk-004）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-kk-003",
+            "f-kk-004",
+            "f-kk-006"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1997,
+            "end_year": 2013
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：sustained=持续体验过。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 2013,
+            "end_year": 2013
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode kariko_2013_biontech decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据。"
+        }
+      },
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "社会支持",
+        "制度约束"
+      ],
+      "mechanism_note": "archetype=direct_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "这是有长期专业成果的学术转产业案例，不等于应届生大小公司薪酬选择。",
+        "refs": [
+          "KK-ROCK",
+          "KK-BION"
+        ],
+        "basis": "review.json analogy_boundary（kariko_2013_biontech）。"
+      },
+      "evidence_refs": [
+        "f-kk-000",
+        "f-kk-001",
+        "f-kk-002",
+        "f-kk-003",
+        "f-kk-004",
+        "f-kk-005",
+        "f-kk-006"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 5
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 3
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "known",
+          "evidence_refs": 3
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-kk-006"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-kk-006",
+          "basis": "formal_episode_chain",
+          "basis_detail": "2013 episode 的 prior_path 归位 + 1995→2013 episode 链；与 f-lx-008 不同，本卡另有 1995/1997/2005/2009 等带年份的中间事实收束该状态，证据链较强但仍走人工裁决。",
+          "justification": "「多年从事 mRNA 研究，已有与 Weissman 的合作成果」的区间终点与 2013 决策同年。排序主要依据正式库结构：kariko_2013_biontech 的 prior_path.0 将其记为决策前状态（field_sources: KK-ROCK），且 1995 episode 的 next_episode_ids 指向 2013 episode；f-kk-003（1997 合作开始）等中间事实提供独立时点锚。属顺序依赖事实，仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    }
+  ]
+}

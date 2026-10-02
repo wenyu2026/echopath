@@ -44,6 +44,8 @@ export function buildManifest(repoRoot, cardResults) {
       continue;
     }
     const perScenario = {};
+    let orderDependentCount = 0;
+    let pendingOrderReviews = 0;
     for (const v of r.views ?? []) {
       if (!v.scenario) continue;
       (perScenario[v.scenario] ??= []).push(v.episode_id);
@@ -51,6 +53,10 @@ export function buildManifest(repoRoot, cardResults) {
       bucket.candidates.add(v.episode_id);
       bucket.persons.add(v.person_id);
       scenarioMap.set(v.scenario, bucket);
+    }
+    for (const v of r.views ?? []) {
+      orderDependentCount += (v.order_dependent_fact_ids ?? []).length;
+      if (v.has_pending_order_review) pendingOrderReviews += 1;
     }
     cards.push({
       card_id: r.card.card_id,
@@ -61,6 +67,8 @@ export function buildManifest(repoRoot, cardResults) {
       per_scenario_episodes: perScenario,
       views_file: r.views_file ?? null,
       audit_file: r.audit_file ?? null,
+      order_dependent_facts: orderDependentCount,
+      views_with_pending_order_review: pendingOrderReviews,
       machine_check: {
         status: r.result.errors.length === 0 ? 'pass' : 'fail',
         errors: r.result.errors.length,
@@ -94,6 +102,8 @@ export function buildManifest(repoRoot, cardResults) {
     scenario_coverage: scenarioCoverage,
     module_partial_note:
       '六卡目标未完成前，每场景第二候选为 pending；覆盖报告以视图为单位，不以文件数代替质量。',
+    order_discipline:
+      'order_dependent_facts 计入靠 explicit_order 才进入决策前视图的事实数；views_with_pending_order_review > 0 表示该卡存在未经真人裁决的顺序证据，不得用于正式排名。',
     review_discipline: 'manifest 中 human_review 为卡片自报状态；机器校验通过不改变其 pending；approved 需真人与范围，见各卡 review 块与审查清单。',
   };
 }

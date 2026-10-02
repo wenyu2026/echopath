@@ -194,6 +194,79 @@ test('后来发表的可靠资料支持早年事实，不因出版晚被错误�
   assert.ok(rec.includes('sf-003'), '发生时间早于决策即合格，与资料形成时间无关');
 });
 
+// ---------- 4b. 顺序证据纪律（QA 弱扣件加固：受控依据 + 人工裁决 + 视图显式标注） ----------
+test('视图显式暴露顺序依赖事实：temporal_caveats / order_dependent_fact_ids / has_pending_order_review', () => {
+  const card = load(REAL_CARD);
+  const { views } = exportViews(card);
+  const v1918 = views.find((v) => v.snapshot_id === 'snap-lx-1918');
+  assert.deepEqual(v1918.order_dependent_fact_ids, ['f-lx-008'], '1918 视图中仅 f-lx-008 靠顺序依据进门');
+  assert.equal(v1918.temporal_caveats.length, 1);
+  assert.equal(v1918.temporal_caveats[0].basis, 'formal_episode_chain');
+  assert.equal(v1918.temporal_caveats[0].human_adjudication, 'pending');
+  assert.equal(v1918.has_pending_order_review, true, '未裁决的顺序证据必须显式标记');
+  // 鲁迅 1902/1906 的顺序依据是解析性前提，同样待人工裁决
+  assert.equal(views.find((v) => v.snapshot_id === 'snap-lx-1906').has_pending_order_review, true);
+});
+
+test('explicit_order 缺 human_adjudication 被拒绝（顺序证据必须提交真人复核）', () => {
+  const card = load(FIXTURE_CARD);
+  card.snapshots[0].prior_fact_ids.push('sf-006'); // 1912 同年
+  card.snapshots[0].prior_order_notes.push({
+    fact_id: 'sf-006',
+    explicit_order: { justification: '（synthetic）', refs: ['SYN-SRC-SELF'], basis: 'logical_precondition' },
+  });
+  const r = validateCard(card, fixtureCtx());
+  errorsOf(r, 'human_adjudication');
+});
+
+test('confirmed 裁决缺真人签字被拒绝', () => {
+  const card = load(FIXTURE_CARD);
+  card.snapshots[0].prior_fact_ids.push('sf-006');
+  card.snapshots[0].prior_order_notes.push({
+    fact_id: 'sf-006',
+    explicit_order: {
+      justification: '（synthetic）', refs: ['SYN-SRC-SELF'], basis: 'logical_precondition',
+      human_adjudication: { status: 'confirmed', by: null, on: null },
+    },
+  });
+  const r = validateCard(card, fixtureCtx());
+  errorsOf(r, 'approved 需要真人签字'.slice(0, 0) + '真人签字');
+});
+
+test('basis 不在受控词表被拒绝', () => {
+  const card = load(FIXTURE_CARD);
+  card.snapshots[0].prior_fact_ids.push('sf-006');
+  card.snapshots[0].prior_order_notes.push({
+    fact_id: 'sf-006',
+    explicit_order: {
+      justification: '（synthetic）', refs: ['SYN-SRC-SELF'], basis: '我觉得顺序没问题',
+      human_adjudication: { status: 'pending' },
+    },
+  });
+  const r = validateCard(card, fixtureCtx());
+  errorsOf(r, '受控词表');
+});
+
+test('被真人驳回的顺序事实：校验器要求移出 prior，导出器强制排除', () => {
+  const card = load(REAL_CARD);
+  const note = card.snapshots.find((s) => s.snapshot_id === 'snap-lx-1918')
+    .prior_order_notes.find((n) => n.fact_id === 'f-lx-008');
+  note.explicit_order.human_adjudication.status = 'rejected';
+  note.explicit_order.human_adjudication.by = 'reviewer-a';
+  note.explicit_order.human_adjudication.on = '2026-10-03';
+  const r = validateCard(card, realCtx());
+  errorsOf(r, '驳回');
+
+  const { views } = exportViews(card);
+  const v1918 = views.find((v) => v.snapshot_id === 'snap-lx-1918');
+  assert.ok(!v1918.prior_fact_ids.includes('f-lx-008'), '驳回后不得进入决策前视图');
+  // 仅靠 f-lx-008 支撑的维度回到 null（new_path_validation；resource_access 的另一引用 f-lx-009 亦被同年门槛排除）
+  assert.equal(v1918.dimensions.new_path_validation.value, null);
+  assert.ok(v1918.dimensions.new_path_validation.unknown_reason.includes('时间门槛'));
+  assert.equal(v1918.dimensions.resource_access.value, null);
+  assert.equal(v1918.has_pending_order_review, false);
+});
+
 // ---------- 5. 确定性与检查点 ----------
 test('固定输入重复导出逐字节一致（纯函数与流水线两层）', () => {
   const card = load(REAL_CARD);

@@ -1,0 +1,474 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "retrieval_views",
+  "card_id": "card-ang_lee-v0.1",
+  "person_id": "ang_lee",
+  "views": [
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-ang_lee-snap-al-1984",
+      "person_id": "ang_lee",
+      "episode_id": "ang_lee_1984_six_years_persist",
+      "snapshot_id": "snap-al-1984",
+      "scenario": "考研还是就业",
+      "decision_time": {
+        "start_year": 1984,
+        "end_year": 1984
+      },
+      "prior_fact_ids": [
+        "f-al-000",
+        "f-al-001"
+      ],
+      "prior_text": "人物为「李安」，纽约大学页面与转载访谈以其电影生涯为记载主体。\n1984 年获得纽约大学电影制作硕士学位。",
+      "dimensions": {
+        "life_stage": {
+          "value": "early_career",
+          "raw_text": "毕业后起步（正式 episode 阶段建模）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1984_six_years_persist time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "study"
+          ],
+          "raw_text": "1984 年获得纽约大学电影制作硕士学位。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1984
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "电影制作硕士为多年度专业训练（锚点：high=多年度专业训练）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "anchor_note": "就读起止年份无逐条出处，按学位完成事实归入多年度训练档。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "家庭收支与经济压力无出处；正式库修订记录明确删除了「六年无正式工作」断言（data/README.md 三条种子修订），且「六年内全部就业记录和家庭收支未核实」列于 episode unknowns。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "credentials",
+            "skills"
+          ],
+          "raw_text": "电影制作硕士学位（学力资格）与专业训练。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "anchor_note": "行业人脉与资金渠道在决策前无独立出处，不列入。"
+        },
+        "goal_structure": {
+          "value": [
+            "growth",
+            "interest"
+          ],
+          "raw_text": "争取执导机会；维持创作积累（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1984_six_years_persist decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "尚无长片执导/市场验证的记载；MFA 属训练经历而非市场验证。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断：正式库无毕业前公开作品或市场反馈记载。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1984
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1984_six_years_persist decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "「创作回报延迟」是建模 constraint，不是日期期限；无明确期限证据。"
+        }
+      },
+      "root_factors": [
+        "沉没成本",
+        "转换成本",
+        "新路径验证不足",
+        "时间窗口"
+      ],
+      "mechanism_note": "archetype=persist（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "这是研究生毕业后的职业进入困境，只能类比继续投入训练与进入就业市场，不能代替考研录取/回报比较。",
+        "refs": [
+          "AL-NYU",
+          "AL-INTERVIEW"
+        ],
+        "basis": "review.json analogy_boundary（ang_lee_1984_six_years_persist）。"
+      },
+      "evidence_refs": [
+        "f-al-000",
+        "f-al-001"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-al-001"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-al-001",
+          "basis": "logical_precondition",
+          "basis_detail": "学位完成（状态终结）先于毕业后选择；同点同年问题由前提关系解决。",
+          "justification": "获得 MFA 学位先于「毕业后」的去向决策：正式 episode 阶段记为「毕业后起步」，决策选项（继续电影创作/转入其他工作）均以毕业完成为前提。属解析性排序，不依赖访谈叙述顺序，仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-ang_lee-snap-al-1990",
+      "person_id": "ang_lee",
+      "episode_id": "ang_lee_1990_script_competition",
+      "snapshot_id": "snap-al-1990",
+      "scenario": "大厂还是小公司/创业",
+      "decision_time": {
+        "start_year": 1990,
+        "end_year": 1990
+      },
+      "prior_fact_ids": [
+        "f-al-000",
+        "f-al-001",
+        "f-al-003"
+      ],
+      "prior_text": "人物为「李安」，纽约大学页面与转载访谈以其电影生涯为记载主体。\n1984 年获得纽约大学电影制作硕士学位。\n据访谈，约六年间项目屡未成行；至 1990 年两部剧本在比赛中获奖。",
+      "dimensions": {
+        "life_stage": {
+          "value": "early_career",
+          "raw_text": "寻找入行渠道（正式 episode 阶段建模）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001",
+            "f-al-003"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1990_script_competition time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "study",
+            "trial"
+          ],
+          "raw_text": "MFA 毕业后多年在美国寻找拍片机会未果（1990 episode prior_path）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001",
+            "f-al-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1990
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "MFA 多年度训练 + 约六年剧本与筹片尝试。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001",
+            "f-al-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=多年度专业训练。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1990 年时经济压力无出处；家庭收支未核实（正式库 unknowns）。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "credentials",
+            "skills"
+          ],
+          "raw_text": "MFA 学位与六年剧本创作积累（「已有未拍剧本」为建模 constraint）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-001",
+            "f-al-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "anchor_note": "「已有未拍剧本」来自 decision_state 建模，未单独立事实；资金与人脉无出处不列入。"
+        },
+        "goal_structure": {
+          "value": [
+            "growth",
+            "interest"
+          ],
+          "raw_text": "寻找首片机会；验证作品接受度（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1990,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1990_script_competition decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "tried",
+          "raw_text": "约六年间项目屡未成行——原渠道已被直接尝试且未成功。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-al-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1984,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：tried=直接体验过（负向结果）。台湾比赛渠道在决策前未验证。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）：改投渠道可回退，但时间成本已沉没。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1990,
+            "end_year": 1990
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode ang_lee_1990_script_competition decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "比赛截稿期限无出处；不虚构 deadline_year。"
+        }
+      },
+      "root_factors": [
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口",
+        "社会支持"
+      ],
+      "mechanism_note": "archetype=explore_then_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "改变融资与合作渠道不同于普通职员换大小公司；奖项入口具有筛选效应。",
+        "refs": [
+          "AL-INTERVIEW"
+        ],
+        "basis": "review.json analogy_boundary（ang_lee_1990_script_competition）。"
+      },
+      "evidence_refs": [
+        "f-al-000",
+        "f-al-001",
+        "f-al-003"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-al-003"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-al-003",
+          "basis": "formal_episode_chain",
+          "basis_detail": "1990 episode 的 prior_path 归位 + 1984→1990 episode 链；两处归位最终同源于同一访谈，故列为待审弱证据。",
+          "justification": "「约六年间项目屡未成行」的区间终点为 1990（获奖年），与 1990 决策同年。排序主要依据正式库 episode 结构：ang_lee_1990_script_competition 的 prior_path.0 记为「毕业后多年在美国寻找拍片机会未果」（先于决策），且 1984 episode 的 next_episode_ids 指向 1990 episode。访谈叙述顺序仅作辅助，不单独定性。属顺序依赖事实，须人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    }
+  ]
+}

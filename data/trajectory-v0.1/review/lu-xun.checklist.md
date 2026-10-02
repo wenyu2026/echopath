@@ -28,13 +28,16 @@
 
 其余：f-lx-000（身份）、f-lx-006（离开仙台）、f-lx-007（retrospective，确认其不进视图）、f-lx-009（受劝）、f-lx-011（狂人日记）、f-lx-013（续写多篇）、f-lx-014（自序 1922）。☐
 
-## 2. explicit_order（须人工裁决是否成立）
+## 2. explicit_order（须人工裁决是否成立；受控依据词表 + human_adjudication 见 weak-order-evidence.md）
 
-| 快照 | fact | 顺序主张 | 依据 | 裁决 |
+| 快照 | fact | 顺序主张 | 依据（basis） | 裁决 |
 |---|---|---|---|---|
-| snap-lx-1902 | f-lx-001 | 完成学业先于毕业后去向决策 | 前提关系 + episode 阶段「毕业后留学」 | ☐ 认可 ☐ 驳回 |
-| snap-lx-1906 | f-lx-004 | 在学先于离校 | 前提关系 + 「第二学年离校」 | ☐ 认可 ☐ 驳回 |
-| snap-lx-1918 | f-lx-008 | 筹刊失败先于 1918 投稿决策 | 自序叙述顺序 | ☐ 认可 ☐ 驳回 |
+| snap-lx-1902 | f-lx-001 | 完成学业先于毕业后去向决策 | logical_precondition | ☐ 认可 ☐ 驳回 |
+| snap-lx-1906 | f-lx-004 | 在学先于离校 | logical_precondition | ☐ 认可 ☐ 驳回 |
+| snap-lx-1918 | f-lx-008 | 筹刊失败先于 1918 投稿决策 | **formal_episode_chain（QA 质询项：原依据「自序叙述顺序」已降为辅助；主要依据为 1906 outcome 层 + 1918 prior_path + episode 链，但最终同源 1922 自述，仍属本卡最弱证据）** | ☐ 认可 ☐ 驳回 |
+
+> 若驳回 f-lx-008：重跑 `node scripts/trajectory-v0.1/run-pipeline.mjs data/trajectory-v0.1/cards/lu-xun.card.json`，
+> snap-lx-1918 视图中 new_path_validation / resource_access 将自动回到 null。
 
 ## 3. 匹配维度抽查（三视图）
 

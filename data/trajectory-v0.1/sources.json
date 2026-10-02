@@ -82,6 +82,171 @@
       },
       "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
       "used_by_facts": ["f-lx-012"]
+    },
+    "AL-NYU": {
+      "formal_ref": "data/sources.json#AL-NYU",
+      "base": {
+        "title": "Ang Lee — Tisch Gala 2024",
+        "publisher": "纽约大学 Tisch",
+        "url": "https://tisch.nyu.edu/giving/the-tisch-gala/tisch-gala-2024/ang-lee.html",
+        "type": "biography",
+        "locator": "1984 MFA、后续影片与奖项",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "页面把首部长片写在 1990 年；本集仅用来核对毕业与后续生涯，影片上映年采用访谈的 1991 年。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
+      "used_by_facts": ["f-al-000", "f-al-001", "f-al-008"]
+    },
+    "AL-INTERVIEW": {
+      "formal_ref": "data/sources.json#AL-INTERVIEW",
+      "base": {
+        "title": "李安｜聆听电影之神的声音",
+        "publisher": "澎湃转载楚尘文化《李安访谈录》",
+        "url": "https://m.thepaper.cn/newsDetail_forward_27605082",
+        "type": "interview",
+        "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "中文译编的事后访谈；未将六年没有执导机会扩大成六年无任何正式工作。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "访谈成文/出版时间未在正式库记载；属事后访谈。" },
+      "used_by_facts": ["f-al-000", "f-al-002", "f-al-003", "f-al-004", "f-al-005", "f-al-006", "f-al-007"]
+    },
+    "HM-SELF": {
+      "formal_ref": "data/sources.json#HM-SELF",
+      "base": {
+        "title": "Haruki Murakami: The Moment I Became a Novelist",
+        "publisher": "Haruki Murakami / Literary Hub / Knopf",
+        "url": "https://lithub.com/haruki-murakami-the-moment-i-became-a-novelist/",
+        "type": "self_writing",
+        "locator": "1978 球赛、营业后写作、1979 首作、卖店专职",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "2015 年出版的自述节选；回顾性解释不代表 1978 年已有明确三年转行计划。"
+      },
+      "formed_time": { "start_year": 2015, "end_year": 2015, "note": "2015 年出版的自述节选（正式库 limitations 记载）。" },
+      "used_by_facts": ["f-hm-000", "f-hm-001", "f-hm-002", "f-hm-003", "f-hm-004", "f-hm-006", "f-hm-007", "f-hm-008", "f-hm-009"]
+    },
+    "HM-1981": {
+      "formal_ref": "data/sources.json#HM-1981",
+      "base": {
+        "title": "Haruki Murakami",
+        "publisher": "Biblioteca Salaborsa Ragazzi / Bologna",
+        "url": "https://www.bibliotecasalaborsa.it/ragazzi/profiles/profile-dd3b04",
+        "type": "biography",
+        "locator": "Nel 1981 Murakami vende il jazz bar",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "公共图书馆的二手人物简介，仅补足卖店年份。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "图书馆简介页，形成时间未记载。" },
+      "used_by_facts": ["f-hm-000", "f-hm-005"]
+    },
+    "CD-STUDY": {
+      "formal_ref": "data/sources.json#CD-STUDY",
+      "base": {
+        "title": "Darwin’s student booklist",
+        "publisher": "Darwin Correspondence Project / Cambridge",
+        "url": "https://www.darwinproject.ac.uk/people/about-darwin/what-darwin-read/darwin-s-student-booklist",
+        "type": "biography",
+        "locator": "Edinburgh 1825—1827；Cambridge January 1828",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "学术项目页面，形成时间未记载。" },
+      "used_by_facts": ["f-cd-000", "f-cd-001", "f-cd-002", "f-cd-003", "f-cd-004"]
+    },
+    "CD-CHURCH": {
+      "formal_ref": "data/sources.json#CD-CHURCH",
+      "base": {
+        "title": "Darwin and the Church",
+        "publisher": "Darwin Correspondence Project / Cambridge",
+        "url": "https://www.darwinproject.ac.uk/commentary/religion/darwin-and-church",
+        "type": "biography",
+        "locator": "Cambridge degree and intended clerical career",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "学术项目页面，形成时间未记载。" },
+      "used_by_facts": ["f-cd-004", "f-cd-005"]
+    },
+    "CD-BEAGLE": {
+      "formal_ref": "data/sources.json#CD-BEAGLE",
+      "base": {
+        "title": "Voyage of HMS Beagle",
+        "publisher": "Darwin Correspondence Project / Cambridge",
+        "url": "https://www.darwinproject.ac.uk/commentary/voyage-hms-beagle",
+        "type": "biography",
+        "locator": "1831 邀请、父亲资助；1831-12-27 至 1836-10-02 航行",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "学术项目页面，形成时间未记载。" },
+      "used_by_facts": ["f-cd-007", "f-cd-008", "f-cd-009", "f-cd-010", "f-cd-011"]
+    },
+    "SJ-REED": {
+      "formal_ref": "data/sources.json#SJ-REED",
+      "base": {
+        "title": "Steve Jobs and Reed College",
+        "publisher": "Reed College",
+        "url": "https://www.reed.edu/about/steve-jobs.html",
+        "type": "biography",
+        "locator": "fall 1972；one semester；auditing classes",
+        "accessed_on": "2026-10-02",
+        "access_method": "search_index",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构网页，形成时间未记载；访问日期 2026-10-02。" },
+      "used_by_facts": ["f-sj-000", "f-sj-001", "f-sj-002", "f-sj-003", "f-sj-006"]
+    },
+    "SJ-SPEECH": {
+      "formal_ref": "data/sources.json#SJ-SPEECH",
+      "base": {
+        "title": "‘You’ve got to find what you love,’ Jobs says",
+        "publisher": "Steve Jobs / Stanford University",
+        "url": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says",
+        "type": "self_writing",
+        "locator": "2005 毕业演讲：退学与重启事业两部分",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "预备演讲稿，动机与意义归本人回顾；不把退学认定为创业成功原因。"
+      },
+      "formed_time": { "start_year": 2005, "end_year": 2005, "note": "2005 年斯坦福毕业演讲（正式库标题与定位记载）。" },
+      "used_by_facts": ["f-sj-000", "f-sj-005", "f-sj-006", "f-sj-007", "f-sj-008", "f-sj-009", "f-sj-011", "f-sj-012"]
+    },
+    "KK-ROCK": {
+      "formal_ref": "data/sources.json#KK-ROCK",
+      "base": {
+        "title": "Katalin Karikó",
+        "publisher": "Rockefeller University / Evelyn Strauss",
+        "url": "https://www.rockefeller.edu/greengard-prize/recipients/katalin-kariko/",
+        "type": "biography",
+        "locator": "1995 降职；1997 Weissman；2005、2008、2009 研究与职位",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "机构或传记叙述，不能单独证明因果；未保存网页全文。"
+      },
+      "formed_time": { "start_year": null, "end_year": null, "note": "机构页面（获奖者介绍），形成时间未记载。" },
+      "used_by_facts": ["f-kk-000", "f-kk-001", "f-kk-002", "f-kk-003", "f-kk-004", "f-kk-005", "f-kk-006"]
+    },
+    "KK-BION": {
+      "formal_ref": "data/sources.json#KK-BION",
+      "base": {
+        "title": "Katalin Karikó and Drew Weissman awarded Nobel Prize",
+        "publisher": "BioNTech",
+        "url": "https://www.biontech.com/int/en/home/mediaroom/news/statements/2023/10/statement-katalin-kariko-and-drew-weissman-awarded-nobel-prize.html",
+        "type": "biography",
+        "locator": "2013 入职；2014 联合论文；2022 转外部顾问",
+        "accessed_on": "2026-10-02",
+        "access_method": "page",
+        "limitations": "雇主新闻稿，有宣传目的；不据此断言个人收入、幸福或职业最优解。"
+      },
+      "formed_time": { "start_year": 2023, "end_year": 2023, "note": "声明页 URL 路径含 2023/10；雇主新闻稿。" },
+      "used_by_facts": ["f-kk-000", "f-kk-007", "f-kk-008", "f-kk-009"]
     }
   }
 }

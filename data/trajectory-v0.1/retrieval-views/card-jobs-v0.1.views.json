@@ -1,0 +1,474 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "retrieval_views",
+  "card_id": "card-jobs-v0.1",
+  "person_id": "jobs",
+  "views": [
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-jobs-snap-sj-1972",
+      "person_id": "jobs",
+      "episode_id": "jobs_1972_reed_dropout",
+      "snapshot_id": "snap-sj-1972",
+      "scenario": "转专业",
+      "decision_time": {
+        "start_year": 1972,
+        "end_year": 1972
+      },
+      "prior_fact_ids": [
+        "f-sj-000",
+        "f-sj-001"
+      ],
+      "prior_text": "人物为「史蒂夫·乔布斯」，Reed College 页面与其 2005 年斯坦福演讲（校方存档）为其记载主体。\n1972 年秋进入里德学院。",
+      "dimensions": {
+        "life_stage": {
+          "value": "student",
+          "raw_text": "大学初期（正式 episode 阶段建模）：里德学院在读第一学期。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-001"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": [
+            "study"
+          ],
+          "raw_text": "1972 年秋进入里德学院。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-001"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "low",
+          "raw_text": "刚入学一个学期内（就学位路径而言刚开始）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：low=刚开始。与后续「没有学位」（f-sj-005）一致。"
+        },
+        "economic_pressure": {
+          "value": "medium",
+          "raw_text": "「教育费用压力」为 decision_state 建模 constraint。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1972_reed_dropout decision_state.constraints（review.json inference_fields）。",
+          "anchor_note": "锚点：medium=明确的过渡期限制（学费压力）。家庭资助细节无出处，不标 high；退学后「节省食宿费用」是决策后结果（f-sj-004），不回填。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "institution"
+          ],
+          "raw_text": "里德学院在读资格（校园与课程访问）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-001"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "anchor_note": "学费资助来源无出处，funding 不列。"
+        },
+        "goal_structure": {
+          "value": [
+            "interest"
+          ],
+          "raw_text": "探索兴趣（decision_state 建模）；「减少正式学费投入」为成本考量，词表无对应档位，见 modeling_basis 全文。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1972_reed_dropout decision_state.goals（review.json inference_fields）：探索兴趣、减少正式学费投入——后者不是收入目标，不硬映射 income。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "退学后的旁听自学路径尚未开始。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "low",
+          "raw_text": "decision_state.reversibility=low（建模）：正式学籍退出后难以原地恢复。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1972
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1972_reed_dropout decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "学期节奏隐含时间约束，但无明确期限出处。"
+        }
+      },
+      "root_factors": [
+        "经济压力",
+        "制度约束",
+        "新路径验证不足",
+        "机会成本"
+      ],
+      "mechanism_note": "archetype=dual_track（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "个别人的旁听与技术产业机会不能证明退学有利；现代学籍、资助和签证后果各异。",
+        "refs": [
+          "SJ-REED",
+          "SJ-SPEECH"
+        ],
+        "basis": "review.json analogy_boundary（jobs_1972_reed_dropout）。"
+      },
+      "evidence_refs": [
+        "f-sj-000",
+        "f-sj-001"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-sj-001"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-sj-001",
+          "basis": "logical_precondition",
+          "basis_detail": "入学（状态）先于退学（该状态的终结）；退学精确月份不断言（正式库 unknowns）。",
+          "justification": "1972 年秋入学先于同年内的退学决策：在学状态先于其自身的终结（退学），「读一个学期后退学」以入学为前提。属解析性排序，不依赖演讲叙述顺序，仍提交人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-jobs-snap-sj-1985",
+      "person_id": "jobs",
+      "episode_id": "jobs_1985_restart",
+      "snapshot_id": "snap-sj-1985",
+      "scenario": "大厂还是小公司/创业",
+      "decision_time": {
+        "start_year": 1985,
+        "end_year": 1985
+      },
+      "prior_fact_ids": [
+        "f-sj-000",
+        "f-sj-001",
+        "f-sj-002",
+        "f-sj-007"
+      ],
+      "prior_text": "人物为「史蒂夫·乔布斯」，Reed College 页面与其 2005 年斯坦福演讲（校方存档）为其记载主体。\n1972 年秋进入里德学院。\n读一个学期后退学（退出正式学籍）。\n已参与创办 Apple，三十岁时离开公司。",
+      "dimensions": {
+        "life_stage": {
+          "value": "established",
+          "raw_text": "离职后重启（正式 episode 阶段建模）；已参与创办 Apple 并任职至三十岁。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-007"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1985_restart time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "study",
+            "business"
+          ],
+          "raw_text": "里德学院退学（未取得学位）→ 参与创办 Apple 并工作至离开。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-001",
+            "f-sj-002",
+            "f-sj-007"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": 1972,
+            "end_year": 1985
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "Apple 为长期事业绑定（「已参与创办…三十岁时离开」的正式表述蕴含多年绑定；创办年份无出处，不标年限数字）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-007"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=长期事业绑定。confidence=low 因年限无逐条出处。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "离职补偿与财务状况无出处；「此前积累的资本与知名度」被正式库列为关键不可比条件（analogy_boundary），将其用作资源/压力分档证据会同时误导匹配与反类比，故仅记入 institutional_context。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "正式库无家庭责任记载；未知不能标 low。"
+        },
+        "resource_access": {
+          "value": [
+            "skills",
+            "network"
+          ],
+          "raw_text": "参与创办 Apple 的产品经验与行业关系（自 1985 决策前的事实 f-sj-007 归纳）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-sj-007"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": null,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "anchor_note": "funding 不列：资本积累无独立出处；skills/network 为从 f-sj-007 的最低限度归纳，confidence=low。"
+        },
+        "goal_structure": {
+          "value": [
+            "interest",
+            "autonomy"
+          ],
+          "raw_text": "继续产品创造；寻找新的组织空间（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1985,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1985_restart decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "新项目（NeXT/Pixar 方向）尚未开始；此前的产品经验属于原路径。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1985,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）：另起项目后回原行业的机会有限但存在。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1985,
+            "end_year": 1985
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode jobs_1985_restart decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据。"
+        }
+      },
+      "root_factors": [
+        "身份绑定",
+        "沉没成本",
+        "新路径验证不足",
+        "机会成本"
+      ],
+      "mechanism_note": "archetype=dual_track（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "此前积累的资本与知名度是关键不可比条件；离职并非完全自主的普通跳槽。",
+        "refs": [
+          "SJ-SPEECH"
+        ],
+        "basis": "review.json analogy_boundary（jobs_1985_restart）。"
+      },
+      "evidence_refs": [
+        "f-sj-000",
+        "f-sj-001",
+        "f-sj-002",
+        "f-sj-007"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 3
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-sj-007"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-sj-007",
+          "basis": "formal_episode_chain",
+          "basis_detail": "1985 episode 的 prior_path 归位 + 1972→1985 episode 链；同源于 2005 年演讲，故列为待审（但「参与创办在先」是表述内蕴含，弱于纯叙述顺序）。",
+          "justification": "「已参与创办 Apple，三十岁时离开公司」的区间终点与 1985 决策同年。排序主要依据正式库结构：jobs_1985_restart 的 prior_path.0 将其记为决策前状态（field_sources: SJ-SPEECH），且 1972 episode 的 next_episode_ids 指向 1985 episode。「创办在先、三十岁离开在后」由表述本身蕴含。属顺序依赖事实，须人工复核。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    }
+  ]
+}
