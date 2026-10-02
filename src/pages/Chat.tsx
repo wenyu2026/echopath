@@ -68,6 +68,17 @@ export default function Chat() {
   const mainPaths = allPaths.filter((a) => a.supporting_cases.length >= 2);
   const thinPaths = allPaths.filter((a) => a.supporting_cases.length < 2);
 
+  /**
+   * 面板只显示「已经说清楚」的字段。
+   * 置信度 < 0.6 的先不显示 —— 填错比空着更糟。
+   */
+  const confirmedItems = Object.entries(collected).filter(
+    ([k, v]) => v && String(v).trim() && (confidence[k] ?? 0) >= 0.6,
+  );
+  const pendingCount = Object.entries(collected).filter(
+    ([k, v]) => v && String(v).trim() && (confidence[k] ?? 0) < 0.6,
+  ).length;
+
   return (
     <div className="chat-wrap">
       {/* ================= 左：对话 ================= */}
@@ -218,7 +229,7 @@ export default function Chat() {
       <aside className="chat-side">
         <div className="chat-side-head">
           <span>你的处境</span>
-          <span className="tiny muted">{Object.keys(collected).length} 项</span>
+          <span className="tiny muted">{confirmedItems.length} 项</span>
         </div>
 
         {Object.keys(collected).length === 0 && (
@@ -229,18 +240,33 @@ export default function Chat() {
           </p>
         )}
 
-        {Object.entries(collected).map(([k, v]) => {
+        {/*
+          ⚠️ 只显示置信度 ≥ 0.6 的字段（产品负责人拍板 A）。
+            理由：**填错比空着更糟。**
+            实测踩到：用户答「想变好为什么会延毕」（在质疑前提），
+            系统却把它填成「可逆性态度：不认为变好会延毕」并显示出来 ——
+            用户会以为系统理解了他，其实理解反了。
+            低置信度的先不显示，等问清楚了自然会出现。
+        */}
+        {confirmedItems.map(([k, v]) => {
           const c = confidence[k] ?? 0;
           return (
             <div className="chat-side-item" key={k}>
               <div className="chat-side-label">
                 {LABELS[k] ?? k}
-                <span className={`chat-side-dot ${c >= 0.85 ? 'hi' : c >= 0.6 ? 'mid' : 'lo'}`} />
+                <span className={`chat-side-dot ${c >= 0.85 ? 'hi' : 'mid'}`} />
               </div>
               <div className="chat-side-value">{v}</div>
             </div>
           );
         })}
+
+        {/* 还在确认中的：只报个数，不显示内容 */}
+        {pendingCount > 0 && (
+          <div className="chat-side-pending">
+            还有 {pendingCount} 项在确认中 —— 说清楚了才会显示在这里
+          </div>
+        )}
 
         {/* 确认后：去检索 */}
         {chat.phase.kind === 'confirming' && (

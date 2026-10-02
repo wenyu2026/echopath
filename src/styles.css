@@ -1719,3 +1719,14 @@ input:focus, textarea:focus, select:focus {
 .chat-thin summary:hover { color: var(--now); }
 .chat-thin summary::before { content: '▸ '; }
 .chat-thin[open] summary::before { content: '▾ '; }
+
+/* 还在确认中的字段：只报个数，不显示内容（填错比空着更糟） */
+.chat-side-pending {
+  margin-top: 12px;
+  padding: 9px 11px;
+  background: var(--bg-sunken);
+  border-radius: 7px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-3, #6b6862);
+}
