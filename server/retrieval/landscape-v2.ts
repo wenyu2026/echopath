@@ -241,55 +241,148 @@ export function recallPersons(situation: SituationV2, episodes: TaggedEpisode[])
    ============================================================ */
 
 /**
- * 把候选案例按 root_factors 聚成路径。
+ * 把候选案例聚成路径。
  *
- * 算法：贪心聚类（不用 K-Means —— 样本太小，无监督聚类会不稳定）
- *   1. 按与用户根因素的相似度降序排列候选案例
- *   2. 逐个看它能否并入已有簇（与簇内任一成员 Jaccard ≥ 阈值）
- *   3. 并进去，或自己开一个新簇
- *   4. 只保留案例数 ≥ min_cases_per_archetype 的簇
+ * ⚠️ 第二版重写了聚类逻辑。第一版的问题（实测数据）：
+ *
+ *   与用户根因素的 Jaccard 分布是**断崖式**的，没有中间地带：
+ *     0.60  ← 10 条案例
+ *     0.33  ← 10 条案例
+ *   我原来把阈值设在 0.34，正好卡在断崖中间 —— 结果
+ *     direct_switch 5 条 / explore_then_switch 2 条 / 其余各 1 条
+ *   4 条路径里 3 条只有 1 个案例，看起来有厚度其实没有。
+ *
+ *   根因：我用**一个全局阈值**同时管两件事 ——
+ *     ① 这条案例与「用户」像不像
+ *     ② 两条案例彼此像不像
+ *   这两件事不是一回事。abandon / persist 这类走法，
+ *   它们内部成员彼此很像，但与「用户」的重叠天然就低
+ *   （因为用户当前面对的不是它们那个张力），却被同一个阈值挡在外面。
+ *
+ *   修法：**先按走法分组，再在组内做连贯性检查**。
+ *     ① 分组用 archetype（这是人工定义的强先验，比阈值可靠）
+ *     ② 组内用「与组内众数的重叠」判断连贯性，而不是与用户的重叠
+ *     ③ 与用户的重叠只用于**排序**（哪条路对用户更相关），不用于准入
+ *
+ *   这样每条路都能拿到它该有的全部案例，厚度如实反映数据。
  */
 export function clusterIntoArchetypes(
   candidates: TaggedEpisode[],
   userFactors: RootFactor[],
-): Array<{ archetype: PathArchetypeId; cases: TaggedEpisode[] }> {
-  const scored = candidates
-    .map((e) => ({
-      ep: e,
-      rel: jaccard(userFactors, e.mechanism?.root_factors ?? []),
-    }))
-    .sort((a, b) => b.rel - a.rel);
-
-  const clusters: Array<{ archetype: PathArchetypeId; cases: TaggedEpisode[]; factors: RootFactor[] }> = [];
-
-  for (const { ep } of scored) {
-    const f = ep.mechanism?.root_factors ?? [];
-    const archetype = ep.mechanism?.archetype ?? 'unknown';
-
-    // 找能并入的簇：同类走法 **且** 根因素足够重叠
-    const target = clusters.find((c) => {
-      if (c.archetype !== archetype) return false;
-      return c.cases.some((other) => jaccard(f, other.mechanism?.root_factors ?? []) >= LANDSCAPE_CONFIG.jaccard_threshold);
-    });
-
-    if (target) {
-      target.cases.push(ep);
-      for (const x of f) if (!target.factors.includes(x)) target.factors.push(x);
-    } else {
-      clusters.push({ archetype, cases: [ep], factors: [...f] });
-    }
+): Array<{ archetype: PathArchetypeId; cases: TaggedEpisode[]; relevance: number }> {
+  // ① 按 archetype 分组
+  const groups = new Map<PathArchetypeId, TaggedEpisode[]>();
+  for (const e of candidates) {
+    const a = e.mechanism?.archetype ?? 'unknown';
+    const arr = groups.get(a) ?? [];
+    arr.push(e);
+    groups.set(a, arr);
   }
 
-  return clusters
-    .filter((c) => c.cases.length >= LANDSCAPE_CONFIG.min_cases_per_archetype)
-    .sort((a, b) => b.cases.length - a.cases.length)
-    .slice(0, LANDSCAPE_CONFIG.max_archetypes)
-    .map((c) => ({ archetype: c.archetype, cases: c.cases }));
+  const result: Array<{ archetype: PathArchetypeId; cases: TaggedEpisode[]; relevance: number }> = [];
+
+  for (const [archetype, eps] of groups) {
+    if (archetype === 'unknown') continue;
+
+    // ② 组内连贯性：算出「组内共识根因素」（出现 ≥50% 的）
+    const freq = new Map<RootFactor, number>();
+    for (const e of eps) {
+      for (const f of new Set(e.mechanism?.root_factors ?? [])) {
+        freq.set(f, (freq.get(f) ?? 0) + 1);
+      }
+    }
+    const consensus = new Set(
+      [...freq.entries()].filter(([, n]) => n / eps.length >= 0.5).map(([f]) => f),
+    );
+
+    // 保留与共识有交集的案例；组内只有 1-2 条时不筛（样本太小，筛了就没意义）
+    const kept =
+      eps.length <= 2
+        ? eps
+        : eps.filter((e) => (e.mechanism?.root_factors ?? []).some((f) => consensus.has(f)));
+
+    const use = kept.length > 0 ? kept : eps;
+
+    // ③ 与用户的相关度（只用于排序，不用于准入）
+    const relevance =
+      use.reduce((sum, e) => sum + jaccard(userFactors, e.mechanism?.root_factors ?? []), 0) / use.length;
+
+    result.push({ archetype, cases: use, relevance });
+  }
+
+  return result
+    .filter((g) => g.cases.length >= LANDSCAPE_CONFIG.min_cases_per_archetype)
+    .sort((a, b) => b.cases.length - a.cases.length || b.relevance - a.relevance)
+    .slice(0, LANDSCAPE_CONFIG.max_archetypes);
 }
 
 /* ============================================================
    代价生成
    ============================================================ */
+
+/* ============================================================
+   数据卫生：区分「人物结果」与「数据维护备注」
+   ============================================================ */
+
+/**
+ * ⚠️ 实测：data/episodes.json 的 outcomes 里混着**数据维护备注**。
+ *
+ *   108 条 outcomes 里有 21 条（19%）不是人物结果，而是类似：
+ *     「未知：本来源没有证明所有受影响员工实际获得安置。」
+ *     「未知：所用大学简介未列中断后最初数年的个人收入与学业影响。」
+ *     「不能据此推算未创业的结局。」
+ *
+ *   这些备注本身是**好东西** —— 它是数据团队在诚实地标注「我们查不到什么」，
+ *   属于 unknowns 层，应该显示在证据抽屉里。
+ *
+ *   但它**不能当人物结果用**：把它放进路径卡的「代价」栏，
+ *   用户看到的是「未知：本来源没有证明……」—— 完全读不通。
+ *
+ *   第一版我就踩了这个坑：加「只认负面词」的过滤，
+ *   结果「未知：本来源没有证明」里的「没有」被判成负面，照样漏进来。
+ *
+ * ⚠️ 根本修法应该是把这些备注挪到独立字段（已反馈给数据 owner）。
+ *   在数据改之前，引擎这边必须自己挡住，不能让脏数据流到 UI。
+ */
+const META_NOTE_PATTERNS = [
+  /^未知[：:]/,
+  /^注意[：:]/,
+  /^说明[：:]/,
+  /^注[：:]/,
+  /本集没有/,
+  /本来源没有/,
+  /本来源未/, // 「本来源未列中断后……」
+  /所用(来源|大学简介|资料)未/,
+  /没有对照/,
+  /没有系统评估/,
+  /没有逐年披露/,
+  /没有隔离/,
+  /无法隔离/,
+  /无法证明/,
+  /不能证明/,
+  /不能据此/,
+  /不能从.{0,12}推断/,
+  /未核实/,
+  /不等于/,
+];
+
+/** 这条 outcomes 文本是「人物结果」还是「数据维护备注」？ */
+export function isMetaNote(text: string): boolean {
+  const t = text.trim();
+  if (t.length === 0) return true;
+  return META_NOTE_PATTERNS.some((re) => re.test(t));
+}
+
+/** 取一条真正的人物结果（跳过维护备注） */
+function humanOutcome(e: TaggedEpisode, prefer: 'mid_term' | 'short_term' | 'long_term' = 'mid_term'): string | null {
+  const order: Array<'short_term' | 'mid_term' | 'long_term'> =
+    prefer === 'mid_term' ? ['mid_term', 'short_term', 'long_term'] : [prefer, 'mid_term', 'short_term'];
+  for (const k of order) {
+    const v = e.outcomes[k];
+    if (typeof v === 'string' && v.trim() && !isMetaNote(v)) return v.trim();
+  }
+  return null;
+}
 
 /**
  * 从案例结果里推出「对用户而言的代价」，并尽量挂上用户原话。
@@ -297,16 +390,54 @@ export function clusterIntoArchetypes(
  * ⚠️ 这是产品的核心差异化：**代价必须能追到用户自己说过的话**。
  *   用户看到「因为你刚才说……」才会信；只说「这条路有风险」是废话。
  *
- * ⚠️ 第一版的坑：直接把 `outcomes.mid_term` 当代价，结果出现
- *   「后来获得跟随 Fischberg 进行博士研究的机会」—— 那是**收获**不是**代价**。
- *   教训：**结果链 ≠ 代价**。代价必须从「约束一直存在」或「结果里的负面部分」推，
- *   而结果链本身只用来做「后来发生了什么」（那是另一栏）。
+ * ⚠️ 两个已踩过的坑：
+ *   ① 直接把 outcomes.mid_term 当代价 → 输出「后来获得跟随 X 进行博士研究的机会」（收获不是代价）
+ *   ② 只按「负面词」过滤 → 「未知：本来源没有证明」里的「没有」被判成负面，照样漏进来
+ *   现在：先挡维护备注（isMetaNote），再找明确负面的结果。
  */
 function isNegativeOutcome(text: string): boolean {
-  // 只认明确的负面信号，不猜
-  return /失败|落榜|未|没有|放弃|退出|止损|无望|紧张|消耗|遗憾|后悔|低于|缓慢|波动|被迫|再次转行|撑不过/.test(
+  return /失败|落榜|未完成|放弃|退出|止损|无望|紧张|消耗|遗憾|后悔|低于|缓慢|波动|被迫|再次转行|撑不过|没有成为|没有完成|失去/.test(
     text,
   );
+}
+
+/**
+ * 判断一条代价是否与用户原话**语义相关**。
+ *
+ * ⚠️ 走过的弯路：我一开始用「字符 bigram 重叠 ≥ 0.06」当判据，结果全被挡掉 ——
+ *   「我不太怕晚毕业，我最怕的是再浪费几年」
+ *   vs「第一次跨考落榜，毕业后进入一家小公司做测试」
+ *   字面重叠只有 0.029，但**语义上明显相关**（都是「白走一趟」）。
+ *
+ *   字符级重合检测不了语义关联。改用**概念命中** ——
+ *   人在意的事情往往落在少数几个概念上（时间、方向、钱、家庭……），
+ *   代价文本里会以不同措辞再次出现这些概念。
+ */
+const CONCEPT_GROUPS: Array<{ name: string; words: RegExp }> = [
+  { name: '时间/浪费', words: /晚|浪费|白走|几年|两年|一年|时间|耗|久|拖/ },
+  { name: '方向/匹配', words: /方向|适合|对口|喜欢|兴趣|匹配|认可|意义/ },
+  { name: '收入/经济', words: /收入|薪资|薪酬|钱|经济|工资|低|穷/ },
+  { name: '家庭/期待', words: /家|父母|家人|期待|期望|解释/ },
+  { name: '失败/重来', words: /失败|落榜|没|放弃|退回|重新|再来|转行|转岗/ },
+  { name: '稳定/风险', words: /稳定|不稳|风险|断|波动|压力/ },
+  { name: '能力/积累', words: /积累|技能|能力|基础|训练|证明/ },
+  { name: '学历/资格', words: /学位|学历|资格|文凭|博士|研究生|毕业/ },
+];
+
+function conceptsOf(text: string): Set<string> {
+  const out = new Set<string>();
+  for (const g of CONCEPT_GROUPS) {
+    if (g.words.test(text)) out.add(g.name);
+  }
+  return out;
+}
+
+/** 代价文本与用户原话是否共享至少一个概念 */
+export function isRelevantToQuote(costText: string, quote: string): boolean {
+  const a = conceptsOf(costText);
+  const b = conceptsOf(quote);
+  for (const x of a) if (b.has(x)) return true;
+  return false;
 }
 
 function buildCosts(
@@ -316,28 +447,44 @@ function buildCosts(
 ): PersonalizedCost[] {
   const costs: PersonalizedCost[] = [];
 
-  // ① 首选：从结果链里挑**明确负面**的那一条，挂上用户原话
-  //    （这才叫「对你而言的代价」—— 别人的一段负面经历 + 你在意的点）
+  // ① 首选：从结果链里挑**明确负面**的那一条（先挡掉维护备注）
   const negatives = cases
-    .map((e) => e.outcomes.mid_term || e.outcomes.short_term)
-    .filter((x) => typeof x === 'string' && isNegativeOutcome(x));
+    .map((e) => humanOutcome(e, 'mid_term'))
+    .filter((x): x is string => x !== null && isNegativeOutcome(x));
 
-  if (userQuote && userQuote.trim().length > 0 && negatives.length > 0) {
+  if (userQuote && userQuote.trim().length > 0) {
     const q = userQuote.trim();
-    // 挑与用户在意点最相关的那条负面结果
-    const best = negatives
-      .map((o) => ({ o, s: textSim(o, q) + textSim(o, situation.goals.join('')) }))
-      .sort((a, b) => b.s - a.s)[0];
 
-    costs.push({
-      text: best.o,
-      basis: { kind: 'user_quote', quote: q, note: '与用户明确表达过的在意点直接相关' },
-    });
+    // ⚠️ 挂原话的前提是**语义真的相关**（概念命中，不是字符重叠）。
+    //    不相关就不挂 —— 否则每条路径都挂同一句话，「因为你刚才说」就成套话了。
+    const relevant = negatives.filter((o) => isRelevantToQuote(o, q));
+
+    if (relevant.length > 0) {
+      // 相关的中挑最短的 —— 最短通常最聚焦，也最好读
+      const best = [...relevant].sort((a, b) => a.length - b.length)[0];
+      costs.push({
+        text: best,
+        basis: { kind: 'user_quote', quote: q, note: '这条代价命中了你在意的那一类问题' },
+      });
+    }
+    /**
+     * ⚠️ 试过「放宽兜底」但**否决了**。
+     *
+     *   为了让更多路径挂上原话，我试过：候选里没有明确负面结果时，
+     *   只要与用户原话共享概念就挂上。结果输出变成：
+     *     ★【挂你原话】 仍继续学习，1969 年取得文凭。      ← 这是进展不是代价
+     *     ★【挂你原话】 毕业后进入互联网公司做数据分析。    ← 这是结果不是代价
+     *
+     *   「代价」栏里写进展，比不写更糟 —— 用户会以为系统分不清好坏。
+     *   宁可覆盖少，也不能让这一栏说出不是代价的东西。
+     *
+     *   → 只在「明确负面」的结果上挂原话。覆盖率低就低。
+     */
   }
 
   // ② 其次：约束会一直存在 —— 这是最稳的「代价」来源
   for (const e of cases) {
-    const c = e.decision_state.constraints[0];
+    const c = e.decision_state.constraints.find((x) => typeof x === 'string' && x.trim().length > 0 && !isMetaNote(x));
     if (!c) continue;
     const text = `即使选了这条路，「${c}」也不会消失`;
     if (costs.some((x) => x.text === text)) continue;
@@ -359,17 +506,70 @@ function buildCosts(
   return costs.slice(0, 3);
 }
 
-/** 「这条路保护的是什么」—— 从案例的 goals + 没有付出的东西里推 */
-function buildProtects(cases: TaggedEpisode[]): string[] {
-  const out: string[] = [];
-  for (const e of cases) {
-    for (const g of e.decision_state.goals) {
-      const t = `继续拥有「${g}」的可能`;
-      if (!out.includes(t)) out.push(t);
+/**
+ * 「这条路保护的是什么」。
+ *
+ * ⚠️ 第一版是错的：只是把 case 的 goals 套了个模板 ——
+ *     · 继续拥有「探索生物学」的可能
+ *   读起来绕，而且那是**目标**不是**保护**。
+ *
+ * ⚠️ 第二版也有错：我把「用户的 constraints」也算进去了，
+ *   结果 4 条路径的「保护」**一模一样** —— 因为输入相同。
+ *   但不同路径保护的东西本来就该不同：
+ *     「守住已投入的路径」保护的是已有的积累
+ *     「先试探再转向」保护的是「不用一次押上全部」
+ *
+ *   所以：保护必须从**这条路本身的做法**推，不能从用户处境推。
+ */
+function buildProtects(cases: TaggedEpisode[], archetype: PathArchetypeId): string[] {
+  /**
+   * 走法 → 它保护了什么。
+   * 这是**领域知识**：每种走法各有各的「不用失去」。
+   */
+  const BY_ARCHETYPE: Record<PathArchetypeId, string[]> = {
+    persist: ['已有的积累继续算数', '生活与收入不必经历断档', '不用向任何人解释为什么改主意'],
+    explore_then_persist: [
+      '不用一次押上全部筹码',
+      '在放弃之前先拿到真实信息',
+      '即使最后留下，这也是「试过之后的选择」而不是「没敢试」',
+    ],
+    explore_then_switch: [
+      '不用一次押上全部筹码',
+      '在新方向上先拿到真实反馈再决定',
+      '验证期内原有的退路仍然有效',
+    ],
+    direct_switch: ['不用在两条路之间长期消耗', '新方向的起步时间不会被拉长', '做决定的心理成本一次性结清'],
+    dual_track: ['原有收入与身份不会立刻断掉', '新方向可以在低压下试错', '不必在信息不足时做二选一'],
+    abandon: ['不用继续追加投入', '可以把资源转向别处', '止损线由自己设定，而不是被拖到最后'],
+    unknown: ['现有材料不足以判断这条路保护了什么'],
+  };
+
+  // 先给该走法的固有保护
+  const out: string[] = [...(BY_ARCHETYPE[archetype] ?? BY_ARCHETYPE.unknown)];
+
+  // 再从**该路径案例自己的约束**里补一条更具体的（约束的另一面）
+  const RULES: Array<{ match: RegExp; protect: string }> = [
+    { match: /已投入|已修完|已积累|读了两年|五年学制|投入大/, protect: '已付出的时间不会白费' },
+    { match: /重新积累|从零|跨领域|没有技术基础/, protect: '不用重新证明自己' },
+    { match: /家里|家庭|父母|家人|期望/, protect: '不用向家里解释为什么改了主意' },
+    { match: /保研|资格|门槛|选拔|学制|编制/, protect: '现有资格与名额继续有效' },
+    { match: /收入|经济|薪资|薪酬|钱/, protect: '短期内收入不会掉下来' },
+    { match: /毕业|延毕|时间/, protect: '毕业节奏不用往后推' },
+  ];
+
+  const pathConstraints = cases
+    .flatMap((e) => e.decision_state.constraints)
+    .filter((x) => typeof x === 'string' && x.trim() && !isMetaNote(x));
+
+  for (const c of pathConstraints) {
+    for (const r of RULES) {
+      if (r.match.test(c) && !out.includes(r.protect)) {
+        out.push(r.protect);
+        return out.slice(0, 3);
+      }
     }
-    if (out.length >= 3) break;
   }
-  if (out.length === 0) out.push('现有材料未记录他保护了什么');
+
   return out.slice(0, 3);
 }
 
@@ -418,7 +618,7 @@ export function buildLandscape(
       id: archetype,
       title: copy.title,
       one_line: copy.one_line,
-      protects: buildProtects(cases),
+      protects: buildProtects(cases, archetype),
       costs: buildCosts(cases, situation, input.user_quote),
       supporting_cases: buildSupportingCases(cases),
       // 单条案例支撑时打标，让用户知道这条路的证据厚度
