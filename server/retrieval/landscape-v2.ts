@@ -29,7 +29,6 @@
  *      路径卡上**不出现大头像、不把姓名当主视觉**，姓名只在 supporting_cases 里。
  */
 
-import type { DecisionEpisode } from '../../src/types/episode.ts';
 import type {
   LandscapeResponse,
   PathArchetype,
@@ -167,7 +166,7 @@ function personTrajectoryText(eps: TaggedEpisode[]): string {
 
 /** 简单的中文字符 bigram 重叠 —— 与 dimensions.ts 的做法一致，不引额外依赖 */
 function bigrams(s: string): Set<string> {
-  const t = s.replace(/[\s，。、；：（）()【】「」…—\-]/g, '');
+  const t = s.replace(/[\s，。、；：（）()【】「」…—-]/gu, '');
   const out = new Set<string>();
   for (let i = 0; i < t.length - 1; i++) out.add(t.slice(i, i + 2));
   return out;
