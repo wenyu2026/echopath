@@ -16,6 +16,7 @@
     "refresh:cache": "node scripts/build-demo-cache.mjs --from-api",
     "preflight": "node scripts/preflight.mjs",
     "smoke": "node scripts/smoke.mjs",
+    "smoke:offline": "node scripts/smoke-offline.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "review:sheet": "node scripts/review-sheet.mjs",
     "start": "node scripts/start-demo.mjs"

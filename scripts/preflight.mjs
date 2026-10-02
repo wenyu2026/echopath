@@ -498,6 +498,29 @@ if (serverOk) {
   check('前端 6 条路由渲染正常（真实浏览器）', true, '后端没起，跳过（冒烟需要后端提供真实数据）', false);
 }
 
+/* ---------- 11. 断网兜底是否真的生效（真实浏览器 + 真的连不上） ---------- */
+// 方案验收清单第 11 条：「断网/API 错误时有缓存的 Demo 数据，保证上台可演示」。
+// 在这之前我们只验过**快照文件在不在**，从没验过「后端真挂掉时前端会不会降级、
+// 降级得对不对」。这是 demo 的保险绳 —— 只在断网那一刻才用得上，平时跑不到。
+//
+// 这项自带一个"接口必然失败"的前端实例，不依赖当前后端状态，所以总是执行。
+{
+  const off = run('node', ['scripts/smoke-offline.mjs'], { timeout: 180_000 });
+  const lines = off.out
+    .split('\n')
+    .filter((l) => /兜底|降级|横幅|❌/.test(l))
+    .slice(-4)
+    .map((l) =>
+      l
+        .split('\u001b')
+        .map((seg) => seg.replace(/^\[[0-9;]*m/, ''))
+        .join('')
+        .trim(),
+    )
+    .join(' / ');
+  check('断网兜底真的生效（拔网线也能演示）', off.ok, off.ok ? '' : lines.slice(0, 320));
+}
+
 /* ---------- 输出 ---------- */
 console.log('');
 for (const r of results) {
