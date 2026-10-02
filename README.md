@@ -10,6 +10,52 @@
 
 **不是预测你的未来，而是把别人已经走过的未来提前给你看。**
 
+---
+
+## 产品形态：一条对话流程
+
+```
+打开 http://localhost:5173/
+        ↓
+AI 一问一答，边聊边把你的处境抽成结构（右侧面板实时长出来）
+        ↓
+聊够了 → AI 总结 →「我理解得对吗？」
+        ↓
+选数据源（历史人物库 / 校友库）→ 去数据库找「来时路相近的人」
+        ↓
+给你 2-4 条**真实有人走过的路**（人物后置，先讲路再讲人）
+        ↓
+点开某条路 → 看那个人的完整轨迹 + 证据 + 为什么不能照搬
+        ↓
+回到自己 → 还没想清楚的地方，选一个就是下一步
+```
+
+**只有这一条流程。** 早期还有一条「六页固定问卷」流程（P1→P6），
+已挪到分支 `classic-flow-archive` 归档，master 上不再有。
+
+> 归档分支里还保留着：离线兜底快照、What-if 面板、七维匹配卡、
+> 反类比与证据分层的前端实现。需要时：
+> `git checkout classic-flow-archive -- src/pages`
+
+---
+
+## 核心主张：历史名人只是**演示数据**
+
+真正要做的是一个**引擎** —— 换一份人群数据，同一套引擎照跑：
+
+```
+历史人物库  ─┐
+校友库      ─┼→  同一套 Schema → 同一个引擎 → 同一种输出
+员工库      ─┤
+机构私有库  ─┘
+```
+
+**这一条有自动化验证**：
+
+```bash
+npm run demo:verify     # 6 项，验「换数据源、结构一致、内容不同、可追溯、追原话、够快」
+```
+
 用户不是来问「我该不该转专业」，而是来理解：像我这样的人，曾经有人坚持、有人转向、
 有人先试探再转向；这些选择分别付出了什么代价、带来了什么可能结果，我能不能接受。
 
@@ -124,8 +170,8 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 | 命令 | 作用 |
 |---|---|
 | **`npm start`** | **一条命令拉起前后端**（后端 :3000 + 前端 :5173）—— 演示用这个 |
-| **`npm run preflight`** | **上台前自检**（20 项，约 2 分钟），给明确的「可以上台 / 阻塞项」 |
-| **`npm run smoke`** | **前端冒烟**（真实 Chrome 打开 8 条路由，验证真的渲染出来了、控制台无报错） |
+| **`npm run preflight`** | **上台前自检**（18 项，约 1 分钟），给明确的「可以上台 / 阻塞项」 |
+| **`npm run smoke`** | **前端冒烟**（真实 Chrome 打开对话首页，验证真的渲染出来了、控制台无报错） |
 | **`npm run smoke:offline`** | **断网兜底验证**（造一个接口必然失败的实例，验「拔网线也能演示」是不是真的） |
 | **`npm run demo:verify`** | **决策地形可行性验证**（验「换数据源、同一套引擎」是否成立） |
 | **`npm run tag:mechanisms`** | 给案例打「决策机制」标签（离线跑，产出进 git） |
@@ -142,12 +188,24 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 | `npm run validate:data` | 校验 `data/episodes.json` 的结构与来源引用 |
 | **`npm run check:sources`** | **来源链接体检** —— 查 37 条来源的链接是否还能打开 |
 | **`npm run review:sheet`** | 生成**人工核查清单**（`data/REVIEW-CHECKLIST.md`），把"去审来源"变成可打勾的表格 |
-| `npm run refresh:cache` | 重新生成离线兜底快照（需后端在跑） |
-| `npm run build:cache` | 用现有 fixture 生成快照（不请求后端） |
+| **`npm run demo:verify`** | 验证「换数据源，同一套引擎」是否成立（6 项） |
+| **`npm run tag:mechanisms`** | 给案例打「决策机制」标签（离线，产出进 git） |
 | `.\scripts\status.ps1` | 看全队进度 |
 
-> **改完 `data/` 或 `server/` 里的检索/反类比逻辑，记得跑 `npm run refresh:cache`** ——
-> 否则离线快照会和实时结果不一致，`npm run preflight` 会报出来。
+### 归档分支专用（master 上跑不了）
+
+这两个脚本生成的是**六页经典流程**的离线兜底快照。
+六页已挪到分支 `classic-flow-archive`，master 上没有那条链路了。
+
+| 命令 | 作用 |
+|---|---|
+| `npm run cache:build` | 用现有 fixture 生成离线快照 |
+| `npm run cache:refresh` | 重新生成离线快照（需后端在跑） |
+| `npm run smoke:offline` | 验证断网降级（测的是六页那条链路） |
+
+```bash
+git checkout classic-flow-archive   # 切到归档分支后这些才可用
+```
 
 ---
 

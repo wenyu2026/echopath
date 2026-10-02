@@ -17,7 +17,6 @@ import { selectDiverse } from '../retrieval/diversity.ts';
 import { scoreDimensions, explainSimilarity } from '../retrieval/dimensions.ts';
 import { validateSituation, validateSituationShape } from '../shared/situation-contract.ts';
 import { normalizeSituationFields, detectOutOfScope } from '../parser/situation-parser.ts';
-import { getJourneyQuestions, detectJourneyStage } from '../../src/data/mock.ts';
 import {
   categoryMatch,
   bigramOverlap,
@@ -156,63 +155,6 @@ test('差异惩罚：年代越远越高', () => {
 
 /* ============================================================
    ④ 离线兜底：三个场景都要在，且能按输入挑对
-   ============================================================ */
-
-test('离线兜底：打包了 3 个演示场景且都不是错误响应', () => {
-  const ts = readFileSync(join(root, 'src', 'data', 'demoCache.ts'), 'utf8');
-
-  // 生成文件里应有三段 raw_input
-  const rawInputs = ts.match(/"raw_input":/g) ?? [];
-  assert.ok(rawInputs.length >= 3, `应打包 ≥3 个场景，实际 ${rawInputs.length}`);
-  assert.ok(!ts.includes('"error"'), 'demoCache.ts 里不应出现错误响应');
-  assert.ok(ts.includes('export function pickScenario'), '应导出 pickScenario');
-});
-
-test('离线兜底：pickScenario 能把三种问法分到不同场景', () => {
-  const ts = readFileSync(join(root, 'src', 'data', 'demoCache.ts'), 'utf8');
-
-  // 抽出三个场景的 raw_input，用同一套 bigram 逻辑复现匹配
-  const raws = [...ts.matchAll(/"raw_input":\s*"([^"]+)"/g)].map((m) => m[1]);
-  assert.ok(raws.length >= 3, '应抽出 ≥3 条 raw_input');
-
-  const pick = (narrative: string) => {
-    let best = 0;
-    let bestScore = 0;
-    raws.forEach((r, i) => {
-      const s = bigramOverlap(narrative, r);
-      if (s > bestScore) {
-        bestScore = s;
-        best = i;
-      }
-    });
-    return best;
-  };
-
-  // 三个问法应各自命中不同的场景下标
-  const picks = raws.map((r) => pick(r));
-  assert.equal(new Set(picks).size, raws.length, `三个问法应命中不同场景，实际 ${picks.join(',')}`);
-});
-
-/* ============================================================
-   ⑤ 会话持久化：模式必须一起存（否则刷新后把缓存当实时）
-   ============================================================ */
-
-test('持久化：AppState 存了 mode 与 offlineReason，且读取时有形状校验', () => {
-  const src = readFileSync(join(root, 'src', 'state', 'AppState.tsx'), 'utf8');
-
-  assert.ok(src.includes('sessionStorage'), '应使用 sessionStorage（不是 localStorage，避免污染下次演示）');
-  assert.ok(/mode[,:\s]/.test(src), '应持久化 mode');
-  assert.ok(src.includes('offlineReason'), '应持久化 offlineReason');
-  assert.ok(src.includes('Array.isArray(p.result.matches)'), '读取时应有形状校验，坏数据不能崩页面');
-  assert.ok(src.includes('removeItem'), 'reset() 应清空持久化');
-});
-
-/* ============================================================
-   ⑧ 「像你的地方」不能比「不像」弱
-   ------------------------------------------------------------
-   对比两侧文案发现的不对称：改之前三条案例的「像」全都是
-   「可逆性相近」排第一（该维度双方都是 medium 时恒为 1.0，
-   信息量最低却霸榜），而且不说是哪一条重合。
    ============================================================ */
 
 test('解释：reversibility 不该霸榜（低信息量维度要降权）', () => {
@@ -460,66 +402,6 @@ test('来源元信息：抽屉要渲染出版信息与局限，而不只是编�
    把系统编的内容算在用户头上。
    ============================================================ */
 
-test('诚实性：全跳过时必须说明那是通用起点，不是"从你的回答里抽的"', () => {
-  const p2 = readFileSync(join(root, 'src', 'pages', 'P2Crossroads.tsx'), 'utf8');
-  const state = readFileSync(join(root, 'src', 'state', 'AppState.tsx'), 'utf8');
-
-  assert.ok(
-    /situationFromUserInput/.test(state),
-    'AppState 必须记录"用户到底写没写过内容"',
-  );
-  assert.ok(
-    /hasUserInput\s*=\s*narrative\.trim\(\)\.length\s*>\s*0/.test(state),
-    '应从 narrative 是否为空推出 hasUserInput',
-  );
-  assert.ok(
-    /raw_input:\s*hasUserInput\s*\?\s*narrative/.test(state),
-    '没有用户输入时不应把兜底文案当作"他的回答"直接发出去',
-  );
-  assert.ok(
-    /situationFromUserInput\s*\?/.test(p2),
-    'P2 必须按"有没有用户输入"分两种措辞',
-  );
-  assert.ok(
-    /通用起点|不是从你的话里读出来的/.test(p2),
-    '全跳过时要明说是通用起点，不能说成从用户回答里抽的',
-  );
-});
-
-test('诚实性：有用户输入时仍保留原来的措辞（不要因噎废食）', () => {
-  const p2 = readFileSync(join(root, 'src', 'pages', 'P2Crossroads.tsx'), 'utf8');
-  assert.ok(
-    /我们从你的回答里抽出了这些结构/.test(p2),
-    '有输入时这句话是对的，应保留',
-  );
-});
-
-/* ============================================================
-   ⑱ 「看证据来源（N）」的 N 不能把 AI 推断算进去
-   ------------------------------------------------------------
-   原来按钮写的是 ep.evidence.length，但每条案例的 evidence 里
-   都有 1 条 ai_inference —— 于是按钮显示「看证据来源（3）」，
-   点进去只有 2 条能点开。
-   点开发现少一条，比一开始就写对更伤可信度。
-   ============================================================ */
-
-test('证据计数：AI 推断不能算作「来源」', () => {
-  const src = readFileSync(join(root, 'src', 'pages', 'P4Episode.tsx'), 'utf8');
-
-  assert.ok(
-    /sourceCount/.test(src),
-    '应单独算外部来源数，而不是直接用 evidence.length',
-  );
-  assert.ok(
-    /type\s*!==\s*'ai_inference'/.test(src),
-    'sourceCount 必须排除 ai_inference',
-  );
-  assert.ok(
-    !/看证据来源（\{ep\.evidence\.length\}\)/.test(src),
-    '不应再用 evidence.length 当来源数（会把 AI 推断算进去）',
-  );
-});
-
 test('证据计数：抽屉要单独说明 AI 推断有几条', () => {
   const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
 
@@ -618,55 +500,6 @@ test('展示顺序：打散必须确定性（同一输入每次顺序一致）',
    而这条恰恰是「不能照搬」的核心指标。
    ============================================================ */
 
-test('维度卡：差异惩罚必须翻转，保证「条越长越好」方向统一', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'DimensionCard.tsx'), 'utf8');
-
-  assert.ok(/invert:\s*true/.test(src), '差异惩罚应标记为需要翻转');
-  assert.ok(
-    /invert\s*\?\s*1\s*-\s*raw/.test(src),
-    '应把差异惩罚翻转成「可迁移性」再画条（1 - raw）',
-  );
-  assert.ok(src.includes('可迁移性'), '标签应写成可迁移性，而不是继续叫「差异惩罚」让人误解方向');
-  assert.ok(
-    /条越长越好|所有条都是越长越好/.test(src),
-    '必须有一句说明让读者知道所有条同向，否则翻转本身反而让人困惑',
-  );
-});
-
-test('维度卡：高惩罚时要说清「不能照搬的是结果，不是做法」', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'DimensionCard.tsx'), 'utf8');
-  assert.ok(
-    /参考它的\*\*做法\*\*|别照搬/.test(src),
-    '高惩罚的解释应区分「做法可参考」与「结果不能照搬」——这是产品核心主张',
-  );
-});
-
-/* ============================================================
-   ⑮ 界面上的耗时不能少报
-   ------------------------------------------------------------
-   实测：P3 的检索过程条原来只显示 meta.elapsed_ms（检索那一段，298ms），
-   而用户实际等了 2.6s（解析 2336ms + 检索 298ms）—— 少了 8.8 倍。
-   页面顶部还写着「我们不隐藏过程」，最显眼的数字却在藏 90% 的时间。
-   ============================================================ */
-
-test('耗时展示：必须把解析时间算进去，不能只报检索那一段', () => {
-  const src = readFileSync(join(root, 'src', 'pages', 'P3ForkMap.tsx'), 'utf8');
-
-  assert.ok(
-    /parser_elapsed_ms/.test(src),
-    'P3 必须读 parser_elapsed_ms —— 否则只显示检索耗时，少报近一个数量级',
-  );
-  assert.ok(
-    /totalSeconds|合计|本次耗时/.test(src),
-    '应展示「用户实际等待」的合计耗时，而不是单个阶段',
-  );
-  // 不应再出现只报 meta.elapsed_ms 的旧写法
-  assert.ok(
-    !/耗时\s*\{\(meta\.elapsed_ms/.test(src),
-    '不应保留「耗时 = 仅 elapsed_ms」的旧写法',
-  );
-});
-
 test('耗时展示：后端确实回了 parser_elapsed_ms（否则前端无从计算）', () => {
   const src = readFileSync(join(root, 'server', 'api.ts'), 'utf8');
   assert.ok(
@@ -731,116 +564,6 @@ test('超范围：拒答信息要能指导用户改写，而不是只说「失�
    立刻露出「这套东西只做过学生」的马脚。
    ============================================================ */
 
-test('P1 问题：按处境切换措辞（校园 / 职场 / 中性）', () => {
-  const school = getJourneyQuestions('大二，专业是材料科学');
-  const career = getJourneyQuestions('工作五年，在一家小公司做产品');
-  const general = getJourneyQuestions('');
-
-  assert.equal(school.length, 6, '六问');
-  assert.equal(career.length, 6, '六问');
-  assert.equal(general.length, 6, '六问');
-
-  // 校园版与职场版的第二问必须不同 —— 这是「只在大学里成立」最明显的那句
-  assert.notEqual(
-    school[1].label,
-    career[1].label,
-    '校园版和职场版的第二问不该一模一样',
-  );
-  assert.ok(
-    /两年|专业课|竞赛|实验室/.test(school[1].label + school[1].placeholder),
-    '校园版应含校园语汇',
-  );
-  assert.ok(
-    !/两年|专业课|竞赛|实验室/.test(career[1].label + career[1].placeholder),
-    `职场版不该出现校园语汇：${career[1].label} / ${career[1].placeholder}`,
-  );
-  assert.ok(
-    !/两年|专业课|竞赛|实验室/.test(general[1].label + general[1].placeholder),
-    '中性版也不该出现校园语汇',
-  );
-});
-
-test('P1 问题：判不出处境时退回中性措辞，不假装知道', () => {
-  const s = detectJourneyStage('');
-  assert.equal(s, 'general', '空输入应归为中性，而不是默认校园');
-
-  // 各类关键词都要能判对
-  assert.equal(detectJourneyStage('大三'), 'school');
-  assert.equal(detectJourneyStage('在读研究生'), 'school');
-  assert.equal(detectJourneyStage('工作五年'), 'career');
-  assert.equal(detectJourneyStage('想转行'), 'career');
-  assert.equal(detectJourneyStage('三十岁出头'), 'general');
-});
-
-test('P1 问题：切换后 id 保持一致（否则已填答案会对不上）', () => {
-  const school = getJourneyQuestions('大二');
-  const career = getJourneyQuestions('工作五年');
-  assert.deepEqual(
-    school.map((q) => q.id),
-    career.map((q) => q.id),
-    '两套问题的 id 必须一致 —— 否则用户切回上一问时答案会丢',
-  );
-});
-
-/* ============================================================
-   ⑫ 分叉地图的「过去」不能是写死的占位词
-   ------------------------------------------------------------
-   走查发现：无论用户输入什么故事，地图上都显示同样的
-   「入学 / 投入 / 动摇」—— 连"换工作"这种跟入学无关的处境也显示「入学」。
-   而地图是整个 demo 视觉上最显眼的东西，
-   写死的标签等于告诉评委「这张图是装饰，不是数据」。
-   ============================================================ */
-
-test('分叉地图：过去节点必须从数据推出，不得写死入学/投入', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'ForkMap.tsx'), 'utf8');
-
-  // 不得再出现写死的三个节点
-  assert.ok(
-    !/label:\s*'入学'/.test(src) && !/label:\s*'投入'/.test(src),
-    '「入学 / 投入」是写死的占位词，必须改成从 situation 与案例数据推出',
-  );
-  assert.ok(src.includes('buildPastNodes'), '应有推导过去节点的函数');
-  assert.ok(src.includes('situation'), 'ForkMap 应接收 situation 才能反映用户自己的处境');
-  assert.ok(src.includes('prior_path'), '中段节点应来自匹配案例的来时路，而不是凭空写');
-});
-
-test('分叉地图：不同处境应得到不同的起点标签（逻辑层验证）', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'ForkMap.tsx'), 'utf8');
-
-  // 起点标签必须读 situation.stage（而不是常量）
-  assert.ok(
-    /situation\?\.stage|situation\.stage/.test(src),
-    '起点标签必须来自 situation.stage，否则不同处境会显示同一个词',
-  );
-
-  // 中段必须从 prior_path 抽词，且要求「多个案例共有」才有代表性
-  assert.ok(/commonPriorPathWord/.test(src), '应有从案例来时路抽共有词的函数');
-  assert.ok(
-    /n\s*>=\s*2/.test(src),
-    '中段词应要求至少 2 个案例共有 —— 只出现在一个案例里的词不具代表性',
-  );
-
-  // 末段固定为「动摇」：能走到检索这一步，对所有处境都成立
-  assert.ok(/动摇/.test(src), '末段节点应保留「动摇」');
-});
-
-test('分叉地图：末段「动摇」对所有处境都成立（保留是刻意的）', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'ForkMap.tsx'), 'utf8');
-  // 明确记录：其余两个节点数据驱动，只有末段是常量，且理由写在注释里
-  assert.ok(
-    /本身就是动摇了|对所有处境都成立/.test(src),
-    '常量节点必须写明为什么可以常量，否则后人会以为又漏了',
-  );
-});
-
-/* ============================================================
-   ⑪ 证据抽屉必须是「真的能点开验证」
-   ------------------------------------------------------------
-   抽屉的整个承诺是「每个关键事实都能追溯到具体来源」，
-   但原来只显示 source_id（如 LX-SENDAI）—— 用户根本无从验证。
-   数据里本来就有 url，只是没渲染。
-   ============================================================ */
-
 test('证据抽屉：必须把 evidence.url 渲染成可点击外链', () => {
   const src = readFileSync(join(root, 'src', 'components', 'EvidenceDrawer.tsx'), 'utf8');
 
@@ -885,44 +608,6 @@ test('证据数据：至少一半的来源带可点击 url（保证抽屉不是�
    outcomes 在时间轴展示过、又在 interpretations 层列一次；
    reflection.unknowns 更是 3/3 完全重复。
    分层区的价值是交代「哪部分有来源」，不是复述正文。
-   ============================================================ */
-
-test('证据分层：已被时间轴展示过的层必须走汇总，不再逐条重复', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'EvidenceLayers.tsx'), 'utf8');
-
-  assert.ok(
-    /SHOWN_ABOVE[\s\S]{0,80}'interpretations'/.test(src),
-    'interpretations 层应被标记为"已在时间轴展示"',
-  );
-  assert.ok(
-    /SHOWN_ABOVE[\s\S]{0,80}'unknowns'/.test(src),
-    'unknowns 层应被标记为"已在时间轴展示"',
-  );
-  assert.ok(src.includes('layer-summary'), '应有汇总行代替逐条重复');
-  assert.ok(
-    /detailed\s*=\s*LAYER_META\.filter/.test(src),
-    '应有 detailed / summarized 的拆分逻辑',
-  );
-});
-
-test('证据分层：真正的新信息（带来源的史实/本人表述/AI 类比）仍要完整列出', () => {
-  const src = readFileSync(join(root, 'src', 'components', 'EvidenceLayers.tsx'), 'utf8');
-
-  // facts / self_claims / ai_inferences 不得进入汇总集合
-  const block = src.slice(src.indexOf('const SHOWN_ABOVE'));
-  for (const k of ['facts', 'self_claims', 'ai_inferences']) {
-    assert.ok(
-      !new RegExp(`SHOWN_ABOVE[^;]*'${k}'`, 's').test(block),
-      `${k} 属于新信息，不能走汇总（否则等于把来源信息藏起来）`,
-    );
-  }
-});
-
-/* ============================================================
-   ⑨ 模型输出的小瑕疵要在显示前清掉
-   ------------------------------------------------------------
-   实测见到过 goals 里出现「止损止损」这种叠词。不影响程序正确性，
-   但会直接显示给用户 —— 在「把别人的经历讲清楚」的产品里显得很廉价。
    ============================================================ */
 
 test('净化：去掉相邻重复词，但不改写其他内容', () => {

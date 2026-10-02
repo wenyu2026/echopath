@@ -10,10 +10,10 @@
  * 忘了起后端、密钥过期、数据没同步、缓存是旧的这类小事。
  * 这些都能在 30 秒内查完，但不查就要在评委面前查。
  */
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -86,72 +86,85 @@ try {
 }
 check(`案例数据可用（${episodeCount} 条）`, episodeCount >= 12, episodeCount >= 12 ? '' : '案例太少，演示会很单薄');
 
-/* ---------- 3. 离线兜底 ---------- */
-let scenarioCount = 0;
-let cacheHasError = false;
-try {
-  const ts = readFileSync(join(root, 'src', 'data', 'demoCache.ts'), 'utf8');
-  scenarioCount = (ts.match(/"raw_input":/g) ?? []).length;
-  cacheHasError = ts.includes('"error"') && ts.includes('INTERNAL');
-} catch {
-  /* 报下面 */
-}
-check(
-  `离线兜底快照（${scenarioCount} 个场景）`,
-  scenarioCount >= 3 && !cacheHasError,
-  cacheHasError ? '快照里混进了错误响应 —— 跑 npm run refresh:cache' : scenarioCount < 3 ? '缺场景，跑 npm run build:cache' : '',
-);
-
-/* ---------- 4. 离线快照是否比逻辑代码旧 / 三份是否一致 ---------- */
-// 踩过两次：
-//  ① 改了 dimensions.ts 的维度算法后忘了重生成快照 →
-//     「实时」与「离线」两条路径给出不同分数，评委一对比就露馅。
-//  ② refresh 中途某个 demo 失败 → fixture 目录里留下「一半新、一半旧」，
-//     而按 mtime 只看最新那个会误判成"是新的"。
-//     混着两代数据的快照比全旧更危险，因为看不出来。
+/* ---------- 3. 决策地形引擎的数据源 ---------- */
+//
+// ⚠️ 2026-10-02 改：原来这里查「离线兜底快照」（src/data/demoCache.ts）。
+//    那份快照是**服务六页经典流程**的，六页已挪到 `classic-flow-archive` 分支，
+//    master 上不再有它。所以改成查**当前主流程真正依赖的东西**：
+//      · 历史人物库（data/episodes.json + data/mechanisms.json）
+//      · 校友库（data/alumni-demo.ts）
+//    这两个是「换数据源」那一拍的基础，缺一个 demo 就少一半。
 {
-  const watch = [
-    join(root, 'server', 'retrieval', 'dimensions.ts'),
-    join(root, 'server', 'retrieval', 'diversity.ts'),
-    join(root, 'server', 'counter-analogy', 'counter-analogy.ts'),
-    join(root, 'server', 'evidence', 'evidence-writer.ts'),
-    join(root, 'data', 'episodes.json'),
-  ];
-  const inputs = JSON.parse(readFileSync(join(root, 'server', 'fixtures', 'demo-inputs.json'), 'utf8'));
-  const fixturePaths = inputs.demos.map((d) => join(root, 'server', 'fixtures', `demo-cache-${d.id}.json`));
-  const cacheTs = join(root, 'src', 'data', 'demoCache.ts');
+  let problems = [];
 
-  // 4a) 三份 fixture 的 mtime 是否一致（生成过就算跨秒，容差 5 秒）
-  let spread = 0;
-  const existing = fixturePaths.filter((f) => existsSync(f));
-  if (existing.length >= 2) {
-    const times = existing.map((f) => statSync(f).mtimeMs);
-    spread = Math.max(...times) - Math.min(...times);
-  }
-  check(
-    '三份离线快照是同一批生成的',
-    spread <= 5000,
-    spread > 5000
-      ? `三份 fixture 时间差 ${Math.round(spread / 1000)}s —— 可能上次 refresh 中途失败了，跑 npm run refresh:cache 重来`
-      : '',
-  );
-
-  // 4b) 快照是否比逻辑代码旧
-  let stale = '';
-  if (existsSync(cacheTs)) {
-    const cacheTime = statSync(cacheTs).mtimeMs;
-    for (const f of watch) {
-      if (existsSync(f) && statSync(f).mtimeMs > cacheTime) {
-        stale = `${basename(f)} 比快照新`;
-        break;
+  // 3a) 机制标注覆盖率 —— 没标注的案例进不了聚类
+  try {
+    const eps = JSON.parse(readFileSync(join(root, 'data', 'episodes.json'), 'utf8')).episodes ?? [];
+    const mech = JSON.parse(readFileSync(join(root, 'data', 'mechanisms.json'), 'utf8')).mechanisms ?? {};
+    const missing = eps.filter((e) => !mech[e.episode_id]);
+    if (missing.length > 0) {
+      problems.push(
+        `${missing.length}/${eps.length} 条案例没有机制标注 —— 跑 npm run tag:mechanisms（否则它们进不了路径聚类）`,
+      );
+    }
+    // 根因素必须落在封闭词表内，否则聚类失效
+    const VALID = new Set([
+      '沉没成本', '转换成本', '新路径验证不足', '长期方向匹配', '再次选错风险', '时间窗口',
+      '经济压力', '家庭约束', '制度约束', '身份绑定', '机会成本', '社会支持',
+    ]);
+    const outside = [];
+    for (const [id, m] of Object.entries(mech)) {
+      for (const f of m.root_factors ?? []) {
+        if (!VALID.has(f)) outside.push(`${id}:${f}`);
       }
     }
+    if (outside.length > 0) {
+      problems.push(`根因素含词表外的值（聚类会失效）：${outside.slice(0, 3).join(' / ')}`);
+    }
+  } catch (e) {
+    problems.push(`读案例/机制数据失败：${e.message}`);
   }
-  check(
-    '离线快照不比逻辑代码旧',
-    !stale,
-    stale ? `${stale} —— 跑 npm run refresh:cache 重新生成（需后端在跑）` : '',
-  );
+
+  // 3b) 校友库（第二个数据源）
+  const alumni = join(root, 'data', 'alumni-demo.ts');
+  if (!existsSync(alumni)) {
+    problems.push('缺 data/alumni-demo.ts —— 「换数据源」那一拍演不了');
+  }
+
+  check('决策地形数据源齐备（机制标注 + 校友库）', problems.length === 0, problems.slice(0, 2).join(' / '));
+}
+
+/* ---------- 4. 主流程用到的后端模块都能加载 ---------- */
+//
+// ⚠️ 这条是补上来的 —— 同一个错误我犯过三次：
+//    新增 server/xxx.ts 时写 `'../retrieval/f.ts'`，但它其实在 server/ 下应该是 `'./retrieval/f.ts'`。
+//    tsc 不报、构建不报，**只有起服务时才 ERR_MODULE_NOT_FOUND 崩掉**。
+//    这里是运行时真加载一遍，比静态扫字符串更可靠。
+{
+  const mods = [
+    'server/api.ts',
+    'server/landscape-routes.ts',
+    'server/case-routes.ts',
+    'server/interview/interview.ts',
+    'server/interview/interview-routes.ts',
+    'server/retrieval/data-source.ts',
+    'server/retrieval/landscape-v2.ts',
+  ];
+  let bad = '';
+  for (const m of mods) {
+    const r = run('node', ['-e', `import('./${m}').catch(e=>{console.error('IMPORT_FAIL:'+e.message);process.exit(9)})`], {
+      timeout: 30_000,
+    });
+    // ⚠️ run() 失败时把 stdout+stderr 合在 out 里，没有单独的 err 字段。
+    //    而且「找不到 API key」是**正常**的（模块能加载，只是顶层打印警告），
+    //    所以只认真正的模块解析错误。
+    const line = r.out.split('\n').find((l) => l.includes('IMPORT_FAIL') || l.includes('ERR_MODULE'));
+    if (line) {
+      bad = `${m}：${line.trim().slice(0, 90)}`;
+      break;
+    }
+  }
+  check('主流程后端模块都能加载', bad === '', bad);
 }
 
 /* ---------- 5. 来源链接完整性（离线检查，不发网络请求） ---------- */
@@ -557,28 +570,18 @@ if (serverOk) {
   check('前端 6 条路由渲染正常（真实浏览器）', true, '后端没起，跳过（冒烟需要后端提供真实数据）', false);
 }
 
-/* ---------- 11. 断网兜底是否真的生效（真实浏览器 + 真的连不上） ---------- */
-// 方案验收清单第 11 条：「断网/API 错误时有缓存的 Demo 数据，保证上台可演示」。
-// 在这之前我们只验过**快照文件在不在**，从没验过「后端真挂掉时前端会不会降级、
-// 降级得对不对」。这是 demo 的保险绳 —— 只在断网那一刻才用得上，平时跑不到。
+/* ---------- 11. 断网兜底（已随六页一起挪走） ---------- */
 //
-// 这项自带一个"接口必然失败"的前端实例，不依赖当前后端状态，所以总是执行。
-{
-  const off = run('node', ['scripts/smoke-offline.mjs'], { timeout: 180_000 });
-  const lines = off.out
-    .split('\n')
-    .filter((l) => /兜底|降级|横幅|❌/.test(l))
-    .slice(-4)
-    .map((l) =>
-      l
-        .split('\u001b')
-        .map((seg) => seg.replace(/^\[[0-9;]*m/, ''))
-        .join('')
-        .trim(),
-    )
-    .join(' / ');
-  check('断网兜底真的生效（拔网线也能演示）', off.ok, off.ok ? '' : lines.slice(0, 320));
-}
+// ⚠️ 2026-10-02：原来这里跑 `npm run smoke:offline`，验证「后端挂掉时前端降级到快照」。
+//    但那套离线兜底是**服务六页经典流程**的（src/data/demoCache.ts），
+//    六页已挪到分支 `classic-flow-archive`，master 上不再有这条链路。
+//
+//    脚本 scripts/smoke-offline.mjs **保留着** —— 在归档分支上仍然可用：
+//      git checkout classic-flow-archive
+//      npm run smoke:offline
+//
+//    当前主流程（对话式访谈）没有离线兜底：它每轮都要调 LLM。
+//    这是已知取舍，不是缺陷 —— 见 .agent/开发者交接.md。
 
 /* ---------- 输出 ---------- */
 console.log('');

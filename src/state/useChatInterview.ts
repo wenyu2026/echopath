@@ -190,7 +190,7 @@ export function useChatInterview() {
       const c = state.collected;
       const splitList = (v: string | undefined): string[] =>
         (v ?? '')
-          .split(/[，,、；;\/]/)
+          .split(/[，,、；;/]/)
           .map((x) => x.trim())
           .filter((x) => x.length > 0 && x.length < 40);
 

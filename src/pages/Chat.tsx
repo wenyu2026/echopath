@@ -14,7 +14,6 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useChatInterview } from '../state/useChatInterview';
 import { FIELDS } from '../types/interview';
 import PathCard from '../components/PathCard';
@@ -65,7 +64,6 @@ export default function Chat() {
           <h1>先说说你的情况</h1>
           <p className="tiny muted">
             不用想清楚再来。你写得越具体，后面找到的人越接近真实的你。
-            <Link to="/landscape">（或看数据源演示 →）</Link>
           </p>
         </div>
 
@@ -265,9 +263,6 @@ export default function Chat() {
             <button className="btn" onClick={chat.reset}>
               换个处境再聊一次
             </button>
-            <Link className="btn btn-ghost" to="/landscape">
-              看数据源演示
-            </Link>
           </div>
         </div>
       )}

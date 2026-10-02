@@ -57,20 +57,13 @@ function findBrowser() {
  *   变异测试（在 P5 埋一个必然抛错的表达式）当时没被抓到，就是这个原因。
  */
 const ROUTES = [
+  // ⚠️ 2026-10-02：只剩对话主流程。六页经典流程已挪到分支 classic-flow-archive
+  //    （连同离线兜底快照、What-if 面板、七维匹配卡）。
+  //    冒烟测试只验当前 master 上真实存在的路由。
   { path: '/', expect: '先说说你的情况', name: '对话访谈（首页）' },
-  { path: '/classic', expect: '先说说你的来时路', name: 'P1 来时路' },
-  { path: '/classic/crossroads', expect: '这是你现在站的路口', name: 'P2 当前路口', needState: true },
-  { path: '/classic/map', expect: '别人从这里去了哪里', name: 'P3 分叉地图', needState: true },
-  { path: '/classic/compare', expect: '像在哪里，不像在哪里', name: 'P5 像与不像', needState: true },
-  { path: '/classic/reflect', expect: '最后，回到你自己', name: 'P6 回到自己', needState: true },
-  { path: '/classic/episode/0', expect: '完整经过', name: 'P4 案例详情', needState: true },
-  // 决策地形 v2 —— 独立流程，不依赖会话状态，自己发起请求
-  { path: '/landscape', expect: '同一个引擎，装载不同的人群数据', name: '决策地形 v2' },
 ];
 
 /** 没有会话状态时这些页面会显示的空状态文案 */
-const FALLBACK_TEXT = '还没有检索结果';
-const FALLBACK_TEXT2 = '还没有你的处境信息';
 
 const browserPath = findBrowser();
 if (!browserPath) {
@@ -165,49 +158,6 @@ function cleanup() {
  * 这样顺带验证了「前端能连通后端、拿到符合契约的响应」。
  * 后端不可用时返回 ok:false，让上层显式报出来（而不是悄悄降级）。
  */
-async function seedSession(send, _base) {
-  const DEMO_INPUT =
-    '大三，材料科学，读了两年半，越来越觉得不适合自己。已投入两年半；转专业有成绩门槛；可以接受延毕；最看重兴趣和成长。';
-
-  const { result } = await send('Runtime.evaluate', {
-    expression: `
-      (async () => {
-        try {
-          const res = await fetch('/api/consult', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ raw_input: ${JSON.stringify(DEMO_INPUT)} }),
-          });
-          if (!res.ok) return { ok: false, detail: 'HTTP ' + res.status };
-          const data = await res.json();
-          if (!Array.isArray(data.matches) || data.matches.length === 0) {
-            return { ok: false, detail: '响应里没有 matches' };
-          }
-          sessionStorage.setItem('echopath.session.v1', JSON.stringify({
-            journey: { q1: ${JSON.stringify(DEMO_INPUT)} },
-            situation: data.situation,
-            result: data,
-            reachable: 5,
-            mode: 'live',
-            offlineReason: null,
-          }));
-          return {
-            ok: true,
-            detail: '拿回 ' + data.matches.length + ' 条案例（' +
-                    data.matches.map(m => m.episode.person.name).join(' / ') + '）',
-          };
-        } catch (e) {
-          return { ok: false, detail: String(e && e.message || e).slice(0, 80) };
-        }
-      })()
-    `,
-    awaitPromise: true,
-    returnByValue: true,
-  });
-
-  return result.value ?? { ok: false, detail: '注入脚本没有返回' };
-}
-
 try {
   const version = await waitForCdp();
   console.log(`  已启动：${version.Browser ?? 'unknown'}`);
@@ -244,15 +194,6 @@ try {
   await send('Runtime.enable');
   await send('Page.enable');
 
-  // 先种一份会话状态：否则 P2-P6 只会渲染空状态，
-  // 真正要验的渲染代码一行都不会执行（第一版就是这么漏掉的）。
-  await send('Page.navigate', { url: `${BASE}/` });
-  await new Promise((r) => setTimeout(r, 1500));
-
-  const seeded = await seedSession(send, BASE);
-  console.log(`  ${seeded.ok ? '\x1b[32m✅\x1b[0m' : '\x1b[31m❌\x1b[0m'} 种入演示会话状态：${seeded.detail}`);
-  console.log('');
-
   const results = [];
   for (const route of ROUTES) {
     consoleErrors.length = 0;
@@ -269,11 +210,10 @@ try {
       const text = String(result.value ?? '');
 
       const rendered = text.includes(route.expect);
-      const fellBack = text.includes(FALLBACK_TEXT) || text.includes(FALLBACK_TEXT2);
       const hasContent = text.trim().length > 40;
 
       // 需要状态的页面**不接受**空状态兜底 —— 那说明种的数据没生效
-      const ok = hasContent && rendered && !(route.needState && fellBack);
+      const ok = hasContent && rendered;
 
       results.push({
         name: route.name,
@@ -282,9 +222,7 @@ try {
           ? `渲染正常（${text.trim().length} 字）`
           : !hasContent
             ? `页面几乎是空白（只有 ${text.trim().length} 字）`
-            : route.needState && fellBack
-              ? `掉进了空状态 —— 会话数据没起作用，真实渲染代码没被执行`
-              : `没找到预期文字「${route.expect}」`,
+            : `没找到预期文字「${route.expect}」`,
         errors: [...consoleErrors],
       });
     } catch (e) {
