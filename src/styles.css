@@ -982,3 +982,186 @@ input:focus, textarea:focus, select:focus {
   color: var(--ink-3);
   line-height: 1.6;
 }
+
+/* ============================================================
+   决策地形 v2（Landscape）
+   ------------------------------------------------------------
+   这一页要证明「同一套引擎能装不同数据源」，
+   所以版面围绕顶部的数据源开关组织。
+   视觉沿用上面的设计变量，不引入新语言。
+   ============================================================ */
+
+.land-wrap { max-width: 980px; margin: 0 auto; }
+
+/* ---------- 数据源开关 ---------- */
+.land-switch {
+  /* ⚠️ 不用 position: sticky。
+     第一版用了 sticky，截图发现它会**盖住下面的标题** ——
+     因为 sticky 元素脱离文档流后不再占据高度，
+     而页面顶部的 header 也是固定的，两个一起把标题压掉了。
+     改成普通块级元素，滚动时随页面走，反而更清楚。 */
+  position: relative;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 26px;
+  box-shadow: var(--shadow);
+}
+.land-switch-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.land-switch-label { font-size: 13px; color: var(--ink-3, #6b6862); margin-right: 4px; }
+.land-switch-btn {
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .14s ease;
+  font-family: inherit;
+}
+.land-switch-btn:hover:not(:disabled) { border-color: var(--now); color: var(--now); }
+.land-switch-btn.on {
+  background: var(--now); border-color: var(--now); color: #fff; font-weight: 500;
+}
+.land-switch-btn:disabled { opacity: .55; cursor: wait; }
+
+.land-source-meta {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);
+}
+.land-tag {
+  font-size: 12px; padding: 2px 9px; border-radius: 999px;
+  background: var(--bg-sunken); color: var(--ink-3, #6b6862);
+}
+.land-tag.privacy { background: var(--now-soft); color: var(--now); }
+.land-source-desc { font-size: 12px; color: var(--ink-3, #6b6862); flex: 1 1 100%; line-height: 1.65; }
+
+/* ---------- 未开始的说明页 ---------- */
+.land-intro { padding: 8px 0 40px; }
+.land-intro h1 { font-size: 27px; margin: 0 0 14px; }
+.land-intro-lead { font-size: 15px; line-height: 1.85; color: var(--ink-2, #4a4742); max-width: 700px; }
+
+.land-input-preview {
+  margin: 26px 0; padding: 18px 20px;
+  background: var(--bg-sunken); border-radius: var(--radius-lg);
+  border-left: 3px solid var(--now);
+}
+.land-input-label { font-size: 12px; color: var(--ink-3, #6b6862); margin-bottom: 7px; }
+.land-input-text {
+  margin: 0; font-family: inherit; font-size: 14px; line-height: 1.85;
+  white-space: pre-wrap; color: var(--ink);
+}
+.land-input-text.quote { font-family: var(--serif); font-size: 15px; color: var(--now); }
+.land-foot-note { margin-top: 30px; font-size: 13px; }
+.land-foot-note a { color: var(--now); text-decoration: none; }
+.land-foot-note a:hover { text-decoration: underline; }
+
+/* ---------- 加载 ---------- */
+.land-loading {
+  display: flex; align-items: center; gap: 12px;
+  padding: 40px 0; color: var(--ink-3, #6b6862); font-size: 14px;
+}
+.land-spinner {
+  width: 17px; height: 17px; border-radius: 50%;
+  border: 2px solid var(--line-strong); border-top-color: var(--now);
+  animation: land-spin .8s linear infinite;
+}
+@keyframes land-spin { to { transform: rotate(360deg); } }
+
+/* ---------- 第二屏：AI 的理解 ---------- */
+.land-profile { margin-bottom: 30px; }
+.land-roots { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 16px; }
+.land-root-chip {
+  font-size: 13px; padding: 4px 13px; border-radius: 999px;
+  background: var(--now-soft); color: var(--now); font-weight: 500;
+}
+.land-reading {
+  font-family: var(--serif); font-size: 17px; line-height: 1.85;
+  margin: 0; padding-left: 15px; border-left: 3px solid var(--now);
+  color: var(--ink);
+}
+
+/* ---------- 第三屏：路径卡 ---------- */
+.land-paths-head { margin: 34px 0 18px; }
+.land-paths-head h2 { line-height: 1.5; }
+.land-paths-head h2 { font-size: 19px; margin: 0 0 6px; }
+.land-paths { display: grid; gap: 16px; }
+
+.land-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--now);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+}
+.land-card-head { display: flex; align-items: center; gap: 11px; margin-bottom: 9px; }
+.land-card-idx {
+  width: 25px; height: 25px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 600; flex: 0 0 auto;
+}
+.land-card-title { font-size: 18px; margin: 0; }
+.land-card-oneline {
+  margin: 0 0 16px; font-size: 14px; line-height: 1.8;
+  color: var(--ink-2, #4a4742);
+}
+.land-caveat {
+  font-size: 13px; padding: 8px 12px; margin-bottom: 14px;
+  background: var(--warn-soft); color: var(--warn); border-radius: 8px;
+}
+
+.land-block { margin-bottom: 16px; }
+.land-block-label {
+  font-size: 12px; color: var(--ink-3, #6b6862);
+  margin-bottom: 8px; letter-spacing: .03em;
+}
+.land-list { margin: 0; padding: 0; list-style: none; }
+.land-list li {
+  font-size: 14px; line-height: 1.8; padding: 4px 0 4px 15px;
+  position: relative;
+}
+.land-list li::before {
+  content: ''; position: absolute; left: 0; top: 13px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--line-strong);
+}
+.land-list.protect li::before { background: var(--ok); }
+.land-list.cost li::before { background: var(--warn); }
+
+.land-cost-star {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  background: var(--warn); color: #fff; border-radius: 4px;
+  padding: 1px 7px; margin-right: 8px; vertical-align: 1px;
+}
+.land-quote {
+  margin-top: 6px; padding: 8px 13px;
+  background: var(--now-soft); border-radius: 8px;
+  font-family: var(--serif); font-size: 14px; color: var(--now);
+}
+
+.land-expand {
+  width: 100%; text-align: left; margin-top: 4px;
+  background: none; border: none; border-top: 1px dashed var(--line);
+  padding: 13px 0 0; font-size: 13px; color: var(--now);
+  cursor: pointer; font-family: inherit;
+}
+.land-expand:hover { text-decoration: underline; }
+.land-caret { margin-left: 6px; }
+
+.land-cases { margin-top: 12px; display: grid; gap: 9px; }
+.land-case {
+  padding: 11px 14px; background: var(--bg-sunken);
+  border-radius: 8px; font-size: 13px; line-height: 1.7;
+}
+.land-case-name { font-weight: 500; }
+.land-case-year { color: var(--ink-3, #6b6862); margin-left: 8px; font-weight: 400; font-size: 12px; }
+.land-case-hint { color: var(--ink-2, #4a4742); margin-top: 4px; }
+
+/* ---------- meta ---------- */
+.land-meta {
+  display: flex; gap: 18px; flex-wrap: wrap;
+  margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--ink-3, #6b6862);
+}

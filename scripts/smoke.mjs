@@ -63,6 +63,8 @@ const ROUTES = [
   { path: '/compare', expect: '像在哪里，不像在哪里', name: 'P5 像与不像', needState: true },
   { path: '/reflect', expect: '最后，回到你自己', name: 'P6 回到自己', needState: true },
   { path: '/episode/0', expect: '完整经过', name: 'P4 案例详情', needState: true },
+  // 决策地形 v2 —— 独立流程，不依赖会话状态，自己发起请求
+  { path: '/landscape', expect: '同一个引擎，装载不同的人群数据', name: '决策地形 v2' },
 ];
 
 /** 没有会话状态时这些页面会显示的空状态文案 */
