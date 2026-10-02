@@ -250,7 +250,7 @@
         "f-al-001",
         "f-al-003"
       ],
-      "prior_text": "人物为「李安」，纽约大学页面与转载访谈以其电影生涯为记载主体。\n1984 年获得纽约大学电影制作硕士学位。\n据访谈，约六年间项目屡未成行；至 1990 年两部剧本在比赛中获奖。",
+      "prior_text": "人物为「李安」，纽约大学页面与转载访谈以其电影生涯为记载主体。\n1984 年获得纽约大学电影制作硕士学位。\n据访谈，MFA 毕业后约六年间项目屡屡未能成行，未能获得长片执导机会。",
       "dimensions": {
         "life_stage": {
           "value": "early_career",
@@ -461,8 +461,8 @@
         {
           "fact_id": "f-al-003",
           "basis": "formal_episode_chain",
-          "basis_detail": "1990 episode 的 prior_path 归位 + 1984→1990 episode 链；两处归位最终同源于同一访谈，故列为待审弱证据。",
-          "justification": "「约六年间项目屡未成行」的区间终点为 1990（获奖年），与 1990 决策同年。排序主要依据正式库 episode 结构：ang_lee_1990_script_competition 的 prior_path.0 记为「毕业后多年在美国寻找拍片机会未果」（先于决策），且 1984 episode 的 next_episode_ids 指向 1990 episode。访谈叙述顺序仅作辅助，不单独定性。属顺序依赖事实，须人工复核。",
+          "basis_detail": "1990 episode 的 prior_path 归位 + 1984→1990 episode 链；两处归位最终同源于同一访谈，故列为待审弱证据。本条只论证「六年未果」作为 1990 投稿决策的前提，与获奖无关。",
+          "justification": "「MFA 毕业后约六年间项目屡屡未能成行」与 1990 决策同年收束。排序主要依据正式库 episode 结构：ang_lee_1990_script_competition 的 prior_path.0 记为「毕业后多年在美国寻找拍片机会未果」（先于决策），且 1984 episode 的 next_episode_ids 指向 1990 episode；区间终点 1990 由决策年本身约束。访谈叙述顺序仅作辅助，不单独定性。该事实已不含任何获奖结果（QA 修复：获奖拆至 f-al-008 结果层），仍属顺序依赖事实，须人工复核。",
           "human_adjudication": "pending"
         }
       ],

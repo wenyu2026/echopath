@@ -55,13 +55,13 @@
     },
     {
       "fact_id": "f-al-003",
-      "text": "据访谈，约六年间项目屡未成行；至 1990 年两部剧本在比赛中获奖。",
+      "text": "据访谈，MFA 毕业后约六年间项目屡屡未能成行，未能获得长片执导机会。",
       "occurred": { "start_year": 1984, "end_year": 1990 },
       "time_scope": "interval",
       "kind": "fact",
       "confidence": "medium",
       "source_refs": [{ "source_id": "AL-INTERVIEW", "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手" }],
-      "notes": "对应 1984 episode 的 outcomes.mid_term（AL-INTERVIEW）。区间终点为获奖年 1990；进入 1990 决策前视图依赖 explicit_order（formal_episode_chain），属顺序依赖事实。"
+      "notes": "对应 ang_lee_1984_six_years_persist 的 outcomes.mid_term 前半句（AL-INTERVIEW）。这是 1990 决策前的处境事实。QA 修复（2026-10-02）：原文本混入「至 1990 年两部剧本在比赛中获奖」——投稿是因、获奖是果，结果不得倒灌进决策前视图，已拆分到结果层事实 f-al-008。区间终点 1990 由决策年与正式库 episode 链约束，与获奖无关。"
     },
     {
       "fact_id": "f-al-004",
@@ -105,6 +105,16 @@
         { "source_id": "AL-INTERVIEW", "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手" }
       ],
       "notes": "对应 ang_lee_1984_six_years_persist 的 outcomes.long_term（AL-NYU）。start_year=1991 采用正式库来源局限说明中「影片上映年采用访谈的 1991 年」的处理。"
+    },
+    {
+      "fact_id": "f-al-008",
+      "text": "1990 年，两部剧本在台湾比赛中获奖。",
+      "occurred": { "start_year": 1990, "end_year": 1990 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "AL-INTERVIEW", "locator": "格伦·肯尼访谈：毕业后六年、1990 年剧本比赛、推手" }],
+      "notes": "这是 1990 年投剧本决策的直接结果（正式库中记为 1984 episode outcomes.mid_term 后半句与 1990 episode outcomes.short_term），禁止进入 snap-al-1990 的 prior_fact_ids。QA 修复（2026-10-02）自 f-al-003 拆出，消除「未投先获奖」的因果倒置。"
     }
   ],
   "snapshots": [
@@ -251,10 +261,10 @@
         {
           "fact_id": "f-al-003",
           "explicit_order": {
-            "justification": "「约六年间项目屡未成行」的区间终点为 1990（获奖年），与 1990 决策同年。排序主要依据正式库 episode 结构：ang_lee_1990_script_competition 的 prior_path.0 记为「毕业后多年在美国寻找拍片机会未果」（先于决策），且 1984 episode 的 next_episode_ids 指向 1990 episode。访谈叙述顺序仅作辅助，不单独定性。属顺序依赖事实，须人工复核。",
+            "justification": "「MFA 毕业后约六年间项目屡屡未能成行」与 1990 决策同年收束。排序主要依据正式库 episode 结构：ang_lee_1990_script_competition 的 prior_path.0 记为「毕业后多年在美国寻找拍片机会未果」（先于决策），且 1984 episode 的 next_episode_ids 指向 1990 episode；区间终点 1990 由决策年本身约束。访谈叙述顺序仅作辅助，不单独定性。该事实已不含任何获奖结果（QA 修复：获奖拆至 f-al-008 结果层），仍属顺序依赖事实，须人工复核。",
             "refs": ["AL-INTERVIEW"],
             "basis": "formal_episode_chain",
-            "basis_detail": "1990 episode 的 prior_path 归位 + 1984→1990 episode 链；两处归位最终同源于同一访谈，故列为待审弱证据。",
+            "basis_detail": "1990 episode 的 prior_path 归位 + 1984→1990 episode 链；两处归位最终同源于同一访谈，故列为待审弱证据。本条只论证「六年未果」作为 1990 投稿决策的前提，与获奖无关。",
             "human_adjudication": { "status": "pending", "by": null, "on": null, "note": "与 f-lx-008 同类：QA 弱顺序证据专项。" }
           }
         }
@@ -366,7 +376,7 @@
         "处境选项、目标与风险/可逆性等级是建模，不是当时的完整心理记录。",
         "改变融资与合作渠道不同于普通职员换大小公司；奖项入口具有筛选效应。",
         "未核实本人对这次选择的直接评价；不补写励志语录。",
-        "f-al-003（六年间隙）区间终点与决策同年，排序依赖 formal_episode_chain，须人工复核。"
+        "f-al-003（六年间隙）区间终点与 1990 决策同年，排序依赖 formal_episode_chain，须人工复核；获奖结果在 f-al-008（结果层），不进决策前视图。"
       ]
     }
   ],
@@ -383,7 +393,7 @@
         "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-al-1984。",
         "action_fact_ids": ["f-al-004"]
       },
-      "outcome_fact_ids": ["f-al-002", "f-al-003", "f-al-007"],
+      "outcome_fact_ids": ["f-al-002", "f-al-003", "f-al-007", "f-al-008"],
       "reflection": {
         "retrospective_fact_ids": [],
         "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写励志语录。",
@@ -403,7 +413,7 @@
         "type_note": "复用正式库 choice.type 原值，不覆盖；机制层 archetype 见 mech-al-1990。",
         "action_fact_ids": ["f-al-005"]
       },
-      "outcome_fact_ids": ["f-al-006"],
+      "outcome_fact_ids": ["f-al-006", "f-al-008"],
       "reflection": {
         "retrospective_fact_ids": [],
         "self_comment_note": "正式库未核实本人对这次选择的直接评价；不补写励志语录。",
@@ -446,7 +456,7 @@
   "partial": {
     "status": true,
     "gaps": [
-      "事实 8 条 < 目标 15–25：正式库对李安仅两条 episode，且多次修订删去了无出处断言；补足需新来源（家庭/经济、1984–1990 逐期经历），须先入正式库或由 A 协调。",
+      "事实 9 条 < 目标 15–25：正式库对李安仅两条 episode，且多次修订删去了无出处断言；补足需新来源（家庭/经济、1984–1990 逐期经历），须先入正式库或由 A 协调。",
       "快照 2 个 < 目标 4–6：两节点之间无正式库支持的中间状态（首部作品、婚育、任教等均无出处，不虚构）。"
     ]
   },

@@ -7,6 +7,19 @@
 触发：QA 质询 f-lx-008 顺序依据（「拿 1922 年自述叙述顺序定性客观事件」）→ 用户指示回正式库重推导并完成剩余卡片。
 ```
 
+## B3.1 修复记录 · 李安 1990 视图因果倒置（QA 第二轮，同日）
+
+**问题**（A 端质检发现，定性准确）：`f-al-003` 文本为「约六年间项目屡未成行；至 1990 年两部剧本在比赛中获奖」，整体进入 snap-al-1990 的 prior_fact_ids——投稿是决策行动（因），获奖是评选结果（果），导致 1990 决策前视图出现「未投先获奖」的时间穿越。
+
+**修复**：
+1. `f-al-003` 改为纯决策前处境：「据访谈，MFA 毕业后约六年间项目屡屡未能成行，未能获得长片执导机会。」notes 记录修复缘由。
+2. 新增结果层事实 `f-al-008`「1990 年，两部剧本在台湾比赛中获奖」（{1990,1990}，AL-INTERVIEW），**禁止进入 snap-al-1990 prior**；同时挂入 ev-al-1984（mid_term 结果）与 ev-al-1990（short_term 结果）的 outcome_fact_ids——两处归位均来自正式库原始字段。
+3. explicit_order 说明重写：只论证「六年未果」作为投稿决策的前提，区间终点 1990 由决策年与 episode 链约束，不再以「获奖年」解释。
+4. 来源登记：AL-INTERVIEW.used_by_facts 补 f-al-008。**未**按质检指引把它加进 AL-NYU——正式库 field_sources 记 1990 short_term 的来源即 AL-INTERVIEW，且 AL-NYU 的 limitations 明言其年份口径未被采用；登记表不得虚标来源绑定。
+5. 回归测试：新增「李安 1990 决策前视图不得剧透获奖结果」——断言 prior_text 保留六年处境、**严格不含「获奖」**、f-al-008 不在 prior_fact_ids、六个维度文字无获奖、**已提交视图文件与从卡重导出逐字节一致**（防改卡不重跑）、f-al-008 挂双事件 outcome 层。
+
+**修复后验证**：validate-card 0 错误（9 事实）；run-pipeline --force 重新生成视图/审计/manifest；测试 27/27；`node --test data/validate-data.test.mjs` 26/26；修复后 snap-al-1990 的 prior_text 实测不含「获奖」。
+
 ## 一、QA 弱扣件处置（f-lx-008）
 
 1. **回正式库重推导**：f-lx-008 的 occurred 从 `{null,null}` 收紧为 `{start_year: 1906, end_year: null}`——依据是正式库把该事件记为 lu_xun_1906 的 outcomes.mid_term（决策后结果层，故不早于 1906），不是来自记忆。
@@ -19,7 +32,7 @@
 | 卡 | 人物 | 事实/快照/事件 | 场景 | 走法（choice/archetype） | partial |
 |---|---|---|---|---|---|
 | lu-xun | 鲁迅 | 15/4/3 | 三场景全 | direct_switch；direct_switch；explore_then_switch | 否（事实数在下限） |
-| ang-lee | 李安 | 8/2/2 | 考研就业+大厂小厂 | persist；explore_then_switch | 是（缺口已列） |
+| ang-lee | 李安 | 9/2/2 | 考研就业+大厂小厂 | persist；explore_then_switch | 是（缺口已列） |
 | murakami | 村上春树 | 10/3/2 | 大厂小厂 | dual_track；explore_then_switch | 是 |
 | darwin | 达尔文 | 12/4/3 | 转专业×2+考研就业 | direct_switch×2；explore_then_switch | 是 |
 | kariko | 考里科 | 10/3/2 | 考研就业+大厂小厂 | persist；direct_switch | 是 |
@@ -57,3 +70,24 @@
 ## 六、下一个检查点
 
 真人裁决回填 → 各卡 human_adjudication 状态更新 → 重跑流水线（视图自动消化裁决结果）→ S1 材料到位后做 B4 对照。
+
+## 附录 · 覆盖盘点（QA 第二轮要求：检查仓库中尚未制卡的数据）
+
+正式库 36 条 episode，六卡已覆盖 **14 条 / 6 人**，且 6 位人物均为**完整覆盖**（每人名下所有正式 episode 都已进卡，无半人遗漏）。**尚未制卡：22 条 / 12 人**：
+
+| 人物 | 未制卡 episode（年份 / 场景 / 走法） |
+|---|---|
+| 杰夫·贝索斯 | bezos_1994_leave_finance（1994 / 大厂小厂 / direct_switch） |
+| 布赖恩·梅 | may_1974_pause_phd（1974 / 考研就业 / direct_switch）；may_2006_resume_phd（2006 / 考研就业 / dual_track） |
+| 詹姆斯·戴森 | dyson_2019_abandon_ev（2019 / 大厂小厂 / abandon，项目止损）；dyson_2014_ev_entry（2014 / 大厂小厂 / direct_switch） |
+| 纽斯莱因-福尔哈德 | nusslein_1962_test_medicine（1962 / 转专业 / explore_then_persist）；nusslein_1964_biochemistry（1964 / 转专业 / direct_switch） |
+| 拉马克里希南 | ramakrishnan_1976_biology_training（1976 / 转专业）；ramakrishnan_1978_yale_postdoc（1978 / 考研就业）；ramakrishnan_1999_lmb（1999 / 大厂小厂） |
+| 弗朗西丝·阿诺德 | arnold_1981_phd（1981 / 考研就业）；arnold_1987_caltech_faculty（1987 / 考研就业） |
+| 约翰·格登 | gurdon_1953_zoology（1953 / 转专业，文转理）；gurdon_1960_caltech_offer（1960 / 转专业） |
+| 斯图尔特·巴特菲尔德 | butterfield_2012_close_glitch（2012 / 大厂小厂 / abandon，失败止损）；butterfield_2013_slack_pivot（2013 / 大厂小厂 / explore_then_switch） |
+| 袁征 | yuan_2011_zoom（2011 / 大厂小厂 / direct_switch） |
+| 萨拉·布莱克利 | blakely_2000_spanx（2000 / 大厂小厂 / explore_then_switch） |
+| 弗兰茨·卡夫卡 | kafka_1908_insurance_and_writing（1908 / 大厂小厂 / dual_track）；kafka_1923_berlin（1923 / 大厂小厂 / direct_switch） |
+| 阿尔伯特·爱因斯坦 | einstein_1902_patent_and_research（1902 / 考研就业 / dual_track）；einstein_1909_academic_post（1909 / 考研就业 / direct_switch） |
+
+**说明**：六卡目标是工作包约定的 v0.1 范围（三场景各 ≥2 候选），已达成；上表 12 人是超出约定的扩展池。若用户要求扩制，B 的优先建议（按走法/情境缺口）：巴特菲尔德（创业失败止损→pivot，abandon+explore_then_switch）、卡夫卡（职场内 dual_track，与村上的自雇双轨互补）、爱因斯坦（考研就业的双轨等待）、布赖恩·梅（暂停/恢复博士的对称对）、格登（文转理）。扩制前建议先补 A 对 §5b 的契约裁决，避免 12 人批量复制未定契约。

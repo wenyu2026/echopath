@@ -267,6 +267,33 @@ test('被真人驳回的顺序事实：校验器要求移出 prior，导出器�
   assert.equal(v1918.has_pending_order_review, false);
 });
 
+// ---------- 4c. 防因果倒置回归（QA 2026-10-02：f-al-003 曾把「1990 获奖」倒灌进决策前视图） ----------
+test('李安 1990 决策前视图不得剧透获奖结果（投稿是因，获奖是果）', () => {
+  const card = load(join(REPO, 'data/trajectory-v0.1/cards/ang-lee.card.json'));
+  const { views } = exportViews(card);
+  const v1990 = views.find((v) => v.view_id === 'view-0.1-ang_lee-snap-al-1990');
+  assert.ok(v1990, '存在 snap-al-1990 视图');
+  // 处境必须在：六年间隙作为决策前提保留（“六年间项目屡…”同时覆盖“屡未成行/屡屡未能成行”两种表述）
+  assert.ok(v1990.prior_text.includes('六年间项目屡'), `prior_text 应保留六年未成行处境，实际=${v1990.prior_text}`);
+  // 结果严禁倒灌：投稿决策之前不得出现获奖
+  assert.ok(!v1990.prior_text.includes('获奖'), 'prior_text 不得出现「获奖」——未来结果倒灌');
+  assert.ok(!v1990.prior_fact_ids.includes('f-al-008'), 'f-al-008（获奖，结果层）不得进入 prior_fact_ids');
+  // 维度文字同样不得剧透
+  for (const [key, d] of Object.entries(v1990.dimensions)) {
+    const s = JSON.stringify(d);
+    assert.ok(!s.includes('获奖'), `维度 ${key} 不得提及获奖`);
+  }
+  // 已提交的视图文件必须与从卡重导出一致（改卡未重跑流水线会被此处抓住）
+  const committedViews = load(join(REPO, 'data/trajectory-v0.1/retrieval-views/card-ang_lee-v0.1.views.json'));
+  const committed = committedViews.views.find((v) => v.view_id === 'view-0.1-ang_lee-snap-al-1990');
+  assert.deepEqual(committed, v1990, '已提交视图与卡重导出不一致——请重跑 run-pipeline.mjs');
+  // 获奖事实应挂在两次事件的 outcome 层（1984 mid_term 与 1990 short_term）
+  const ev1984 = card.events.find((e) => e.event_id === 'ev-al-1984');
+  const ev1990 = card.events.find((e) => e.event_id === 'ev-al-1990');
+  assert.ok(ev1984.outcome_fact_ids.includes('f-al-008'));
+  assert.ok(ev1990.outcome_fact_ids.includes('f-al-008'));
+});
+
 // ---------- 5. 确定性与检查点 ----------
 test('固定输入重复导出逐字节一致（纯函数与流水线两层）', () => {
   const card = load(REAL_CARD);

@@ -9,7 +9,7 @@
       "person_id": "ang_lee",
       "card_file": "data/trajectory-v0.1/cards/ang-lee.card.json",
       "stats": {
-        "facts": 8,
+        "facts": 9,
         "snapshots": 2,
         "events": 2
       },
@@ -25,15 +25,15 @@
           "ang_lee_1990_script_competition"
         ]
       },
-      "views_file": null,
-      "audit_file": null,
+      "views_file": "data/trajectory-v0.1/retrieval-views/card-ang_lee-v0.1.views.json",
+      "audit_file": "data/trajectory-v0.1/audits/card-ang_lee-v0.1.temporal-audit.json",
       "order_dependent_facts": 2,
       "views_with_pending_order_review": 2,
       "machine_check": {
         "status": "pass",
         "errors": 0,
         "warnings": [
-          "工作量 {\"facts\":8,\"snapshots\":2,\"events\":2} 不足目标，已按 partial 交付（应说明资料缺口）"
+          "工作量 {\"facts\":9,\"snapshots\":2,\"events\":2} 不足目标，已按 partial 交付（应说明资料缺口）"
         ],
         "command": "node scripts/trajectory-v0.1/validate-card.mjs data/trajectory-v0.1/cards/ang-lee.card.json"
       },
@@ -41,7 +41,7 @@
       "partial": {
         "status": true,
         "gaps": [
-          "事实 8 条 < 目标 15–25：正式库对李安仅两条 episode，且多次修订删去了无出处断言；补足需新来源（家庭/经济、1984–1990 逐期经历），须先入正式库或由 A 协调。",
+          "事实 9 条 < 目标 15–25：正式库对李安仅两条 episode，且多次修订删去了无出处断言；补足需新来源（家庭/经济、1984–1990 逐期经历），须先入正式库或由 A 协调。",
           "快照 2 个 < 目标 4–6：两节点之间无正式库支持的中间状态（首部作品、婚育、任教等均无出处，不虚构）。"
         ]
       }
@@ -109,8 +109,8 @@
           "jobs_1985_restart"
         ]
       },
-      "views_file": "data/trajectory-v0.1/retrieval-views/card-jobs-v0.1.views.json",
-      "audit_file": "data/trajectory-v0.1/audits/card-jobs-v0.1.temporal-audit.json",
+      "views_file": null,
+      "audit_file": null,
       "order_dependent_facts": 2,
       "views_with_pending_order_review": 2,
       "machine_check": {

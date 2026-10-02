@@ -111,7 +111,7 @@
         "limitations": "中文译编的事后访谈；未将六年没有执导机会扩大成六年无任何正式工作。"
       },
       "formed_time": { "start_year": null, "end_year": null, "note": "访谈成文/出版时间未在正式库记载；属事后访谈。" },
-      "used_by_facts": ["f-al-000", "f-al-002", "f-al-003", "f-al-004", "f-al-005", "f-al-006", "f-al-007"]
+      "used_by_facts": ["f-al-000", "f-al-002", "f-al-003", "f-al-004", "f-al-005", "f-al-006", "f-al-007", "f-al-008"]
     },
     "HM-SELF": {
       "formal_ref": "data/sources.json#HM-SELF",

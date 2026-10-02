@@ -26,7 +26,7 @@
 | 卡 | 快照 | 事实 | 结构依据 | 残余风险 | 裁决 |
 |---|---|---|---|---|---|
 | lu_xun | snap-1918 | f-lx-008（筹办《新生》未成，start=1906） | 1906 episode outcomes.mid_term + 1918 prior_path.0 + next_episode_ids 链 | 全部归位最终同源 1922 自述；若回忆时序有误，「新生失败在 1918 投稿决策前」仍可能成立（1918 episode prior_path 独立记载），但需人认可该 prior_path 归位的可靠性 | ☐ confirmed ☐ rejected |
-| ang_lee | snap-1990 | f-al-003（六年未成行，1984—1990） | 1990 episode prior_path.0 + 1984→1990 episode 链 | 同源单一访谈 | ☐ confirmed ☐ rejected |
+| ang_lee | snap-1990 | f-al-003（六年未成行，1984—1990；**不含获奖结果**——QA 修复后获奖拆至 f-al-008 结果层） | 1990 episode prior_path.0 + 1984→1990 episode 链 | 同源单一访谈 | ☐ confirmed ☐ rejected |
 | murakami | snap-1981 | f-hm-007（已完成两部小说，1978—1981） | 1981 episode prior_path.0 + 1978→1981 episode 链 | 同源 2015 自述节选 | ☐ confirmed ☐ rejected |
 | kariko | snap-2013 | f-kk-006（多年研究+合作成果，至 2013） | 2013 episode prior_path.0 + 1995→2013 链 | 较强：有 1995/1997/2005/2009 带年份中间事实收束 | ☐ confirmed ☐ rejected |
 | jobs | snap-1985 | f-sj-007（创办 Apple 至三十岁离开） | 1985 episode prior_path.0 + 1972→1985 链 | 「创办在先」为表述内蕴含 | ☐ confirmed ☐ rejected |
