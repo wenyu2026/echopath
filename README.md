@@ -76,17 +76,17 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 
 ---
 
-## 任务分工（4 人 + 集成）
+## 任务分工（4 人 + 集成）—— 五张任务卡已全部完成合并
 
-| Issue | 角色 | 内容 | 负责人 |
-|---|---|---|---|
-| **#13** | **B 数据** | Decision Episode 数据集（**关键路径**） | fu6868 |
-| **#14** | **C AI/后端** | Situation Parser + 检索链路 | Damn4lee |
-| **#15** | **C AI/后端** | 反类比 + 证据分层 | Damn4lee |
-| **#16** | **D 前端** | 六页面 + 人生分叉地图 | bo200712 |
-| **#17** | **A 产品/集成** | Demo 剧本 + 全链路 + 兜底 | wenyu2026 |
+| Issue | 角色 | 内容 | 负责人 | 状态 |
+|---|---|---|---|---|
+| **#13** | **B 数据** | Decision Episode 数据集 | fu6868 | ✅ 已合并（PR #19） |
+| **#14** | **C AI/后端** | Situation Parser + 检索链路 | Damn4lee | ✅ 已合并 |
+| **#15** | **C AI/后端** | 反类比 + 证据分层 | Damn4lee | ✅ 已合并 |
+| **#16** | **D 前端** | 六页面 + 人生分叉地图 | bo200712 | ✅ 已合并 |
+| **#17** | **A 产品/集成** | Demo 剧本 + 全链路 + 兜底 | wenyu2026 | ✅ 已合并（PR #23） |
 
-**⚠️ #13 是最大的瓶颈** —— 没有数据，前端再漂亮、AI 再花哨，演示都是空的。
+> 数据集起步时 #13 是最大的瓶颈 —— 现在它仍然是质量上限：数据规模与来源审查见 `data/README.md`。
 
 ---
 
@@ -97,7 +97,8 @@ git config --global http.https://github.com.proxy http://127.0.0.1:7890
 │   ├── types/episode.ts      # 🔴 类型契约（前后端共用，已定稿）
 │   ├── pages/                # P1–P6 六页面（#16）
 │   ├── components/           # 组件（#16）
-│   └── ai/                   # AI 模块
+│   ├── state/AppState.tsx    # 全局状态（含离线降级、sessionStorage 恢复）
+│   └── data/demoCache.ts     # 三个演示场景的离线兜底快照
 ├── server/                   # 后端（#14 #15）
 │   ├── parser/               # Situation Parser
 │   ├── retrieval/            # 向量召回 + 结构重排
@@ -221,7 +222,8 @@ P5 底部可以「改一个条件，看匹配怎么变」。这不是玩具 —�
 
 | 用途 | 模型 | 实测 |
 |---|---|---|
-| 处境结构化 | `glm-5` + `reasoning_effort:none` | ✅ 6.0s，8 字段齐全 |
+| 处境结构化（**默认**） | `deepseek-v4.1-flash` | ✅ 2.3s，9/9 成功（见上文对比） |
+| 处境结构化（回退） | `SITUATION_MODEL=glm-5` + `reasoning_effort:none` | ✅ 6.0s，8 字段齐全 |
 | 向量召回 | `qwen3.7-text-embedding` | ✅ 1024 维，0.4s |
 | 备选快速模型 | `deepseek-v4-flash` | ✅ 6.3s |
 
