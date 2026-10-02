@@ -59,6 +59,15 @@ export default function Chat() {
   const collected = chat.state?.collected ?? {};
   const confidence = chat.state?.confidence ?? {};
 
+  /**
+   * 路径分两档：有厚度的（≥2 案例）和只有 1 个案例的。
+   * 后者收进折叠区 —— 卡片自己都写着「参考价值有限」，
+   * 就不该和结实的那几条占同样的位置。
+   */
+  const allPaths = chat.landscape?.archetypes ?? [];
+  const mainPaths = allPaths.filter((a) => a.supporting_cases.length >= 2);
+  const thinPaths = allPaths.filter((a) => a.supporting_cases.length < 2);
+
   return (
     <div className="chat-wrap">
       {/* ================= 左：对话 ================= */}
@@ -329,9 +338,11 @@ export default function Chat() {
                   是在看「别人走过哪几条路」
             */}
             <h2>
-              {chat.landscape.archetypes.length === 1
-                ? '在这些案例里，只看到一种明确的走法'
-                : `在这些案例里，我看到 ${chat.landscape.archetypes.length} 种不同的走法`}
+              {mainPaths.length === 0
+                ? '这些案例里没有一条路有多人走过'
+                : mainPaths.length === 1
+                  ? '在这些案例里，只看到一种明确的走法'
+                  : `在这些案例里，我看到 ${mainPaths.length} 种不同的走法`}
             </h2>
             <p className="chat-result-sub">
               不是给你的建议，只是别人真实走过的路。点开可以看他们后来怎么样。
@@ -365,11 +376,41 @@ export default function Chat() {
             ))}
           </div>
 
+          {/*
+            ⚠️ 分两档渲染（产品负责人选的方案）：
+              · **有厚度的**（≥2 个案例支撑）→ 主卡
+              · **只有 1 个案例的** → 折叠起来
+
+            理由：既然卡片上自己都写着「这条路径目前只有 1 个案例支撑，
+            参考价值有限」，那它就不该和结实的那几条占同样的位置。
+            收进折叠区 —— 想看能看，但不会让用户误以为它们分量相当。
+          */}
           <div className="land-paths">
-            {chat.landscape.archetypes.map((a, i) => (
-              <PathCard a={a} index={i} key={a.id + i} onOpenCase={(id) => setOpenCase(id)} />
-            ))}
+            {chat.landscape.archetypes
+              .filter((a) => a.supporting_cases.length >= 2)
+              .map((a, i) => (
+                <PathCard a={a} index={i} key={a.id + i} onOpenCase={(id) => setOpenCase(id)} />
+              ))}
           </div>
+
+          {thinPaths.length > 0 && (
+            <details className="chat-thin">
+              <summary>
+                另有 {thinPaths.length} 种走法，各只有 1 个案例支撑 ——
+                参考价值有限，要看可以展开
+              </summary>
+              <div className="land-paths" style={{ marginTop: 12 }}>
+                {thinPaths.map((a, i) => (
+                  <PathCard
+                    a={a}
+                    index={mainPaths.length + i}
+                    key={a.id + i}
+                    onOpenCase={(id) => setOpenCase(id)}
+                  />
+                ))}
+              </div>
+            </details>
+          )}
 
           <div className="land-meta">
             <span>召回人物 {chat.landscape.meta.persons_recalled}</span>

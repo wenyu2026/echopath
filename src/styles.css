@@ -1190,6 +1190,8 @@ input:focus, textarea:focus, select:focus {
   .chat-wrap { grid-template-columns: 1fr; gap: 16px; }
   .chat-side { position: static; }
   .chat-list { max-height: 46vh; }
+  /* 单列布局下没有「第二行」的概念，取消显式行号 */
+  .chat-result { grid-row: auto; }
 }
 
 .chat-main { min-width: 0; }
@@ -1321,11 +1323,24 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* ---------- 结果区 ---------- */
+/*
+  ⚠️ 结果区必须**显式**放在第二行、跨两列。
+  原来只写了 grid-column: 1 / -1，但它在 DOM 里排在 .chat-side 之后 ——
+  自动布局把它放到第二行，而 .chat-side 是 sticky 的，
+  于是那个浮动的侧栏**压在了路径卡上面**（截图能直接看到文字重叠）。
+
+  修法：显式指定 grid-row: 2，并且给第 1 行留足空间。
+*/
 .chat-result {
   grid-column: 1 / -1;
+  grid-row: 2;
   margin-top: 34px;
   padding-top: 28px;
   border-top: 2px solid var(--line);
+  /* 防止被 sticky 侧栏压住 */
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
 }
 .chat-result-head { margin-bottom: 20px; }
 .chat-result-head h2 { font-size: 20px; margin: 0 0 8px; }
@@ -1679,3 +1694,28 @@ input:focus, textarea:focus, select:focus {
   line-height: 1.75;
   color: var(--ink-2, #4a4742);
 }
+
+/* ============================================================
+   薄路径折叠区
+   ------------------------------------------------------------
+   只有 1 个案例支撑的走法，卡片自己都写着「参考价值有限」——
+   那它就不该和结实的那几条占同样的位置。
+   ============================================================ */
+
+.chat-thin {
+  margin-top: 16px;
+  border-top: 1px dashed var(--line);
+  padding-top: 14px;
+}
+.chat-thin summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-3, #6b6862);
+  line-height: 1.7;
+  list-style: none;
+  user-select: none;
+}
+.chat-thin summary::-webkit-details-marker { display: none; }
+.chat-thin summary:hover { color: var(--now); }
+.chat-thin summary::before { content: '▸ '; }
+.chat-thin[open] summary::before { content: '▾ '; }
