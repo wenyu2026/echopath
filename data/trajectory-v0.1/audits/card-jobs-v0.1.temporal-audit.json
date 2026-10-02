@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-jobs-v0.1",
+  "person_id": "jobs",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-sj-1972": {
+      "view_id": "view-0.1-jobs-snap-sj-1972",
+      "episode_id": "jobs_1972_reed_dropout",
+      "decision_time": {
+        "start_year": 1972,
+        "end_year": 1972
+      },
+      "eligible": [
+        "f-sj-000",
+        "f-sj-001"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-sj-001"
+      ],
+      "eligible_count": 2
+    },
+    "snap-sj-1985": {
+      "view_id": "view-0.1-jobs-snap-sj-1985",
+      "episode_id": "jobs_1985_restart",
+      "decision_time": {
+        "start_year": 1985,
+        "end_year": 1985
+      },
+      "eligible": [
+        "f-sj-000",
+        "f-sj-001",
+        "f-sj-002",
+        "f-sj-007"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-sj-007"
+      ],
+      "eligible_count": 4
+    }
+  }
+}

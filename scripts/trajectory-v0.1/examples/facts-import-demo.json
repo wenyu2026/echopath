@@ -1,0 +1,23 @@
+{
+  "target_person_id": "lu_xun",
+  "source_note": "示例草稿（演示无密钥录入路径，不并入卡片）：第 1 条与卡内 f-lx-010 同文应跳过；第 2 条取自正式库 1902 episode outcomes.short_term，为卡内未收录的新事实。",
+  "facts": [
+    {
+      "text": "1918 年开始小说创作（本人 1932 年回顾：「我做小说，是开手于一九一八年」）。",
+      "occurred": { "start_year": 1918, "end_year": 1918 },
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "LX-SELECT", "locator": "我做小说，是开手于一九一八年" }]
+    },
+    {
+      "text": "赴日学习，尚未进入仙台医专（1902—1904 年间状态）。",
+      "occurred": { "start_year": 1902, "end_year": 1904 },
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [
+        { "source_id": "LX-TOHOKU", "locator": "赴日与仙台入学、第二学年退学" },
+        { "source_id": "LX-SENDAI", "locator": "Lu Xun studied in Sendai from 1904 to 1906" }
+      ]
+    }
+  ]
+}

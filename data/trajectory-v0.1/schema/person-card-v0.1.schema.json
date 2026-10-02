@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trajectory-v0.1/person-card-v0.1.schema.json",
+  "title": "PersonCard v0.1",
+  "description": "人物轨迹卡（完整档案）。语义约定见 .agent/handoffs/agent-cards-v0.1/02-two-person-work-packages.md §3；本 schema 是文档性描述，可执行权威为 scripts/trajectory-v0.1/lib/validate.mjs（含时间边界、retrospective 排除等 schema 表达不了的规则）。",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "card_id", "synthetic", "person_id", "person", "facts", "snapshots", "events", "mechanisms", "partial", "review"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "artifact_type": { "const": "person_card" },
+    "card_id": { "type": "string" },
+    "contract": { "type": "object" },
+    "synthetic": {
+      "type": "boolean",
+      "description": "测试素材必须为 true 且人物/来源 ID 以 SYN 前缀；synthetic 卡不进入正式候选与 manifest 正式列表。"
+    },
+    "person_id": { "type": "string", "pattern": "^[a-z_]+$" },
+    "person": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "name_refs": { "type": "array", "items": { "type": "string" } },
+        "birth_year": { "type": ["integer", "null"] },
+        "birth_year_unknown_reason": { "type": ["string", "null"] }
+      }
+    },
+    "scenario_tags": {
+      "type": "array",
+      "items": { "enum": ["转专业", "考研还是就业", "大厂还是小公司/创业"] }
+    },
+    "sampling_note": { "type": "string" },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["fact_id", "text", "occurred", "time_scope", "kind", "confidence", "source_refs"],
+        "properties": {
+          "fact_id": { "type": "string", "pattern": "^f-[a-z]+-\\d{3}$" },
+          "text": { "type": "string", "minLength": 1 },
+          "occurred": {
+            "description": "发生时间区间；未知分量为 null。时间门槛以发生时间判断，与资料形成时间无关。",
+            "type": ["object", "null"],
+            "properties": {
+              "start_year": { "type": ["integer", "null"] },
+              "end_year": { "type": ["integer", "null"] }
+            }
+          },
+          "time_scope": { "enum": ["point", "interval", "timeless"] },
+          "kind": { "enum": ["fact", "inference", "retrospective"], "description": "retrospective（回顾性解释）禁止进入决策前视图。" },
+          "confidence": { "enum": ["high", "medium", "low", null], "description": "证据支持程度，不是历史真相概率。" },
+          "source_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["source_id", "locator"],
+              "properties": {
+                "source_id": { "type": "string" },
+                "locator": { "type": "string", "minLength": 1, "description": "具体定位：版本/章节/页码/段落或等效精确定位。" }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["snapshot_id", "snapshot_kind", "node_time", "prior_fact_ids", "dimensions", "institutional_context"],
+        "properties": {
+          "snapshot_id": { "type": "string" },
+          "snapshot_kind": { "enum": ["decision", "state_change"] },
+          "view_export": { "type": "boolean" },
+          "event_id": { "type": ["string", "null"] },
+          "episode_id": { "type": ["string", "null"], "description": "decision 快照必须引用正式库 episode_id（synthetic 除外）。" },
+          "node_time": { "$ref": "#/$defs/yearInterval" },
+          "decision_time": { "$ref": "#/$defs/yearInterval" },
+          "sampling_reason": { "type": "string" },
+          "prior_fact_ids": { "type": "array", "items": { "type": "string" } },
+          "prior_order_notes": {
+            "type": "array",
+            "description": "同年/未知区间事实进入决策前视图所需的 explicit_order：须带受控 basis 与人工裁决记录；被驳回的事实必须移出 prior_fact_ids。",
+            "items": {
+              "type": "object",
+              "required": ["fact_id", "explicit_order"],
+              "properties": {
+                "fact_id": { "type": "string" },
+                "explicit_order": {
+                  "type": "object",
+                  "required": ["justification", "refs", "basis", "human_adjudication"],
+                  "properties": {
+                    "justification": { "type": "string", "minLength": 1 },
+                    "refs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                    "basis": {
+                      "enum": ["logical_precondition", "formal_episode_chain", "cross_source_consistency", "source_narrative_order"],
+                      "description": "依据强弱：解析性前提 > 正式库 episode 结构 > 多源互证 > 单一事后来源叙述顺序（最弱，必审）。"
+                    },
+                    "basis_detail": { "type": "string" },
+                    "human_adjudication": {
+                      "type": "object",
+                      "required": ["status"],
+                      "properties": {
+                        "status": { "enum": ["pending", "confirmed", "rejected"] },
+                        "by": { "type": ["string", "null"] },
+                        "on": { "type": ["string", "null"] },
+                        "note": { "type": ["string", "null"] }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "dimensions": { "$ref": "#/$defs/dimensions" },
+          "institutional_context": {
+            "type": "object",
+            "required": ["text", "refs"],
+            "properties": {
+              "text": { "type": "string" },
+              "refs": { "type": "array", "items": { "type": "string" } },
+              "basis": { "type": "string" }
+            }
+          },
+          "unknowns": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event_id", "episode_id", "scenario", "snapshot_id", "decision_time", "choice", "mechanism_id"],
+        "properties": {
+          "event_id": { "type": "string" },
+          "episode_id": { "type": "string", "description": "正式事件只引用现有 episode_id；新事件先作为候选。" },
+          "scenario": { "enum": ["转专业", "考研还是就业", "大厂还是小公司/创业"] },
+          "snapshot_id": { "type": "string" },
+          "decision_time": { "$ref": "#/$defs/yearInterval" },
+          "choice": {
+            "type": "object",
+            "required": ["type", "action_fact_ids"],
+            "properties": {
+              "type": { "enum": ["persist", "direct_switch", "explore_then_switch", "explore_then_persist", "abandon", "dual_track"], "description": "复用正式库 choice.type，与机制 archetype 分开，不相互覆盖。" },
+              "type_note": { "type": "string" },
+              "action_fact_ids": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "outcome_fact_ids": { "type": "array", "items": { "type": "string" } },
+          "reflection": {
+            "type": "object",
+            "properties": {
+              "retrospective_fact_ids": { "type": "array", "items": { "type": "string" } },
+              "self_comment_note": { "type": "string" },
+              "unknowns_source": { "type": "string" }
+            }
+          },
+          "mechanism_id": { "type": "string" }
+        }
+      }
+    },
+    "mechanisms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mechanism_id", "event_id", "archetype", "root_factors", "kind", "basis"],
+        "properties": {
+          "mechanism_id": { "type": "string" },
+          "event_id": { "type": "string" },
+          "archetype": { "enum": ["persist", "explore_then_persist", "explore_then_switch", "direct_switch", "dual_track", "abandon", "unknown"] },
+          "root_factors": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 6,
+            "items": { "enum": ["沉没成本", "转换成本", "新路径验证不足", "长期方向匹配", "再次选错风险", "时间窗口", "经济压力", "家庭约束", "制度约束", "身份绑定", "机会成本", "社会支持"] }
+          },
+          "mechanism_short": { "type": "string" },
+          "kind": { "const": "inference" },
+          "basis": { "type": "string" },
+          "vocab": { "type": "string" },
+          "supporting_refs": { "type": "array", "items": { "type": "string" } },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "unknowns": { "type": "array", "items": { "type": "string" } },
+    "partial": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "boolean" },
+        "gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["human_review"],
+      "properties": {
+        "human_review": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": { "enum": ["pending", "approved"] },
+            "reviewed_by": { "type": ["string", "null"] },
+            "reviewed_on": { "type": ["string", "null"] },
+            "scope": { "type": ["string", "null"] },
+            "checklist_file": { "type": ["string", "null"] },
+            "note": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "yearInterval": {
+      "type": ["object", "null"],
+      "properties": {
+        "start_year": { "type": ["integer", "null"] },
+        "end_year": { "type": ["integer", "null"] }
+      }
+    },
+    "dimensionEntry": {
+      "type": "object",
+      "required": ["value", "raw_text", "kind", "evidence_refs", "confidence", "valid_time", "unknown_reason"],
+      "properties": {
+        "value": {
+          "description": "未知必须为 null 且带 unknown_reason；分档 low/medium/high 属建模。各键取值词表见 contract.mjs。"
+        },
+        "raw_text": { "type": ["string", "null"] },
+        "kind": { "enum": ["fact", "inference", "retrospective"] },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } },
+        "confidence": { "enum": ["high", "medium", "low", null] },
+        "valid_time": { "$ref": "#/$defs/yearInterval" },
+        "unknown_reason": { "type": ["string", "null"] },
+        "modeling_basis": { "type": ["string", "null"], "description": "值为正式库建模（decision_state 等）时的依据说明；此时允许无事实引用。" },
+        "anchor_note": { "type": ["string", "null"] }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["life_stage", "prior_path", "path_investment", "economic_pressure", "family_responsibility", "resource_access", "goal_structure", "new_path_validation", "reversibility", "time_window"],
+      "propertyNames": { "enum": ["life_stage", "prior_path", "path_investment", "economic_pressure", "family_responsibility", "resource_access", "goal_structure", "new_path_validation", "reversibility", "time_window"] },
+      "additionalProperties": { "$ref": "#/$defs/dimensionEntry" }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trajectory-v0.1/retrieval-view-v0.1.schema.json",
+  "title": "RetrievalView v0.1",
+  "description": "按决策节点导出的决策前检索视图（在线匹配的唯一人物侧输入）。由 scripts/trajectory-v0.1/lib/export.mjs 从 PersonCard 确定性生成；prior_text 仅由通过时间检查的事实拼成，不拼完整传记。最小字段清单来自 .agent/handoffs/agent-cards-v0.1/02-two-person-work-packages.md §3。",
+  "type": "object",
+  "required": ["schema_version", "artifact_type", "view_id", "person_id", "episode_id", "snapshot_id", "decision_time", "prior_fact_ids", "prior_text", "dimensions", "root_factors", "institutional_context", "evidence_refs", "coverage", "review_status"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "artifact_type": { "const": "retrieval_view" },
+    "view_id": { "type": "string", "description": "view-0.1-<person_id>-<snapshot_id>；与 person_id+episode_id+snapshot_id 三元组一一对应。" },
+    "person_id": { "type": "string" },
+    "episode_id": { "type": "string", "description": "正式库 episode_id 原样复用。" },
+    "snapshot_id": { "type": "string" },
+    "scenario": { "enum": ["转专业", "考研还是就业", "大厂还是小公司/创业", null] },
+    "decision_time": {
+      "type": "object",
+      "properties": {
+        "start_year": { "type": "integer" },
+        "end_year": { "type": "integer" }
+      }
+    },
+    "prior_fact_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "只含通过时间门槛的事实（完全早于决策，或同年/未知区间但有引用支持的 explicit_order）。"
+    },
+    "prior_text": {
+      "type": "string",
+      "description": "仅由 prior_fact_ids 的文本按时间顺序生成；不含未来结果、后来荣誉与回顾性解释。"
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "十维（键与词表同 PersonCard）；导出时证据引用被时间门槛过滤，失去全部支撑的维度回到 null+unknown_reason。",
+      "propertyNames": { "enum": ["life_stage", "prior_path", "path_investment", "economic_pressure", "family_responsibility", "resource_access", "goal_structure", "new_path_validation", "reversibility", "time_window"] }
+    },
+    "root_factors": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["沉没成本", "转换成本", "新路径验证不足", "长期方向匹配", "再次选错风险", "时间窗口", "经济压力", "家庭约束", "制度约束", "身份绑定", "机会成本", "社会支持"] },
+      "description": "复用正式机制标注；聚类用集合重叠，机制文本不用作聚类。root_factors 与状态维度分档分属两层，不互推。"
+    },
+    "mechanism_note": { "type": ["string", "null"] },
+    "institutional_context": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "refs": { "type": "array", "items": { "type": "string" } },
+        "basis": { "type": "string" }
+      },
+      "description": "制度/时代差异，主要用于反类比，不参与十维匹配。"
+    },
+    "evidence_refs": { "type": "array", "items": { "type": "string" } },
+    "coverage": {
+      "type": "object",
+      "description": "十维的证据覆盖情况：known（有事实证据）/ modeling_only（仅正式库建模）/ unknown（未知）。不含用户相关分数——排名由在线系统计算。",
+      "propertyNames": { "enum": ["life_stage", "prior_path", "path_investment", "economic_pressure", "family_responsibility", "resource_access", "goal_structure", "new_path_validation", "reversibility", "time_window"] },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": { "enum": ["known", "modeling_only", "unknown"] },
+          "evidence_refs": { "type": "integer" }
+        }
+      }
+    },
+    "order_dependent_fact_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "靠 explicit_order 才通过时间门槛的 prior 事实——与自然合格事实不同，这些事实的先后证据较弱，匹配方可据此降权。"
+    },
+    "temporal_caveats": {
+      "type": "array",
+      "description": "逐条列出顺序依赖事实的依据类别（basis）与人工裁决状态；source_narrative_order 为最弱类。",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fact_id": { "type": "string" },
+          "basis": { "enum": ["logical_precondition", "formal_episode_chain", "cross_source_consistency", "source_narrative_order", null] },
+          "basis_detail": { "type": ["string", "null"] },
+          "justification": { "type": ["string", "null"] },
+          "human_adjudication": { "enum": ["pending", "confirmed", "rejected"] }
+        }
+      }
+    },
+    "has_pending_order_review": {
+      "type": "boolean",
+      "description": "true 表示存在未经真人裁决的顺序证据；该视图不得用于正式排名，仅供隔离试验。"
+    },
+    "review_status": {
+      "enum": ["pending", "approved"],
+      "description": "approved 需真人、时间与审核范围；机器校验通过不自动改 approved。未审核视图仅供隔离试验。"
+    },
+    "synthetic": { "type": "boolean" }
+  }
+}

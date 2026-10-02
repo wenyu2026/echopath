@@ -1,0 +1,668 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "retrieval_views",
+  "card_id": "card-darwin-v0.1",
+  "person_id": "darwin",
+  "views": [
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-darwin-snap-cd-1825",
+      "person_id": "darwin",
+      "episode_id": "darwin_1825_medicine_trial",
+      "snapshot_id": "snap-cd-1825",
+      "scenario": "转专业",
+      "decision_time": {
+        "start_year": 1825,
+        "end_year": 1825
+      },
+      "prior_fact_ids": [
+        "f-cd-000"
+      ],
+      "prior_text": "人物为「查尔斯·达尔文」，Cambridge 大学的 Darwin Correspondence Project 页面为其记载主体。",
+      "dimensions": {
+        "life_stage": {
+          "value": "transition",
+          "raw_text": "大学初期（正式 episode 阶段建模）：1825 年即将赴爱丁堡入学。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1825
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1825_medicine_trial time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "1825 年决策前的经历在本卡事实集内无记载（正式库 prior_path 即从 1825 赴爱丁堡开始）；不据常识补写中学与童年经历。"
+        },
+        "path_investment": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "原路径（此前的学习方向）无记载，投入无从分档。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无经济状况出处。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无供养/照护责任记载；「职业预期来自家庭」是建模 constraint，指期望方向，不是本人承担的家庭责任。"
+        },
+        "resource_access": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "求学资助与家庭支持在决策前无独立出处（父亲资助的记载属 1831 年事件）。"
+        },
+        "goal_structure": {
+          "value": [
+            "growth"
+          ],
+          "raw_text": "探索职业方向；判断学习适配（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1825
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1825_medicine_trial decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "医学训练尚未开始（「尚未经历临床训练」为建模 constraint）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1825
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1825
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1825_medicine_trial decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "入学期限无出处。"
+        }
+      },
+      "root_factors": [
+        "家庭约束",
+        "新路径验证不足",
+        "长期方向匹配",
+        "转换成本"
+      ],
+      "mechanism_note": "archetype=explore_then_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "无现代麻醉的手术环境与今天医学院差异很大；不能把不适归结为固定人格。",
+        "refs": [
+          "CD-STUDY"
+        ],
+        "basis": "review.json analogy_boundary（darwin_1825_medicine_trial）。"
+      },
+      "evidence_refs": [
+        "f-cd-000"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "prior_path": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "path_investment": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [],
+      "temporal_caveats": [],
+      "has_pending_order_review": false,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-darwin-snap-cd-1828",
+      "person_id": "darwin",
+      "episode_id": "darwin_1828_cambridge",
+      "snapshot_id": "snap-cd-1828",
+      "scenario": "转专业",
+      "decision_time": {
+        "start_year": 1828,
+        "end_year": 1828
+      },
+      "prior_fact_ids": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003"
+      ],
+      "prior_text": "人物为「查尔斯·达尔文」，Cambridge 大学的 Darwin Correspondence Project 页面为其记载主体。\n1825 年赴爱丁堡，与兄长一起学习医学（开始医学课程并接触临床观察）。\n对解剖课程缺乏兴趣，观看手术给他强烈不适。\n1827 年停止医学学习。",
+      "dimensions": {
+        "life_stage": {
+          "value": "transition",
+          "raw_text": "1827 年停医后、1828 年入学前（阶段建模：重新入学）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-003"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1827,
+            "end_year": 1828
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1828_cambridge time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "study"
+          ],
+          "raw_text": "1827 年放弃在爱丁堡继续学医（1828 episode prior_path）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-001",
+            "f-cd-003"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1828
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "两年医学训练已投入；剑桥学位为待投入新路径。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-001",
+            "f-cd-003"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1828
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：medium=已有持续尝试但仍有退出空间。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无经济状况出处；家庭资助条件在决策前无独立记载（类比边界明言「家庭资助」为不可比项）。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无供养/照护责任记载。"
+        },
+        "resource_access": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "剑桥入学的资助与资格条件在决策前无独立出处；学位—教会职业关联是制度背景（f-cd-005），记入 institutional_context 而非个人资源。"
+        },
+        "goal_structure": {
+          "value": [
+            "stability",
+            "interest"
+          ],
+          "raw_text": "保留职业出口；继续自然兴趣（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1828,
+            "end_year": 1828
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1828_cambridge decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "剑桥/教会路径未开始；自然兴趣在正式库中无决策前的验证记载（童年采集等不在事实集内，不据常识补写）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1828,
+            "end_year": 1828
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "decision_state.reversibility=medium（建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1828,
+            "end_year": 1828
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1828_cambridge decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无明确期限证据（1828 年 1 月入剑桥为事件年，不构成决策期限）。"
+        }
+      },
+      "root_factors": [
+        "制度约束",
+        "身份绑定",
+        "新路径验证不足",
+        "家庭约束"
+      ],
+      "mechanism_note": "archetype=direct_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "当时英国教会职位、家庭资助与现代转专业的资格和成本不同；学位与教会职业路径存在制度关联（f-cd-005）。",
+        "refs": [
+          "CD-STUDY",
+          "CD-CHURCH"
+        ],
+        "basis": "review.json analogy_boundary（darwin_1828_cambridge）+ f-cd-005 制度事实。"
+      },
+      "evidence_refs": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 2
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [],
+      "temporal_caveats": [],
+      "has_pending_order_review": false,
+      "review_status": "pending",
+      "synthetic": false
+    },
+    {
+      "schema_version": "0.1",
+      "artifact_type": "retrieval_view",
+      "view_id": "view-0.1-darwin-snap-cd-1831",
+      "person_id": "darwin",
+      "episode_id": "darwin_1831_beagle",
+      "snapshot_id": "snap-cd-1831",
+      "scenario": "考研还是就业",
+      "decision_time": {
+        "start_year": 1831,
+        "end_year": 1831
+      },
+      "prior_fact_ids": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003",
+        "f-cd-004",
+        "f-cd-005",
+        "f-cd-006",
+        "f-cd-007"
+      ],
+      "prior_text": "人物为「查尔斯·达尔文」，Cambridge 大学的 Darwin Correspondence Project 页面为其记载主体。\n当时剑桥学位与英国教会职业路径存在制度关联（学位是教职资格通道）。\n1825 年赴爱丁堡，与兄长一起学习医学（开始医学课程并接触临床观察）。\n对解剖课程缺乏兴趣，观看手术给他强烈不适。\n1827 年停止医学学习。\n1828 年进入剑桥，为可能的教会职业准备学位。\n在剑桥完成学习，原考虑教会职业。\n1831 年收到贝格尔号航行邀请。",
+      "dimensions": {
+        "life_stage": {
+          "value": "transition",
+          "raw_text": "毕业后探索（正式 episode 阶段建模）：剑桥学业刚完成。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-006"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1831,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1831_beagle time.stage（review.json inference_fields）。"
+        },
+        "prior_path": {
+          "value": [
+            "study"
+          ],
+          "raw_text": "爱丁堡医学（1825—1827）→ 剑桥学位（1828—1831，原考虑教会职业）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-001",
+            "f-cd-003",
+            "f-cd-004",
+            "f-cd-006"
+          ],
+          "confidence": "high",
+          "valid_time": {
+            "start_year": 1825,
+            "end_year": 1831
+          },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "high",
+          "raw_text": "剑桥学位为多年度训练，且教会职业是既定轨道（学位—教职制度关联）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-004",
+            "f-cd-005",
+            "f-cd-006"
+          ],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1828,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "anchor_note": "锚点：high=多年度专业训练/长期事业绑定（既定教职轨道）。"
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无经济压力出处；父亲资助记载于决策后结果层（f-cd-009），不回填决策前。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "无供养/照护责任记载；「父亲最初反对」仅见 decision_state 建模 constraint（无独立事实来源），且反对不是本人的家庭责任。"
+        },
+        "resource_access": {
+          "value": [
+            "network"
+          ],
+          "raw_text": "收到贝格尔号航行邀请（机会来自推荐连接；推荐细节无出处）。",
+          "kind": "inference",
+          "evidence_refs": [
+            "f-cd-007"
+          ],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1831,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "anchor_note": "funding 不列：私人资助的承诺发生在决策后（f-cd-009 为决策年结果）。"
+        },
+        "goal_structure": {
+          "value": [
+            "growth",
+            "interest"
+          ],
+          "raw_text": "获得实地经验；探索自然研究（decision_state 建模）。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1831,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1831_beagle decision_state.goals（review.json inference_fields）。"
+        },
+        "new_path_validation": {
+          "value": "none",
+          "raw_text": "远航考察尚未开始；自然研究的实地验证无决策前记载。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "medium",
+          "valid_time": {
+            "start_year": 1831,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "anchor_note": "none 为缺失性判断。"
+        },
+        "reversibility": {
+          "value": "low",
+          "raw_text": "decision_state.reversibility=low（建模）：五年航期一旦出发即锁定。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": {
+            "start_year": 1831,
+            "end_year": 1831
+          },
+          "unknown_reason": null,
+          "modeling_basis": "episode darwin_1831_beagle decision_state.reversibility（review.json inference_fields）。"
+        },
+        "time_window": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "船期（1831-12-27 启航，见 CD-BEAGLE 定位）客观存在，但「决策期限的当时可知细节」无出处；出航事实属决策后结果层，不作为期限证据。"
+        }
+      },
+      "root_factors": [
+        "长期方向匹配",
+        "时间窗口",
+        "家庭约束",
+        "机会成本"
+      ],
+      "mechanism_note": "archetype=direct_switch（机制层标注，与 choice.type 分开；root_factors 与状态维度分档不互推）",
+      "institutional_context": {
+        "text": "私人资助、推荐关系与殖民航行背景是重大差异；不等于现代学生普遍可选的间隔年。",
+        "refs": [
+          "CD-BEAGLE",
+          "CD-CHURCH"
+        ],
+        "basis": "review.json analogy_boundary（darwin_1831_beagle）。"
+      },
+      "evidence_refs": [
+        "f-cd-000",
+        "f-cd-001",
+        "f-cd-002",
+        "f-cd-003",
+        "f-cd-004",
+        "f-cd-005",
+        "f-cd-006",
+        "f-cd-007"
+      ],
+      "coverage": {
+        "life_stage": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "prior_path": {
+          "status": "known",
+          "evidence_refs": 4
+        },
+        "path_investment": {
+          "status": "known",
+          "evidence_refs": 3
+        },
+        "economic_pressure": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "family_responsibility": {
+          "status": "unknown",
+          "evidence_refs": 0
+        },
+        "resource_access": {
+          "status": "known",
+          "evidence_refs": 1
+        },
+        "goal_structure": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "new_path_validation": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "reversibility": {
+          "status": "modeling_only",
+          "evidence_refs": 0
+        },
+        "time_window": {
+          "status": "unknown",
+          "evidence_refs": 0
+        }
+      },
+      "order_dependent_fact_ids": [
+        "f-cd-006",
+        "f-cd-007"
+      ],
+      "temporal_caveats": [
+        {
+          "fact_id": "f-cd-006",
+          "basis": "logical_precondition",
+          "basis_detail": "完成学业（状态终结）先于毕业后的去向选择；prior_path 归位为辅证。",
+          "justification": "「在剑桥完成学习」的区间终点与 1831 决策同年。完成学业先于「毕业后探索」的决策：正式 episode 阶段记为「毕业后探索」，且该事实被 1831 episode 的 prior_path.0 记为决策前状态（field_sources: CD-CHURCH）。属解析性前提 + 正式库归位的复合依据，仍提交人工复核。",
+          "human_adjudication": "pending"
+        },
+        {
+          "fact_id": "f-cd-007",
+          "basis": "logical_precondition",
+          "basis_detail": "机会的获得先于对该机会的抉择；同点同年问题由前提关系解决。",
+          "justification": "「收到贝格尔号航行邀请」与接受（f-cd-008，决策行动）同年。收到先于接受是解析性前提：受邀是接受邀请的定义性前提，不依赖任何叙述顺序。",
+          "human_adjudication": "pending"
+        }
+      ],
+      "has_pending_order_review": true,
+      "review_status": "pending",
+      "synthetic": false
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "temporal_check_audit",
+  "rule_version": "tc-0.1",
+  "card_id": "card-lu_xun-v0.1",
+  "person_id": "lu_xun",
+  "note": "本文件每次导出重新生成，记录可复核的逐事实判定；不作为「已通过」标记，人工仍须复核 explicit_order 条目。",
+  "checks": {
+    "snap-lx-1902": {
+      "view_id": "view-0.1-lu_xun-snap-lx-1902",
+      "episode_id": "lu_xun_1902_study_japan",
+      "decision_time": {
+        "start_year": 1902,
+        "end_year": 1902
+      },
+      "eligible": [
+        "f-lx-000",
+        "f-lx-001"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-lx-001"
+      ],
+      "eligible_count": 2
+    },
+    "snap-lx-1906": {
+      "view_id": "view-0.1-lu_xun-snap-lx-1906",
+      "episode_id": "lu_xun_1906_medicine_to_literature",
+      "decision_time": {
+        "start_year": 1906,
+        "end_year": 1906
+      },
+      "eligible": [
+        "f-lx-000",
+        "f-lx-001",
+        "f-lx-002",
+        "f-lx-003",
+        "f-lx-004"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-lx-004"
+      ],
+      "eligible_count": 5
+    },
+    "snap-lx-1918": {
+      "view_id": "view-0.1-lu_xun-snap-lx-1918",
+      "episode_id": "lu_xun_1918_write_new_youth",
+      "decision_time": {
+        "start_year": 1918,
+        "end_year": 1918
+      },
+      "eligible": [
+        "f-lx-000",
+        "f-lx-001",
+        "f-lx-002",
+        "f-lx-003",
+        "f-lx-004",
+        "f-lx-005",
+        "f-lx-006",
+        "f-lx-008"
+      ],
+      "excluded": [],
+      "order_dependent": [
+        "f-lx-008"
+      ],
+      "eligible_count": 8
+    }
+  }
+}

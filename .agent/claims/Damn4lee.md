@@ -1,8 +1,13 @@
 # Damn4lee 责任区
 
-**角色**：C AI/后端
+**角色**：C AI/后端（AGENTS.md 原四人角色）
 **区域**：`server/**`　`src/ai/**`
 **任务**：Issue #14（检索链路）+ #15（反类比 + 证据分层）
+
+**本轮新增（工作线 B，2026-10-02）**：`data/trajectory-v0.1/**`、`scripts/trajectory-v0.1/**`、`.agent/handoffs/trajectory-v0.1/**`
+——离线人物轨迹卡制作模块（工作包 `.agent/handoffs/agent-cards-v0.1/02-two-person-work-packages.md` §2 授权的隔离目录）。
+B 线暂无对应 Issue，CHECKIN 草稿见 `.agent/handoffs/trajectory-v0.1/CHECKIN-draft.md`。
+不触碰 `data/**` 原正式数据与 fu6868 的 validator。
 
 | 字段 | 内容 |
 |---|---|

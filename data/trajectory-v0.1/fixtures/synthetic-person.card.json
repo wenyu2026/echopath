@@ -1,0 +1,243 @@
+{
+  "schema_version": "0.1",
+  "artifact_type": "person_card",
+  "card_id": "card-SYN-P-1-v0.1",
+  "contract": {
+    "work_package": "test fixture only",
+    "note": "synthetic 测试卡：人物、事件、来源均为虚构，专供校验器/导出器正反例测试；禁止混入正式人物。"
+  },
+  "synthetic": true,
+  "person_id": "SYN-P-1",
+  "person": {
+    "name": "（synthetic）测试人物甲",
+    "name_refs": ["sf-001"],
+    "birth_year": 1880,
+    "birth_year_unknown_reason": null
+  },
+  "scenario_tags": ["转专业"],
+  "sampling_note": "synthetic：单决策节点最小卡，覆盖全部十条维度与各时间门槛分支。",
+  "facts": [
+    {
+      "fact_id": "sf-001",
+      "text": "（synthetic）测试人物甲是本卡人物。",
+      "occurred": { "start_year": null, "end_year": null },
+      "time_scope": "timeless",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "SYN-SRC-CONTEMP", "locator": "（synthetic）第一章" }],
+      "notes": "身份事实。"
+    },
+    {
+      "fact_id": "sf-002",
+      "text": "（synthetic）1900 年进入甲地学堂学习。",
+      "occurred": { "start_year": 1900, "end_year": 1900 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "SYN-SRC-CONTEMP", "locator": "（synthetic）第一章" }],
+      "notes": "决策前事实（早于 1912 决策）。"
+    },
+    {
+      "fact_id": "sf-003",
+      "text": "（synthetic）1905 年起参加课外试验并记录结果。",
+      "occurred": { "start_year": 1905, "end_year": 1907 },
+      "time_scope": "interval",
+      "kind": "fact",
+      "confidence": "medium",
+      "source_refs": [{ "source_id": "SYN-SRC-LATEBIO", "locator": "（synthetic）第二章第 3 段" }],
+      "notes": "资料形成于 1990 年（晚于事件 85 年），但发生区间早于 1912 决策；用于验证「不因出版晚排除」。"
+    },
+    {
+      "fact_id": "sf-004",
+      "text": "（synthetic）1915 年获得乙地职位。",
+      "occurred": { "start_year": 1915, "end_year": 1915 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "SYN-SRC-CONTEMP", "locator": "（synthetic）第一章" }],
+      "notes": "决策后结果事实（1912 决策之后），只进结果层。"
+    },
+    {
+      "fact_id": "sf-005",
+      "text": "（synthetic）他在 1970 年回忆录中把 1912 年的转向解释为「早已向往」。",
+      "occurred": { "start_year": 1970, "end_year": 1970 },
+      "time_scope": "point",
+      "kind": "retrospective",
+      "confidence": "high",
+      "source_refs": [{ "source_id": "SYN-SRC-SELF", "locator": "（synthetic）第 4 节" }],
+      "notes": "回顾性解释；禁止进入决策前视图。"
+    },
+    {
+      "fact_id": "sf-006",
+      "text": "（synthetic）本人自述 1912 年决定转学。",
+      "occurred": { "start_year": 1912, "end_year": 1912 },
+      "time_scope": "point",
+      "kind": "fact",
+      "confidence": "medium",
+      "source_refs": [{ "source_id": "SYN-SRC-SELF", "locator": "（synthetic）第 4 节" }],
+      "notes": "决策行动（事后自述记载）；不是决策前事实。"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_id": "SYN-S-1912",
+      "snapshot_kind": "decision",
+      "event_id": "SYN-EV-1",
+      "episode_id": "syn_episode_1",
+      "node_time": { "start_year": 1912, "end_year": 1912 },
+      "decision_time": { "start_year": 1912, "end_year": 1912 },
+      "sampling_reason": "（synthetic）转学决策。",
+      "prior_fact_ids": ["sf-001", "sf-002", "sf-003"],
+      "prior_order_notes": [],
+      "dimensions": {
+        "life_stage": {
+          "value": "student",
+          "raw_text": "（synthetic）在甲地学堂学习。",
+          "kind": "inference",
+          "evidence_refs": ["sf-002"],
+          "confidence": "high",
+          "valid_time": { "start_year": 1900, "end_year": 1912 },
+          "unknown_reason": null
+        },
+        "prior_path": {
+          "value": ["study"],
+          "raw_text": "（synthetic）甲地学堂。",
+          "kind": "inference",
+          "evidence_refs": ["sf-002"],
+          "confidence": "high",
+          "valid_time": { "start_year": 1900, "end_year": 1912 },
+          "unknown_reason": null
+        },
+        "path_investment": {
+          "value": "medium",
+          "raw_text": "（synthetic）已有多年学业投入。",
+          "kind": "inference",
+          "evidence_refs": ["sf-002"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1905, "end_year": 1912 },
+          "unknown_reason": null
+        },
+        "economic_pressure": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "（synthetic）无经济状况出处。"
+        },
+        "family_responsibility": {
+          "value": null,
+          "raw_text": null,
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": null,
+          "valid_time": null,
+          "unknown_reason": "（synthetic）无家庭责任记载。"
+        },
+        "resource_access": {
+          "value": ["credentials", "skills"],
+          "raw_text": "（synthetic）学堂资格与课外试验技能。",
+          "kind": "inference",
+          "evidence_refs": ["sf-002", "sf-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1905, "end_year": 1912 },
+          "unknown_reason": null
+        },
+        "goal_structure": {
+          "value": ["interest"],
+          "raw_text": "（synthetic）decision_state 建模。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1912, "end_year": 1912 },
+          "unknown_reason": null,
+          "modeling_basis": "（synthetic）syn_episode_1 decision_state.goals。"
+        },
+        "new_path_validation": {
+          "value": "tried",
+          "raw_text": "（synthetic）课外试验即尝试。",
+          "kind": "inference",
+          "evidence_refs": ["sf-003"],
+          "confidence": "medium",
+          "valid_time": { "start_year": 1905, "end_year": 1907 },
+          "unknown_reason": null
+        },
+        "reversibility": {
+          "value": "medium",
+          "raw_text": "（synthetic）decision_state 建模。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1912, "end_year": 1912 },
+          "unknown_reason": null,
+          "modeling_basis": "（synthetic）syn_episode_1 decision_state.reversibility。"
+        },
+        "time_window": {
+          "value": { "description": "（synthetic）学期截止", "deadline_year": 1912 },
+          "raw_text": "（synthetic）学期制度。",
+          "kind": "inference",
+          "evidence_refs": [],
+          "confidence": "low",
+          "valid_time": { "start_year": 1912, "end_year": 1912 },
+          "unknown_reason": null,
+          "modeling_basis": "（synthetic）syn_episode_1 decision_state.constraints。"
+        }
+      },
+      "institutional_context": {
+        "text": "（synthetic）甲地学堂制度与现代学校不同。",
+        "refs": ["SYN-SRC-CONTEMP"],
+        "basis": "（synthetic）测试用类比边界。"
+      },
+      "unknowns": ["（synthetic）全部为测试数据。"]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "SYN-EV-1",
+      "episode_id": "syn_episode_1",
+      "episode_source": "（synthetic）fixture 内事件，不入正式库",
+      "scenario": "转专业",
+      "snapshot_id": "SYN-S-1912",
+      "decision_time": { "start_year": 1912, "end_year": 1912 },
+      "choice": {
+        "type": "direct_switch",
+        "type_note": "（synthetic）",
+        "action_fact_ids": ["sf-006"]
+      },
+      "outcome_fact_ids": ["sf-004"],
+      "reflection": {
+        "retrospective_fact_ids": ["sf-005"],
+        "self_comment_note": "（synthetic）1970 年回忆属 retrospective。",
+        "unknowns_source": "fixture"
+      },
+      "mechanism_id": "SYN-MECH-1"
+    }
+  ],
+  "mechanisms": [
+    {
+      "mechanism_id": "SYN-MECH-1",
+      "event_id": "SYN-EV-1",
+      "archetype": "direct_switch",
+      "root_factors": ["长期方向匹配", "转换成本", "新路径验证不足"],
+      "mechanism_short": "（synthetic）从学堂转向试验方向",
+      "kind": "inference",
+      "basis": "（synthetic）测试标注。",
+      "vocab": "src/types/landscape.ts",
+      "supporting_refs": ["sf-002", "sf-003"],
+      "note": "（synthetic）"
+    }
+  ],
+  "unknowns": ["（synthetic）全部为测试数据。"],
+  "partial": { "status": false, "gaps": [] },
+  "review": {
+    "human_review": {
+      "status": "pending",
+      "reviewed_by": null,
+      "reviewed_on": null,
+      "scope": null,
+      "checklist_file": null,
+      "note": "synthetic 卡不进入人工审核流程。"
+    }
+  }
+}
