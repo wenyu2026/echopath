@@ -49,8 +49,11 @@ export function useChatInterview() {
   const [askedField, setAskedField] = useState<string>('');
   const [phase, setPhase] = useState<ChatPhase>({ kind: 'idle' });
   const [summary, setSummary] = useState<string>('');
+  /** 后端判断出「当前没有面临选择」—— UI 据此不显示「去找人」按钮 */
+  const [noDilemma, setNoDilemma] = useState(false);
   const [landscape, setLandscape] = useState<LandscapeResponse | null>(null);
-  const [progress, setProgress] = useState({ asked: 0, max: 8 });
+  // ⚠️ 不显示「上限」—— 没有轮次上限，只有「信息够不够」
+  const [progress, setProgress] = useState({ asked: 0, fields: 0 });
 
   /** 最后一次真正说过的话（原话），用于把「代价」挂到它上面 */
   const bestQuote = useRef<string>('');
@@ -88,7 +91,7 @@ export function useChatInterview() {
         state: InterviewStateWire;
         message: string;
         asked_field: string;
-        progress: { asked: number; max: number };
+        progress: { asked: number; fields: number };
       }>('/api/interview/start', {});
       setState(r.state);
       setAskedField(r.asked_field);
@@ -115,7 +118,7 @@ export function useChatInterview() {
           asked_field: string | null;
           done: boolean;
           stop_reason: string;
-          progress: { asked: number; max: number };
+          progress: { asked: number; fields: number };
         }>('/api/interview/answer', { state, answer: text, asked_field: askedField });
 
         setState(r.state);
@@ -166,12 +169,33 @@ export function useChatInterview() {
     async (s: InterviewStateWire) => {
       setPhase({ kind: 'confirming' });
       try {
-        const r = await postJson<{ summary: string; state: InterviewStateWire }>('/api/interview/finish', {
-          state: s,
-        });
+        const r = await postJson<{
+          summary: string;
+          state: InterviewStateWire;
+          /** ⚠️ 后端判断出「这个人当前没有面临选择」—— 此时不该去检索 */
+          no_dilemma?: boolean;
+        }>('/api/interview/finish', { state: s });
         setSummary(r.summary);
         setState(r.state);
         setMessages((m) => [...m, { id: uid(), role: 'ai', text: r.summary, field: 'summary' }]);
+
+        /**
+         * ⚠️ 没有迷茫 → **不进确认流程，也不去找人**。
+         *
+         *   实测踩到：用户明确说「我对这个方向很满意呀」，
+         *   系统照样给他匹配了 4 条「别人走过的路」——
+         *   那等于在暗示「你该重新考虑」，而产品的主张恰恰是
+         *   「不替你判断该不该变」。
+         *
+         *   所以这里直接进 done，UI 只显示总结 + 一个说明。
+         */
+        if (r.no_dilemma) {
+          setNoDilemma(true);
+          setPhase({ kind: 'done' });
+          return;
+        }
+
+        setNoDilemma(false);
         setPhase({ kind: 'confirming' });
       } catch (e) {
         setPhase({ kind: 'error', error: (e as Error).message });
@@ -230,6 +254,7 @@ export function useChatInterview() {
     setMessages([]);
     setState(null);
     setSummary('');
+    setNoDilemma(false);
     setLandscape(null);
     setAskedField('');
     setPhase({ kind: 'idle' });
@@ -260,6 +285,7 @@ export function useChatInterview() {
     state,
     phase,
     summary,
+    noDilemma,
     landscape,
     progress,
     /** 用户说过的、最能体现他在意什么的那句话 */

@@ -145,7 +145,7 @@ export default function Chat() {
 
         <div className="chat-foot">
           <span className="tiny muted">
-            第 {chat.progress.asked} / {chat.progress.max} 轮
+            已聊 {chat.progress.asked} 轮 · 摸清 {chat.progress.fields} 项
           </span>
           {chat.phase.kind !== 'done' && chat.progress.asked >= 2 && (
             <button className="btn btn-sm btn-ghost" onClick={() => void chat.finishNow()} disabled={busy}>
@@ -212,6 +212,27 @@ export default function Chat() {
                 不对，重来
               </button>
             </div>
+          </div>
+        )}
+
+        {/*
+          ⚠️ 没有迷茫 —— 这里**不给「去找人」按钮**。
+          硬凑几条「别人的人生抉择」等于在暗示「你该重新考虑」，
+          而产品的主张恰恰是「不替你判断该不该变」。
+        */}
+        {chat.noDilemma && (
+          <div className="chat-nodilemma">
+            <div className="chat-nodilemma-title">你现在的状态不需要参考别人</div>
+            <p className="chat-nodilemma-body">
+              听起来你不是「在选什么」，而是「在确认」。
+              这时候看别人怎么选，反而会干扰你自己已经想清楚的东西。
+            </p>
+            <p className="chat-nodilemma-body">
+              如果<strong>真遇到岔路</strong>，再回来聊一次 —— 那时候我们才该去找人。
+            </p>
+            <button className="btn btn-sm btn-ghost" onClick={chat.reset}>
+              换个处境再聊
+            </button>
           </div>
         )}
       </aside>

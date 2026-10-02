@@ -1537,3 +1537,32 @@ input:focus, textarea:focus, select:focus {
   transition: all .14s ease; white-space: nowrap;
 }
 .topnav-link:hover { border-color: var(--now); color: var(--now); }
+
+/* ============================================================
+   「不需要参考别人」的出口
+   ------------------------------------------------------------
+   ⚠️ 用户明确表示对现状满意时，不能硬塞 4 条「别人的人生抉择」。
+      那不只是在做无用功 —— 它等于在暗示「你该重新考虑」，
+      而产品的主张恰恰是「不替你判断该不该变」。
+   ============================================================ */
+
+.chat-nodilemma {
+  margin-top: 16px;
+  padding: 16px 16px 14px;
+  background: var(--ok-soft);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--ok);
+}
+.chat-nodilemma-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ok);
+  margin-bottom: 9px;
+}
+.chat-nodilemma-body {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-2, #4a4742);
+  margin: 0 0 9px;
+}
+.chat-nodilemma .btn { margin-top: 4px; }

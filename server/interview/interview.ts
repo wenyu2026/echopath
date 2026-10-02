@@ -44,12 +44,18 @@ export interface InterviewState {
   collected: Collected;
   /** 每个字段的置信度 0-1 */
   confidence: Record<string, number>;
-  /** 问过哪些字段（避免重复问） */
+  /** 问过哪些字段（含重复问的次数） */
   asked: string[];
+  /**
+   * 每轮结束时「已采集字段数」的快照。
+   * 用来判断有没有原地打转 —— 这是**替代轮次上限**的兜底：
+   * 挡的是「问不出东西还硬问」，不是「问得多」。
+   */
+  progressMarks?: number[];
 }
 
 export function newInterviewState(): InterviewState {
-  return { turns: [], collected: {}, confidence: {}, asked: [] };
+  return { turns: [], collected: {}, confidence: {}, asked: [], progressMarks: [] };
 }
 
 /* ============================================================
@@ -60,14 +66,6 @@ export function newInterviewState(): InterviewState {
 //    那是前后端共用的规格文件。这里只 import，不重复定义（重复会直接 SyntaxError）。
 
 /**
- * 算某个字段「还值不值得问」。
- *
- * 公式：Priority = (1 − Confidence) × Relevance ÷ Burden
- *
- * ⚠️ 用除法而不是减法来惩罚高负担：
- *   负担是乘法效应 —— 一个很难答的问题，即使很重要，
- *   如果连续问两个，用户会跑掉。除法让负担的影响更陡。
- *
  * ⚠️ 关于「问过还要不要再问」——第一版这里是错的。
  *
  *   第一版：`if (state.asked.includes(f.key)) return 0;`
@@ -76,23 +74,68 @@ export function newInterviewState(): InterviewState {
  *   但系统把 goals 记成「已问过」，**再也不问了** —— 最后 goals 完全没采集到。
  *
  *   教训：**问了 ≠ 答了**。
- *   修法：允许重问，但重问要**打折**（最多再问一次），
- *   因为反复问同一个字段比漏掉更烦人。
+ *   修法：允许重问，但重问要**打折**，因为反复问同一个字段比漏掉更烦人。
+ *   次数从 INTERVIEW_CONFIG 读（不要在代码里写死，两处会不一致）。
  */
-const MAX_ASKS_PER_FIELD = 2;
 
 export function priorityOf(f: FieldSpec, state: InterviewState): number {
   if (!f.askable) return 0;
 
   const askCount = state.asked.filter((k) => k === f.key).length;
-  if (askCount >= MAX_ASKS_PER_FIELD) return 0;
+  if (askCount >= INTERVIEW_CONFIG.max_asks_per_field) return 0;
 
   const conf = state.confidence[f.key] ?? 0;
-  // 如果已经问过一次但没抽到东西，说明这个问法没问出来 —— 换个角度重问，
-  // 但要打折（×0.6），避免它一直缠着同一个点不放。
-  const repeatPenalty = askCount === 1 ? 0.6 : 1;
+  // 已经问过一次但没抽到东西 → 换个角度重问，但打折
+  // 除以 (askCount + 1) 而不是固定 0.6：问第二次 ×0.5，第三次 ×0.33，递减更自然
+  const repeatPenalty = askCount === 0 ? 1 : 1 / (askCount + 1);
 
-  return ((1 - conf) * f.relevance * repeatPenalty) / Math.max(f.burden, 0.05);
+  /**
+   * ⚠️ **「有没有迷茫」会改变问什么。**
+   *
+   *   实测踩到：用户已经明确说了「我没什么纠结的，对这方向挺满意」，
+   *   系统**还是**追问「你最怕最后变成什么样」—— 因为 fear 的 relevance 是 0.95（最高），
+   *   排序里永远排第一，不管这个人是不是真的面临选择。
+   *
+   *   这一问在那个语境下是多余的：他不是在选，是在确认。
+   *   「最怕什么」只有在**面对岔路**时才是关键信息。
+   *
+   *   所以：一旦判断出「没有迷茫」，这几个「决策导向」的字段要降权。
+   */
+  const noDilemma = hasNoDilemma(state);
+  const decisionOriented = ['fear', 'reversibility_attitude', 'constraints'];
+  const dilemmaPenalty = noDilemma && decisionOriented.includes(f.key) ? 0.35 : 1;
+
+  return ((1 - conf) * f.relevance * repeatPenalty * dilemmaPenalty) / Math.max(f.burden, 0.05);
+}
+
+/**
+ * 判断「这个人当前是不是真的面临选择」。
+ *
+ * ⚠️ 这是产品逻辑，不是技术细节。
+ *   用户说「我对现在挺满意的」时，他不缺参考对象 —— 缺的是**确认**。
+ *   这时候硬给他找 4 条「别人的人生抉择」是答非所问。
+ *
+ * 判据（两个都要满足，避免因为一句客套话就误判）：
+ *   ① 迷茫点没抽到，或置信度很低
+ *   ② 用户明确表达过「满意 / 不打算变 / 现状可接受」
+ */
+export function hasNoDilemma(state: InterviewState): boolean {
+  const dilemmaConf = state.confidence['dilemma'] ?? 0;
+  const dilemmaText = state.collected['dilemma'] ?? '';
+
+  // ① 迷茫点要么空着，要么置信度 < 0.6
+  const dilemmaUnclear = !dilemmaText.trim() || dilemmaConf < 0.6;
+
+  // ② 有明确的「满意/不变」表述
+  const SATISFIED = /满意|挺好的|还行|不打算转|没想转|不想换|不纠结|没什么迷茫|挺好|可以接受|继续读|继续做|稳定就好/;
+  const pool = [
+    state.collected['goals'] ?? '',
+    state.collected['validation'] ?? '',
+    state.collected['dilemma'] ?? '',
+    ...state.turns.filter((t) => t.role === 'user').map((t) => t.text),
+  ].join(' ');
+
+  return dilemmaUnclear && SATISFIED.test(pool);
 }
 
 /** 挑出下一个最值得问的字段 */
@@ -116,31 +159,61 @@ export function averageConfidence(state: InterviewState): number {
   return sum / important.length;
 }
 
-/** 现在该不该停止追问了 */
+/**
+ * 现在该不该停止追问。
+ *
+ * ⚠️ **刻意没有「最多问几轮」这个条件。**
+ *
+ * 原来有 `max_questions: 8`，实测踩到：用户答到第 8 轮时 AI 刚好问出
+ * 最有价值的一问（「你说满意，是喜欢这个方向本身，还是觉得读下去稳？」），
+ * 但已到上限，**这一问没机会问完就被截断了**。
+ * 而且那一场里 AI 自我纠错花掉 2 轮，8 轮有 1/4 用在纠错上。
+ *
+ * **轮次是手段不是目的** —— 目的是「信息够不够下判断」。所以只看三件事：
+ *
+ *   ① 关键字段置信度够          → 停（enough_info）
+ *   ② 没有可问的问题了          → 停（no_more_fields）
+ *   ③ 在原地打转                → 停（no_progress）
+ *
+ * ③ 是**替代轮次上限**的那个兜底：它挡的是「问不出东西还硬问」，
+ * 而不是「问得多」。问 20 轮但每轮都在推进，那是好事，不该拦。
+ */
 export function shouldStop(state: InterviewState): { stop: boolean; reason: string } {
   const askedCount = state.asked.length;
-
-  if (askedCount >= INTERVIEW_CONFIG.max_questions) {
-    return { stop: true, reason: 'reached_max' };
-  }
 
   if (askedCount < INTERVIEW_CONFIG.min_questions) {
     return { stop: false, reason: 'below_min' };
   }
 
+  // ① 信息够了
   const avg = averageConfidence(state);
   const top = FIELDS.map((f) => priorityOf(f, state)).reduce((a, b) => Math.max(a, b), 0);
-
   if (avg >= INTERVIEW_CONFIG.confidence_threshold && top < INTERVIEW_CONFIG.priority_threshold * 4) {
     return { stop: true, reason: 'enough_info' };
   }
 
-  // 没有可问的字段了（都问过或都不可问）
+  // ② 没有可问的字段了（都问够次数 / 都不可问）
   if (nextField(state) === null) {
     return { stop: true, reason: 'no_more_fields' };
   }
 
+  // ③ 原地打转：最近 N 轮里「已采集字段数」没增加
+  const now = countCollected(state);
+  state.progressMarks = [...(state.progressMarks ?? []), now];
+  const marks = state.progressMarks;
+  if (marks.length > INTERVIEW_CONFIG.no_progress_rounds) {
+    const win = marks.slice(-INTERVIEW_CONFIG.no_progress_rounds);
+    if (win[win.length - 1] <= win[0]) {
+      return { stop: true, reason: 'no_progress' };
+    }
+  }
+
   return { stop: false, reason: 'continue' };
+}
+
+/** 已采集到的字段数（判断有没有推进） */
+function countCollected(state: InterviewState): number {
+  return Object.values(state.collected).filter((v) => v && String(v).trim()).length;
 }
 
 /* ============================================================
@@ -422,6 +495,25 @@ export interface SummaryResult {
   elapsedMs: number;
 }
 
+export interface SummaryResult {
+  summary: string;
+  /**
+   * ⚠️ 「这个人当前没有面临选择」。
+   *
+   *   实测踩到：用户明确说「我没说要转专业呀，我对这个方向很满意呀」，
+   *   系统**照样**给他匹配了 4 条「别人走过的路」。
+   *
+   *   这是答非所问 —— 他不缺参考对象，他缺的是**确认**。
+   *   而且更重要的是：**硬给 4 条路，等于暗示「你该重新考虑」**，
+   *   而产品的主张恰恰是「不替你判断该不该变」。
+   *
+   *   所以这个字段为 true 时，前端**不去检索**，改为明说：
+   *   「你现在的状态听起来不是'在选什么'，而是'在确认'。」
+   */
+  no_dilemma: boolean;
+  elapsedMs: number;
+}
+
 export async function summarize(
   config: GatewayConfig,
   state: InterviewState,
@@ -430,6 +522,25 @@ export async function summarize(
     .map((f) => `${f.label}：${state.collected[f.key]}`)
     .join('\n');
 
+  const noDilemma = hasNoDilemma(state);
+
+  // ⚠️ 判断出「没有迷茫」时，总结的收尾语要换 ——
+  //    不能再问「我理解得对吗？确认后去找人」，
+  //    那等于硬把他推去检索。
+  const systemPrompt = noDilemma
+    ? SUMMARY_SYSTEM_PROMPT +
+      `
+
+⚠️ 特别注意：这个人**当前没有面临选择** —— 他对现状是接受的，没有在两条路之间纠结。
+   所以：
+   - 不要用「你正在纠结…」这类措辞
+   - 不要说「我帮你找了几个和你相似的人」—— 不需要找人
+   - 收尾改成确认「你现在的状态」而不是确认「你的选择」，
+     例如：「我理解得对吗？如果你之后真遇到岔路，再来找我。」
+   - 如果他的表述里其实藏着一点不确定（比如「稳一点好」可能是在说"我怕不稳"），
+     可以温和地提一句，但**不要硬把它说成迷茫**。`
+    : SUMMARY_SYSTEM_PROMPT;
+
   const t0 = Date.now();
   const result = await chatCompletions(config, {
     model: process.env.SUMMARY_MODEL ?? 'deepseek-v4.1-flash',
@@ -437,10 +548,10 @@ export async function summarize(
     max_tokens: 300,
     temperature: 0.4,
     messages: [
-      { role: 'system', content: SUMMARY_SYSTEM_PROMPT },
+      { role: 'system', content: systemPrompt },
       { role: 'user', content: `【访谈收集到的内容】\n${known}` },
     ],
   });
 
-  return { summary: result.content.trim(), elapsedMs: Date.now() - t0 };
+  return { summary: result.content.trim(), no_dilemma: noDilemma, elapsedMs: Date.now() - t0 };
 }

@@ -44,6 +44,8 @@ function readState(body: Record<string, unknown>): InterviewState {
     collected: (raw.collected && typeof raw.collected === 'object' ? raw.collected : {}) as Record<string, string>,
     confidence: (raw.confidence && typeof raw.confidence === 'object' ? raw.confidence : {}) as Record<string, number>,
     asked: Array.isArray(raw.asked) ? raw.asked : [],
+    // ⚠️ progressMarks 必须带回来 —— 它跨请求累计，丢了就判断不出「原地打转」
+    progressMarks: Array.isArray(raw.progressMarks) ? raw.progressMarks : [],
   };
 }
 
@@ -73,7 +75,8 @@ export async function handleInterviewRoutes(
         state,
         message: first.question,
         asked_field: first.field,
-        progress: { asked: state.asked.length, max: INTERVIEW_CONFIG.max_questions },
+        // ⚠️ 不报「上限」—— 没有轮次上限，只有「信息够不够」（见 shouldStop）
+        progress: { asked: state.asked.length, fields: Object.keys(state.collected).length },
       });
     } catch (e) {
       console.error('[interview/start] ❌', (e as Error).message);
@@ -144,7 +147,8 @@ export async function handleInterviewRoutes(
         asked_field: nextField,
         done: nextMessage === null,
         stop_reason: decision.reason,
-        progress: { asked: state.asked.length, max: INTERVIEW_CONFIG.max_questions },
+        // ⚠️ 不报「上限」—— 没有轮次上限，只有「信息够不够」（见 shouldStop）
+        progress: { asked: state.asked.length, fields: Object.keys(state.collected).length },
       });
     } catch (e) {
       console.error('[interview/answer] ❌', (e as Error).message);
@@ -175,7 +179,13 @@ export async function handleInterviewRoutes(
 
     try {
       const result = await summarize({ apiKey }, state);
-      sendJson(res, 200, { state, summary: result.summary, elapsed_ms: result.elapsedMs });
+      sendJson(res, 200, {
+        state,
+        summary: result.summary,
+        // ⚠️ 前端靠这个决定「去不去检索」—— 无迷茫时不找人
+        no_dilemma: result.no_dilemma,
+        elapsed_ms: result.elapsedMs,
+      });
     } catch (e) {
       console.error('[interview/finish] ❌', (e as Error).message);
       sendJson(res, 502, { error: { code: 'LLM_FAILED', message: (e as Error).message } });
