@@ -17,6 +17,7 @@
     "preflight": "node scripts/preflight.mjs",
     "smoke": "node scripts/smoke.mjs",
     "smoke:offline": "node scripts/smoke-offline.mjs",
+    "tag:mechanisms": "node --env-file=.env scripts/tag-mechanisms.mjs",
     "check:sources": "node scripts/check-sources.mjs",
     "review:sheet": "node scripts/review-sheet.mjs",
     "start": "node scripts/start-demo.mjs"

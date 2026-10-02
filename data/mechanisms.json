@@ -1,0 +1,475 @@
+{
+  "_note": "由 scripts/tag-mechanisms.mjs 生成。archetype 是**新增字段**，不覆盖 episode.choice.type —— 两者回答不同问题：choice.type 记「做了什么」，archetype 记「在权衡什么」（实测依据见该脚本注释）。",
+  "_model": "deepseek-v4.1-flash",
+  "_generated_at": "2026-10-02T06:51:21.818Z",
+  "mechanisms": {
+    "murakami_1978_bar_and_writing": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "经济压力",
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口"
+      ],
+      "mechanism_short": "营业结束后试写，不先关店",
+      "choice_type_original": "dual_track",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "darwin_1825_medicine_trial": {
+      "archetype": "explore_then_switch",
+      "root_factors": [
+        "家庭约束",
+        "新路径验证不足",
+        "长期方向匹配",
+        "转换成本"
+      ],
+      "mechanism_short": "先按家庭安排试读医学，临床体验后确认不适配",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "ang_lee_1984_six_years_persist": {
+      "archetype": "persist",
+      "root_factors": [
+        "沉没成本",
+        "转换成本",
+        "新路径验证不足",
+        "时间窗口"
+      ],
+      "mechanism_short": "用剧本获奖延续等待，不转行",
+      "choice_type_original": "persist",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "lu_xun_1906_medicine_to_literature": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "沉没成本",
+        "转换成本",
+        "长期方向匹配",
+        "再次选错风险"
+      ],
+      "mechanism_short": "弃医从文，以未验证的文艺路径替代已投入的医学",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "jobs_1972_reed_dropout": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "经济压力",
+        "制度约束",
+        "新路径验证不足",
+        "机会成本"
+      ],
+      "mechanism_short": "退学籍省学费，留校旁听保留探索空间",
+      "choice_type_original": "abandon",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "may_1974_pause_phd": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "时间窗口",
+        "机会成本",
+        "身份绑定",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "中断学位保研究兴趣，先全力投入音乐",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "darwin_1828_cambridge": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "制度约束",
+        "身份绑定",
+        "新路径验证不足",
+        "家庭约束"
+      ],
+      "mechanism_short": "为保住职业出口而接受学位门槛",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "bezos_1994_leave_finance": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "机会成本",
+        "新路径验证不足",
+        "时间窗口",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "放弃高薪职位，抢在窗口期前押注未验证的互联网",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "may_2006_resume_phd": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "沉没成本",
+        "时间窗口",
+        "身份绑定",
+        "机会成本"
+      ],
+      "mechanism_short": "中断三十年后重启旧研究，同时不放弃现有工作",
+      "choice_type_original": "dual_track",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "kariko_1995_persist_cost": {
+      "archetype": "persist",
+      "root_factors": [
+        "沉没成本",
+        "长期方向匹配",
+        "制度约束",
+        "身份绑定"
+      ],
+      "mechanism_short": "降职保岗以延续未验证的研究方向",
+      "choice_type_original": "persist",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "nusslein_1962_test_medicine": {
+      "archetype": "explore_then_persist",
+      "root_factors": [
+        "新路径验证不足",
+        "再次选错风险",
+        "时间窗口",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "用一个月护理体验排除医学，确认生物方向",
+      "choice_type_original": "explore_then_persist",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "dyson_2019_abandon_ev": {
+      "archetype": "abandon",
+      "root_factors": [
+        "沉没成本",
+        "经济压力",
+        "新路径验证不足",
+        "机会成本"
+      ],
+      "mechanism_short": "整车商业化无望，止损以保其他技术方向",
+      "choice_type_original": "abandon",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "lu_xun_1902_study_japan": {
+      "archetype": "explore_then_persist",
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "经济压力",
+        "新路径验证不足"
+      ],
+      "mechanism_short": "借公费留学低成本试探新方向",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "lu_xun_1918_write_new_youth": {
+      "archetype": "explore_then_persist",
+      "root_factors": [
+        "新路径验证不足",
+        "沉没成本",
+        "社会支持",
+        "机会成本"
+      ],
+      "mechanism_short": "受友人劝说，以单篇投稿试探公共表达",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "ang_lee_1990_script_competition": {
+      "archetype": "explore_then_switch",
+      "root_factors": [
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口",
+        "社会支持"
+      ],
+      "mechanism_short": "原渠道久试无果，转投比赛验证剧本",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "murakami_1981_fulltime_writing": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "机会成本",
+        "长期方向匹配",
+        "经济压力",
+        "身份绑定"
+      ],
+      "mechanism_short": "卖店断退路，以不确定收入换写作专注",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "jobs_1985_restart": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "身份绑定",
+        "沉没成本",
+        "新路径验证不足",
+        "机会成本"
+      ],
+      "mechanism_short": "离开原公司但继续做产品创造，用新组织延续旧身份",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "ramakrishnan_1976_biology_training": {
+      "archetype": "explore_then_persist",
+      "root_factors": [
+        "新路径验证不足",
+        "转换成本",
+        "家庭约束",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "先补课验证新领域，再决定是否深入",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "darwin_1831_beagle": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "时间窗口",
+        "家庭约束",
+        "机会成本"
+      ],
+      "mechanism_short": "放弃既定职业轨道，抓住不可逆的远航机会",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "ramakrishnan_1978_yale_postdoc": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "转换成本",
+        "时间窗口",
+        "新路径验证不足",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "已有学位，不愿重复训练，直接换轨进新团队",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "ramakrishnan_1999_lmb": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "家庭约束",
+        "转换成本"
+      ],
+      "mechanism_short": "为科研协作迁居，接受减薪重建团队",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "arnold_1981_phd": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "新路径验证不足",
+        "转换成本",
+        "长期方向匹配",
+        "时间窗口"
+      ],
+      "mechanism_short": "为拓展研究能力，直接转入新领域读博",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "kariko_2013_biontech": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "社会支持",
+        "制度约束"
+      ],
+      "mechanism_short": "为推进技术应用而转入产业团队",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "arnold_1987_caltech_faculty": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "社会支持",
+        "身份绑定"
+      ],
+      "mechanism_short": "放弃产业职位，选择独立建组以保研究自主",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "gurdon_1953_zoology": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "转换成本",
+        "新路径验证不足",
+        "时间窗口"
+      ],
+      "mechanism_short": "补科学课后直接转入动物学",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "butterfield_2012_close_glitch": {
+      "archetype": "abandon",
+      "root_factors": [
+        "沉没成本",
+        "新路径验证不足",
+        "经济压力",
+        "机会成本"
+      ],
+      "mechanism_short": "止损关停，缩编团队另寻出路",
+      "choice_type_original": "abandon",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "gurdon_1960_caltech_offer": {
+      "archetype": "explore_then_switch",
+      "root_factors": [
+        "新路径验证不足",
+        "长期方向匹配",
+        "转换成本",
+        "机会成本"
+      ],
+      "mechanism_short": "为拓宽方法视野而暂离原领域，验证后回归",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "dyson_2014_ev_entry": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "转换成本",
+        "新路径验证不足",
+        "机会成本",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "在成熟业务之外另起炉灶，押注未验证的整车方向",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "butterfield_2013_slack_pivot": {
+      "archetype": "explore_then_persist",
+      "root_factors": [
+        "沉没成本",
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口"
+      ],
+      "mechanism_short": "关停旧项目后，用内部工具试探新市场",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "blakely_2000_spanx": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "经济压力",
+        "新路径验证不足",
+        "机会成本",
+        "时间窗口"
+      ],
+      "mechanism_short": "保留收入来源，业余验证产品需求后再推出",
+      "choice_type_original": "explore_then_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "kafka_1908_insurance_and_writing": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "经济压力",
+        "时间窗口",
+        "身份绑定",
+        "机会成本"
+      ],
+      "mechanism_short": "换岗保收入，用业余时间维持写作",
+      "choice_type_original": "dual_track",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "yuan_2011_zoom": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "机会成本",
+        "身份绑定",
+        "新路径验证不足",
+        "社会支持"
+      ],
+      "mechanism_short": "放弃大公司工程管理身份，另组团队自建产品",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "einstein_1902_patent_and_research": {
+      "archetype": "dual_track",
+      "root_factors": [
+        "经济压力",
+        "制度约束",
+        "时间窗口",
+        "长期方向匹配"
+      ],
+      "mechanism_short": "接受非学术职位以维持收入，同时保留研究活动",
+      "choice_type_original": "dual_track",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "einstein_1909_academic_post": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "机会成本",
+        "身份绑定",
+        "社会支持"
+      ],
+      "mechanism_short": "放弃安稳职位换取学术共同体入场券",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "kafka_1923_berlin": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "长期方向匹配",
+        "身份绑定",
+        "经济压力",
+        "时间窗口"
+      ],
+      "mechanism_short": "在生命末期挣脱家庭与城市束缚，迁居柏林尝试独立生活",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    },
+    "nusslein_1964_biochemistry": {
+      "archetype": "direct_switch",
+      "root_factors": [
+        "新路径验证不足",
+        "长期方向匹配",
+        "转换成本",
+        "机会成本"
+      ],
+      "mechanism_short": "为求学科交叉而转校换课程，未先试听",
+      "choice_type_original": "direct_switch",
+      "tagged_by": "deepseek-v4.1-flash",
+      "tagged_at": "2026-10-02"
+    }
+  }
+}
