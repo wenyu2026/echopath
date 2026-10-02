@@ -19,6 +19,7 @@ import P4Episode from './pages/P4Episode';
 import P5Compare from './pages/P5Compare';
 import P6Reflect from './pages/P6Reflect';
 import Landscape from './pages/Landscape';
+import Chat from './pages/Chat';
 
 function Shell() {
   const { reachable } = useApp();
@@ -45,8 +46,10 @@ function Shell() {
           <Route path="/episode/:index" element={<P4Episode />} />
           <Route path="/compare" element={<P5Compare />} />
           <Route path="/reflect" element={<P6Reflect />} />
-        {/* 决策地形 v2 —— 独立流程，与上面六页并存，互不影响 */}
-        <Route path="/landscape" element={<Landscape />} />
+          {/* 决策地形 v2 —— 独立流程，与上面六页并存，互不影响 */}
+          <Route path="/landscape" element={<Landscape />} />
+          {/* 对话式访谈 —— 产品的主形态 */}
+          <Route path="/chat" element={<Chat />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

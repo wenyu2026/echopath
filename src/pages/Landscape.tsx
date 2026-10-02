@@ -16,7 +16,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLandscape } from '../state/useLandscape';
-import type { PathArchetype, SituationV2 } from '../types/landscape';
+import type { SituationV2 } from '../types/landscape';
+import PathCard from '../components/PathCard';
 
 /** 演示用的默认输入 —— 一个真实的转专业处境 */
 const DEMO_SITUATION: SituationV2 = {
@@ -31,81 +32,6 @@ const DEMO_SITUATION: SituationV2 = {
 };
 
 const DEMO_QUOTE = '我不太怕晚毕业，我最怕的是再浪费几年。';
-
-/** 走法 → 配色（沿用 styles.css 里的 path-a/b/c 体系） */
-const ARCHETYPE_COLOR: Record<string, string> = {
-  persist: 'var(--path-a)',
-  explore_then_persist: 'var(--path-c)',
-  explore_then_switch: 'var(--path-c)',
-  direct_switch: 'var(--path-b)',
-  dual_track: 'var(--now)',
-  abandon: 'var(--warn)',
-  unknown: 'var(--line-strong)',
-};
-
-function PathCard({ a, index }: { a: PathArchetype; index: number }) {
-  const [open, setOpen] = useState(false);
-  const color = ARCHETYPE_COLOR[a.id] ?? 'var(--now)';
-
-  return (
-    <div className="land-card" style={{ borderLeftColor: color }}>
-      <div className="land-card-head">
-        <span className="land-card-idx" style={{ background: color }}>
-          {String.fromCharCode(65 + index)}
-        </span>
-        <h3 className="land-card-title">{a.title}</h3>
-      </div>
-
-      <p className="land-card-oneline">{a.one_line}</p>
-
-      {a.caveat && <div className="land-caveat">⚠️ {a.caveat}</div>}
-
-      <div className="land-block">
-        <div className="land-block-label">这条路保护的是</div>
-        <ul className="land-list protect">
-          {a.protects.map((p, i) => (
-            <li key={i}>{p}</li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="land-block">
-        <div className="land-block-label">对你可能最重的代价</div>
-        <ul className="land-list cost">
-          {a.costs.map((c, i) => (
-            <li key={i}>
-              {i === 0 && <span className="land-cost-star">最重</span>}
-              <span>{c.text}</span>
-              {/* ⚠️ 用户原话必须原样引用，这是产品最核心的可信度来源 */}
-              {c.basis.kind === 'user_quote' && c.basis.quote && (
-                <div className="land-quote">↳ 因为你刚才说：「{c.basis.quote}」</div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <button className="land-expand" onClick={() => setOpen(!open)}>
-        {open ? '收起' : `看看这 ${a.supporting_cases.length} 个案例后来怎样`}
-        <span className="land-caret">{open ? '▴' : '▾'}</span>
-      </button>
-
-      {open && (
-        <div className="land-cases">
-          {a.supporting_cases.map((c) => (
-            <div className="land-case" key={c.episode_id}>
-              <div className="land-case-name">
-                {c.display_name}
-                <span className="land-case-year">{c.year}</span>
-              </div>
-              {c.outcome_hint && <div className="land-case-hint">→ {c.outcome_hint}…</div>}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function Landscape() {
   const { sources, sourceId, setSourceId, data, loading, error, run } = useLandscape();

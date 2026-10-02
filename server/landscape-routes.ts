@@ -16,6 +16,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { getSourceWithMechanisms, listSources } from './retrieval/data-source.ts';
 import { buildLandscape, normalizeRootFactors } from './retrieval/landscape-v2.ts';
 import type { SituationV2 } from '../src/types/landscape.ts';
+import { handleInterviewRoutes } from './interview/interview-routes.ts';
 
 export function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload);
@@ -90,7 +91,11 @@ export async function handleLandscapeRoutes(
   req: IncomingMessage,
   res: ServerResponse,
   url: URL,
+  apiKey = '',
 ): Promise<boolean> {
+  // 访谈相关路由（独立文件，见 server/interview/interview-routes.ts）
+  if (await handleInterviewRoutes(req, res, url, apiKey)) return true;
+
   // ---- 列出数据源 ----
   if (req.method === 'GET' && url.pathname === '/api/sources') {
     sendJson(res, 200, { sources: listSources() });
@@ -117,6 +122,48 @@ export async function handleLandscapeRoutes(
 
     const sourceId = typeof body.source_id === 'string' ? body.source_id : undefined;
     const userQuote = typeof body.user_quote === 'string' ? body.user_quote : undefined;
+
+    /**
+     * ⚠️ 根因素为空时，用 LLM 从自然语言里推。
+     *
+     *   对话式访谈采到的是自然语言（「家人希望稳定就业，不支持折腾」），
+     *   不是封闭词表的根因素 —— 前端传过来时 root_factors 是空的。
+     *
+     *   不补这一步的后果：根因素为空 → 聚类失去结构信号 →
+     *   「AI 对你的理解」那一栏也是空的。
+     *   （实测踩过：对话走完全程，结果页根因素区是空的。）
+     */
+    if (situation.root_factors.length === 0 && apiKey) {
+      const parts = [
+        situation.stage ? `阶段：${situation.stage}` : '',
+        situation.options.length ? `岔路：${situation.options.join('、')}` : '',
+        situation.constraints.length ? `约束：${situation.constraints.join('、')}` : '',
+        situation.goals.length ? `目标：${situation.goals.join('、')}` : '',
+        situation.unknowns.length ? `他在意的：${situation.unknowns.join('、')}` : '',
+      ].filter(Boolean);
+
+      if (parts.length > 0) {
+        try {
+          const { inferRootFactors } = await import('./interview/interview.ts');
+          const r = await inferRootFactors(
+            { apiKey },
+            {
+              turns: [],
+              collected: { profile_text: parts.join('\n') },
+              confidence: { profile_text: 1 },
+              asked: [],
+            },
+          );
+          const normalized = normalizeRootFactors(r.root_factors);
+          if (normalized.length > 0) {
+            situation = { ...situation, root_factors: normalized };
+          }
+        } catch (e) {
+          // 推不出来**不能让它崩** —— 根因素为空引擎仍能跑（只是没有结构信号）
+          console.error('[landscape] ⚠️ 根因素推断失败，降级为空:', (e as Error).message);
+        }
+      }
+    }
 
     try {
       const t0 = Date.now();

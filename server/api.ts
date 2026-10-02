@@ -135,7 +135,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
   try {
     // 决策地形 v2 的路由（独立模块，见 server/landscape-routes.ts）
-    if (await handleLandscapeRoutes(req, res, url)) return;
+    if (await handleLandscapeRoutes(req, res, url, API_KEY)) return;
 
     if (route === 'GET /api/health') {
       json(res, 200, { ok: true, ts: new Date().toISOString(), key_configured: Boolean(API_KEY) });
