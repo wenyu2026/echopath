@@ -24,7 +24,16 @@ const ARCHETYPE_COLOR: Record<string, string> = {
   unknown: 'var(--line-strong)',
 };
 
-export default function PathCard({ a, index }: { a: PathArchetype; index: number }) {
+export default function PathCard({
+  a,
+  index,
+  onOpenCase,
+}: {
+  a: PathArchetype;
+  index: number;
+  /** 点开某个案例看他的完整轨迹。不传则案例只显示摘要（Landscape 页就是这种） */
+  onOpenCase?: (episodeId: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const color = ARCHETYPE_COLOR[a.id] ?? 'var(--now)';
 
@@ -74,10 +83,24 @@ export default function PathCard({ a, index }: { a: PathArchetype; index: number
       {open && (
         <div className="land-cases">
           {a.supporting_cases.map((c) => (
-            <div className="land-case" key={c.episode_id}>
+            <div
+              className={`land-case ${onOpenCase ? 'clickable' : ''}`}
+              key={c.episode_id}
+              onClick={onOpenCase ? () => onOpenCase(c.episode_id) : undefined}
+              role={onOpenCase ? 'button' : undefined}
+              tabIndex={onOpenCase ? 0 : undefined}
+              onKeyDown={
+                onOpenCase
+                  ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') onOpenCase(c.episode_id);
+                    }
+                  : undefined
+              }
+            >
               <div className="land-case-name">
                 {c.display_name}
                 <span className="land-case-year">{c.year}</span>
+                {onOpenCase && <span className="land-case-go">看他的完整轨迹 →</span>}
               </div>
               {c.outcome_hint && <div className="land-case-hint">→ {c.outcome_hint}…</div>}
             </div>

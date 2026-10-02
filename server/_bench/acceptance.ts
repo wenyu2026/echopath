@@ -6,7 +6,11 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import type { DecisionEpisode, Situation } from '../src/types/episode.ts';
+// ⚠️ 这里原本写的是 '../src/types/episode.ts' —— 错的。
+//    本文件在 server/_bench/ 下，要比其他 server 文件多退一层。
+//    错的后果：tsc 不报（路径解析宽容），但**运行时 ERR_MODULE_NOT_FOUND 直接崩**。
+//    由 preflight 新增的「服务端相对导入路径都存在」检查发现。
+import type { DecisionEpisode, Situation } from '../../src/types/episode.ts';
 import { realEmbedder, cosine } from '../embedding/embed.ts';
 import { loadEpisodes } from '../retrieval/load-episodes.ts';
 import { scoreDimensions, totalScore } from '../retrieval/dimensions.ts';

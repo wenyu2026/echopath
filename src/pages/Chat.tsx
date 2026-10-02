@@ -18,6 +18,8 @@ import { Link } from 'react-router-dom';
 import { useChatInterview } from '../state/useChatInterview';
 import { FIELDS } from '../types/interview';
 import PathCard from '../components/PathCard';
+import CaseDrawer from '../components/CaseDrawer';
+import ReflectPanel from '../components/ReflectPanel';
 
 /** 字段 → 中文标签（右侧面板显示用） */
 const LABELS: Record<string, string> = Object.fromEntries(FIELDS.map((f) => [f.key, f.label]));
@@ -26,6 +28,7 @@ export default function Chat() {
   const chat = useChatInterview();
   const [draft, setDraft] = useState('');
   const [sourceId, setSourceId] = useState('historical');
+  const [openCase, setOpenCase] = useState<string | null>(null);
   const [sources, setSources] = useState<Array<{ id: string; label: string }>>([]);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -241,7 +244,7 @@ export default function Chat() {
 
           <div className="land-paths">
             {chat.landscape.archetypes.map((a, i) => (
-              <PathCard a={a} index={i} key={a.id + i} />
+              <PathCard a={a} index={i} key={a.id + i} onOpenCase={(id) => setOpenCase(id)} />
             ))}
           </div>
 
@@ -250,6 +253,13 @@ export default function Chat() {
             <span>命中案例 {chat.landscape.meta.episodes_matched}</span>
             <span>耗时 {chat.landscape.meta.elapsed_ms}ms</span>
           </div>
+
+          {/* 最后一屏：回到自己 */}
+          <ReflectPanel
+            landscape={chat.landscape}
+            userQuote={chat.bestQuote}
+            collected={chat.state?.collected ?? {}}
+          />
 
           <div className="btn-row" style={{ marginTop: 22 }}>
             <button className="btn" onClick={chat.reset}>
@@ -260,6 +270,23 @@ export default function Chat() {
             </Link>
           </div>
         </div>
+      )}
+
+      {/* 案例详情抽屉 */}
+      {openCase && chat.landscape && (
+        <CaseDrawer
+          episodeId={openCase}
+          sourceId={sourceId}
+          situation={{
+            stage: chat.landscape.profile.stage,
+            options: chat.state?.collected.dilemma ? [chat.state.collected.dilemma] : ['未说明'],
+            constraints: chat.landscape.profile.constraints,
+            goals: chat.landscape.profile.goals,
+            risk: 'medium',
+            reversibility: 'medium',
+          }}
+          onClose={() => setOpenCase(null)}
+        />
       )}
     </div>
   );

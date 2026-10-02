@@ -13,7 +13,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { basename, dirname, join, relative } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -425,7 +425,66 @@ check(
   check('静态资源无脚手架残留 / 死文件', problems.length === 0, problems.join(' / '));
 }
 
-/* ---------- 10. 构建能过 ---------- */const buildRes = buildCheck();
+/* ---------- 10. 服务端模块的相对导入路径必须真实存在 ---------- */
+//
+// ⚠️ 这一项是补上来的 —— 同一个错误我犯了**三次**：
+//    新增 server/xxx.ts 时写 `import ... from '../retrieval/foo.ts'`，
+//    但文件其实在 server/ 下，应该是 './retrieval/foo.ts'。
+//
+//    tsc 不报（它按 tsconfig 的路径解析，宽容），
+//    构建也不报 —— **只有真正起服务时才会 ERR_MODULE_NOT_FOUND 崩掉**。
+//    每次都是"改完以为好了，一跑才发现后端起不来"。
+//
+//    规则不自动化就会一直重犯。这里静态扫一遍。
+{
+  const problems = [];
+  const serverDir = join(root, 'server');
+
+  const walk = (dir, depth = 0) => {
+    if (depth > 5) return;
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) {
+        if (!SKIP_DIRS.has(e.name)) walk(p, depth + 1);
+        continue;
+      }
+      if (!e.name.endsWith('.ts') || e.name.endsWith('.test.ts')) continue;
+
+      let text;
+      try {
+        text = readFileSync(p, 'utf8');
+      } catch {
+        continue;
+      }
+
+      // 抓所有相对导入
+      const re = /from\s+['"](\.[^'"]+)['"]/g;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        const spec = m[1];
+        const resolved = resolve(dirname(p), spec);
+        if (!existsSync(resolved)) {
+          problems.push(`${relative(root, p)} 里的 '${spec}' 指向不存在的文件`);
+        }
+      }
+    }
+  };
+  walk(serverDir);
+
+  check(
+    '服务端相对导入路径都存在',
+    problems.length === 0,
+    problems.slice(0, 3).join(' / '),
+  );
+}
+
+/* ---------- 11. 构建能过 ---------- */const buildRes = buildCheck();
 check('构建通过（tsc -b + vite build）', buildRes.ok, buildRes.ok ? '' : buildRes.out.slice(-300).trim());
 
 /* ---------- 5. 单测能过 ---------- */

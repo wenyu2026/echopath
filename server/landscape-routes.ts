@@ -17,6 +17,7 @@ import { getSourceWithMechanisms, listSources } from './retrieval/data-source.ts
 import { buildLandscape, normalizeRootFactors } from './retrieval/landscape-v2.ts';
 import type { SituationV2 } from '../src/types/landscape.ts';
 import { handleInterviewRoutes } from './interview/interview-routes.ts';
+import { handleCaseRoutes } from './case-routes.ts';
 
 export function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload);
@@ -95,6 +96,9 @@ export async function handleLandscapeRoutes(
 ): Promise<boolean> {
   // 访谈相关路由（独立文件，见 server/interview/interview-routes.ts）
   if (await handleInterviewRoutes(req, res, url, apiKey)) return true;
+
+  // 案例详情（见 server/case-routes.ts）
+  if (await handleCaseRoutes(req, res, url)) return true;
 
   // ---- 列出数据源 ----
   if (req.method === 'GET' && url.pathname === '/api/sources') {

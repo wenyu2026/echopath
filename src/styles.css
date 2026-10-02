@@ -1330,3 +1330,187 @@ input:focus, textarea:focus, select:focus {
 .chat-result-head { margin-bottom: 20px; }
 .chat-result-head h2 { font-size: 20px; margin: 0 0 8px; }
 .chat-result-head p { line-height: 1.75; }
+
+/* ============================================================
+   案例详情抽屉（CaseDrawer）
+   ------------------------------------------------------------
+   五个区块的顺序是刻意的：
+     轨迹 → ⚠️当时知道什么 → 做了什么 → ⚠️后来发生什么 → 为什么不能照搬
+   中间两块必须视觉上分开 —— 合起来写就是成功学。
+   ============================================================ */
+
+.drawer-wide { width: min(640px, 94vw); }
+
+.case-sec { margin-bottom: 26px; }
+.case-sec-title {
+  font-size: 14px; font-weight: 600; margin-bottom: 11px;
+  display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
+}
+.case-sec-hint { font-size: 12px; font-weight: 400; color: var(--ink-3, #6b6862); }
+
+.case-path-item {
+  font-size: 14px; line-height: 1.8; padding: 7px 0 7px 16px;
+  position: relative; border-left: 2px solid var(--line);
+  margin-left: 5px;
+}
+.case-path-item::before {
+  content: ''; position: absolute; left: -5px; top: 15px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--bg-raised); border: 2px solid var(--line-strong);
+}
+
+.case-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 11px; }
+.case-tag {
+  font-size: 13px; padding: 4px 12px; border-radius: 999px;
+  background: var(--bg-sunken); color: var(--ink-2, #4a4742);
+}
+.case-sub { font-size: 13.5px; line-height: 1.75; margin-bottom: 4px; }
+
+/* ⚠️ 这两个区块用不同的边框色，视觉上必须分开 */
+.case-known {
+  padding: 14px 16px; border-radius: 10px;
+  background: var(--now-soft); border-left: 3px solid var(--now);
+}
+.case-after {
+  padding: 14px 16px; border-radius: 10px;
+  background: var(--bg-sunken); border-left: 3px solid var(--path-a);
+}
+
+.case-outcome { display: flex; gap: 10px; font-size: 13.5px; line-height: 1.75; margin-bottom: 8px; }
+.case-outcome-label {
+  flex: 0 0 auto; font-size: 12px; color: var(--ink-3, #6b6862);
+  padding-top: 2px; min-width: 28px;
+}
+.case-note {
+  margin-top: 12px; padding: 9px 12px; font-size: 12.5px; line-height: 1.7;
+  background: var(--bg-raised); border-radius: 7px; color: var(--ink-2, #4a4742);
+}
+.case-self-comment {
+  margin-top: 12px; padding: 11px 14px; font-size: 13.5px; line-height: 1.75;
+  font-family: var(--serif); background: var(--bg-raised);
+  border-radius: 8px; border-left: 2px solid var(--line-strong);
+}
+
+/* 反类比 */
+.case-diff-item {
+  font-size: 13.5px; line-height: 1.75; padding: 10px 13px;
+  border-radius: 8px; margin-bottom: 8px;
+  background: var(--bg-sunken);
+}
+.case-diff-kind {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 1px 8px; border-radius: 4px; margin-right: 8px;
+  background: var(--bg-raised); color: var(--ink-2, #4a4742);
+}
+.case-diff-item.kind-era { background: #fdf6e3; }
+.case-diff-item.kind-era .case-diff-kind { background: #f5b301; color: #3a2d00; }
+.case-diff-item.kind-unknown { border: 1px dashed var(--line-strong); background: transparent; }
+.case-diff-item.kind-structure .case-diff-kind { background: var(--now-soft); color: var(--now); }
+
+/* 证据 */
+.case-evidence-toggle {
+  width: 100%; text-align: left; background: none; border: none;
+  border-top: 1px dashed var(--line); padding: 13px 0 0;
+  font-size: 13.5px; color: var(--now); cursor: pointer; font-family: inherit;
+}
+.case-evidence-toggle:hover { text-decoration: underline; }
+
+.case-evidence { margin-top: 14px; }
+.case-layer-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 16px; }
+.case-layer {
+  font-size: 12px; padding: 3px 10px; border-radius: 999px;
+  background: var(--bg-sunken); color: var(--ink-2, #4a4742);
+}
+.case-layer.layer-fact { background: var(--ok-soft); color: var(--ok); }
+.case-layer.layer-self { background: var(--now-soft); color: var(--now); }
+.case-layer.layer-interp { background: #f2eef7; color: var(--path-c); }
+.case-layer.layer-ai { background: #fdf6e3; color: #8a6d00; }
+.case-layer.layer-unknown { background: transparent; border: 1px dashed var(--line-strong); }
+
+.case-ev-item {
+  padding: 12px 0; border-bottom: 1px solid var(--line);
+}
+.case-ev-item:last-child { border-bottom: none; }
+.case-ev-type { font-size: 12px; color: var(--ink-3, #6b6862); margin-bottom: 5px; }
+.case-ev-claim { font-size: 13.5px; line-height: 1.75; }
+.case-ev-cite { margin-top: 7px; font-size: 13px; color: var(--ink-2, #4a4742); line-height: 1.7; }
+.case-ev-limit {
+  margin-top: 6px; padding: 6px 10px; background: var(--bg-sunken);
+  border-radius: 5px; color: var(--ink-3, #6b6862); line-height: 1.6;
+}
+.case-ev-meta {
+  margin-top: 8px; display: flex; gap: 12px; align-items: center;
+  font-size: 12px; flex-wrap: wrap;
+}
+.case-ev-meta code { background: var(--bg-sunken); padding: 1px 6px; border-radius: 4px; }
+.case-ev-meta a { color: var(--now); text-decoration: none; }
+.case-ev-meta a:hover { text-decoration: underline; }
+
+/* 案例可点击 */
+.land-case.clickable { cursor: pointer; transition: background .14s ease; }
+.land-case.clickable:hover { background: var(--now-soft); }
+.land-case-go {
+  float: right; font-size: 12px; color: var(--now); font-weight: 400;
+}
+
+/* ============================================================
+   回到自己（ReflectPanel）
+   ============================================================ */
+
+.reflect-wrap { margin-top: 40px; padding-top: 32px; border-top: 2px solid var(--line); }
+.reflect-head { margin-bottom: 24px; }
+.reflect-head h2 { font-size: 22px; margin: 0 0 9px; }
+.reflect-head p { line-height: 1.85; max-width: 680px; }
+
+.reflect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .reflect-grid { grid-template-columns: 1fr; } }
+
+.reflect-card {
+  background: var(--bg-raised); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+}
+.reflect-card-action { border-color: var(--now); }
+.reflect-card-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+
+.reflect-facts { margin: 0; padding: 0; list-style: none; }
+.reflect-facts li {
+  font-size: 13.5px; line-height: 1.8; padding: 5px 0 5px 15px; position: relative;
+}
+.reflect-facts li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--now);
+}
+.reflect-quote {
+  margin-top: 16px; padding: 12px 15px; background: var(--now-soft);
+  border-radius: 9px; font-family: var(--serif); font-size: 14.5px;
+  line-height: 1.8; color: var(--now);
+}
+
+.reflect-options { display: grid; gap: 9px; }
+.reflect-option {
+  text-align: left; padding: 12px 15px; font-size: 14px; line-height: 1.7;
+  border: 1px solid var(--line-strong); border-radius: 9px;
+  background: var(--bg); color: var(--ink); cursor: pointer;
+  font-family: inherit; transition: all .14s ease;
+}
+.reflect-option:hover { border-color: var(--now); color: var(--now); }
+.reflect-option.on {
+  background: var(--now); border-color: var(--now); color: #fff;
+}
+
+.reflect-picked {
+  margin-top: 16px; padding: 15px 16px;
+  background: var(--ok-soft); border-radius: 10px;
+}
+.reflect-picked-text { font-size: 14.5px; line-height: 1.75; font-weight: 500; }
+.reflect-picked-note {
+  margin-top: 10px; font-size: 12.5px; line-height: 1.7; color: var(--ink-2, #4a4742);
+}
+
+.reflect-disclaimer {
+  margin-top: 24px; padding: 16px 20px;
+  background: var(--bg-sunken); border-radius: var(--radius-lg);
+  font-size: 13px; line-height: 1.8;
+}
+.reflect-disclaimer ul { margin: 9px 0 0; padding-left: 20px; }
+.reflect-disclaimer li { margin-bottom: 4px; }
