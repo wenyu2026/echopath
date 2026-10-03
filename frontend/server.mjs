@@ -45,7 +45,7 @@ const server = createServer((req, res) => {
     });
     proxy.on('error', () => {
       res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ error: { code: 'BACKEND_DOWN', message: `代理失败：后端没在 ${API_TARGET} 听着（在 xuejun-hackathon 里 npm run server）` } }));
+      res.end(JSON.stringify({ error: { code: 'BACKEND_DOWN', message: `代理失败：后端没在 ${API_TARGET} 听着（在 echopath 里 npm run server）` } }));
     });
     req.pipe(proxy);
     return;

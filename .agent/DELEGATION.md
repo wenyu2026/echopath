@@ -8,8 +8,8 @@
 
 ```bash
 # 1. 克隆（私有仓库）
-git clone git@github.com:wenyu2026/xuejun-hackathon.git
-cd xuejun-hackathon
+git clone git@github.com:wenyu2026/echopath.git
+cd echopath
 
 # 2. 配置身份
 git config --global user.name "你的GitHub用户名"

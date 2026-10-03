@@ -1,13 +1,13 @@
 # EchoPath 前端 × 后端接入说明（V4，2026-10-03）
 
-> 本 Demo 已直接对接 `xuejun-hackathon` 的真实后端，页面渲染与数据层完全解耦。
+> 本 Demo 已直接对接 `echopath` 的真实后端，页面渲染与数据层完全解耦。
 > 后端离线时自动降级为「模拟模式」（仅聊天随口应答 + 静态示例页），所有页面仍可浏览。
 
 ## 怎么跑起来
 
 ```bash
-# 1. 起后端（在 xuejun-hackathon 目录，默认端口 3000）
-cd xuejun-hackathon
+# 1. 起后端（在 echopath 目录，默认端口 3100）
+cd echopath
 npm run server        # 需要 .env 里配好 TOKENDANCE_API_KEY，否则访谈不可用
 
 # 2. 起前端预览（在本目录）
