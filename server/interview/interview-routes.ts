@@ -14,7 +14,9 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import {
   askNextQuestion,
   extractFromAnswer,
+  generateHints,
   newInterviewState,
+  planNextTurn,
   shouldStop,
   summarize,
   type InterviewState,
@@ -46,6 +48,13 @@ function readState(body: Record<string, unknown>): InterviewState {
     asked: Array.isArray(raw.asked) ? raw.asked : [],
     // ⚠️ progressMarks 必须带回来 —— 它跨请求累计，丢了就判断不出「原地打转」
     progressMarks: Array.isArray(raw.progressMarks) ? raw.progressMarks : [],
+    // ⚠️ 追问线程 / 救援计数 / 跳过清单同理 —— 丢了的话「不要反复追问」会失效，
+    //    用户每轮都会被重复救援同一个字段
+    probeThread: (raw.probeThread && typeof raw.probeThread === 'object')
+      ? (raw.probeThread as InterviewState['probeThread'])
+      : null,
+    rescued: (raw.rescued && typeof raw.rescued === 'object' ? raw.rescued : {}) as Record<string, number>,
+    skipped: Array.isArray(raw.skipped) ? raw.skipped : [],
   };
 }
 
@@ -110,10 +119,11 @@ export async function handleInterviewRoutes(
     state.turns.push({ role: 'user', text: answer });
 
     try {
-      // 1. 抽取
+      // 1. 抽取（含对话信号：concrete_event / stuck / skip_request / correction / hints）
       const extracted = await extractFromAnswer({ apiKey }, state, answer, askedField);
       for (const u of extracted.updates) {
         // 只在新置信度更高时覆盖（避免后面模糊的话把前面明确的覆盖掉）
+        // ⚠️ 纠正（correction）也走这条路：纠正表述的置信度按提示词要求给 0.9+，自然覆盖旧值
         const prev = state.confidence[u.field] ?? 0;
         if (u.confidence >= prev) {
           state.collected[u.field] = u.value;
@@ -121,17 +131,26 @@ export async function handleInterviewRoutes(
         }
       }
 
-      // 2. 判断要不要停
+      // 2. 规划下一轮（追问线程触发/推进/释放、救援、跳过 —— 会更新 state）
+      //    ⚠️ 必须在停机判断**之前**：线程的触发与释放要反映进 shouldStop，
+      //    否则"信息够了"会在追问线程刚要启动时把对话截停（经验 1 / 2 的程序级保障）
+      const plan = planNextTurn(state, extracted.signals, askedField);
+
+      // 3. 判断要不要停
       const decision = shouldStop(state);
 
-      // 3. 若继续，问下一个
+      // 4. 若继续，按计划问下一个
       let nextMessage: string | null = null;
       let nextField: string | null = null;
+      let mode = 'normal';
+      let hints: string[] = [];
       if (!decision.stop) {
-        const q = await askNextQuestion({ apiKey }, state);
+        const q = await askNextQuestion({ apiKey }, state, plan);
         if (q) {
           nextMessage = q.question;
           nextField = q.field;
+          mode = q.mode;
+          hints = q.hints;
           state.asked.push(q.field);
           state.turns.push({ role: 'ai', text: q.question });
         }
@@ -142,16 +161,51 @@ export async function handleInterviewRoutes(
         extracted: {
           updates: extracted.updates,
           memorable_quote: extracted.memorable_quote,
+          /** 对话信号原样透出 —— 调试台能看到"为什么这一步决定追问/跳过" */
+          signals: extracted.signals,
         },
         message: nextMessage,
         asked_field: nextField,
         done: nextMessage === null,
         stop_reason: decision.reason,
+        /** normal / probe_event / probe_impact / rescue —— 调试台和前端提示条用 */
+        mode,
+        /** 回忆入口（可能为空）。前端只拿它做"帮你回忆"的可点击提示，不自动提交 */
+        hints,
         // ⚠️ 不报「上限」—— 没有轮次上限，只有「信息够不够」（见 shouldStop）
         progress: { asked: state.asked.length, fields: Object.keys(state.collected).length },
       });
     } catch (e) {
       console.error('[interview/answer] ❌', (e as Error).message);
+      sendJson(res, 502, { error: { code: 'LLM_FAILED', message: (e as Error).message } });
+    }
+    return true;
+  }
+
+  /* ---------------- 「帮我回忆」—— 动态回忆入口（不算一轮访谈回答） ---------------- */
+  if (req.method === 'POST' && url.pathname === '/api/interview/hints') {
+    if (!apiKey) {
+      sendJson(res, 500, { error: { code: 'NO_KEY', message: '未配置 TOKENDANCE_API_KEY' } });
+      return true;
+    }
+    let body: Record<string, unknown>;
+    try {
+      body = await readJson(req);
+    } catch (e) {
+      sendJson(res, 400, { error: { code: 'BAD_BODY', message: (e as Error).message } });
+      return true;
+    }
+    const state = readState(body);
+    const askedField = typeof body.asked_field === 'string' ? body.asked_field : '';
+    const previousHints = Array.isArray(body.previous_hints)
+      ? body.previous_hints.map(String).slice(0, 6)
+      : [];
+    try {
+      const r = await generateHints({ apiKey }, state, askedField, previousHints);
+      // ⚠️ 刻意不回传 state —— 生成提示**不能**改动访谈状态，更不能计为一轮回答
+      sendJson(res, 200, { hints: r.hints, elapsed_ms: r.elapsedMs });
+    } catch (e) {
+      console.error('[interview/hints] ❌', (e as Error).message);
       sendJson(res, 502, { error: { code: 'LLM_FAILED', message: (e as Error).message } });
     }
     return true;

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EchoPath · 来路 — UI Demo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-navstate="expanded" data-density="editorial">
+
+<!-- ═══════ 纵向果冻导航 ═══════ -->
+<nav id="sidenav" aria-label="主导航">
+  <div class="brand serif">EchoPath<span>·</span>来路</div>
+  <div class="nav-rail" id="navRail">
+    <div class="nav-capsule" id="navCapsule"></div>
+    <button class="nav-item is-active" data-page="p1"><i></i>首页</button>
+    <button class="nav-item" data-page="p2"><i></i>来时路</button>
+    <button class="nav-item" data-page="p3"><i></i>理解困境</button>
+    <button class="nav-item" data-page="p4"><i></i>决策地形</button>
+    <button class="nav-item" data-page="p5"><i></i>真实案例</button>
+    <button class="nav-item" data-page="p6"><i></i>回到自己</button>
+  </div>
+  <div class="nav-foot">
+    <span class="backend-dot" id="backendDot"></span><span id="backendHint">未连接后端</span>
+    <br>让前人的来路，<br>成为后来者的回响。
+  </div>
+  <button id="navCollapse" class="nav-collapse" title="收起目录">«</button>
+  <button id="navTab" class="nav-tab jelly" title="展开目录">
+    <span class="nav-tab-label" id="navTabLabel">首页</span><span class="nav-tab-arrow">»</span>
+  </button>
+</nav>
+
+<!-- ═══════ 主舞台：六个页面 ═══════ -->
+<main id="stage">
+
+<!-- 01 首页：回响（多条来路汇成你这一条，再向外荡开） -->
+<section class="page is-active" id="p1">
+  <canvas id="echoCanvas" class="echo-canvas" aria-hidden="true"></canvas>
+  <div class="page-inner">
+    <p class="kicker">EchoPath · 来路</p>
+    <h1 class="serif">让前人的来路，<br>成为后来者看向未来的回响。</h1>
+    <p class="lead">不是预测你的未来，<br>而是让你看见别人已经走过的未来。</p>
+    <button class="link-btn big" data-goto="p2">开始梳理我的来时路&nbsp;&nbsp;→</button>
+    <p class="echo-hint">移动指针，那些来路会朝你汇聚；点一下提灯的人，照亮几段来路。</p>
+  </div>
+  <!-- 品牌角色：提着小路灯的纸质旅伴（他陪你回头看，不替你往前看） -->
+  <figure class="pal" id="pal" tabindex="0" role="button"
+          aria-label="点亮来路：看看那些走过的人留下的痕迹">
+    <svg viewBox="0 0 220 260" aria-hidden="true">
+      <defs>
+        <radialGradient id="palGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#E8B168" stop-opacity=".85"/>
+          <stop offset="55%" stop-color="#E8B168" stop-opacity=".22"/>
+          <stop offset="100%" stop-color="#E8B168" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- 身后留下的三段来路（点亮点燃） -->
+      <g class="pal-trails" fill="none">
+        <path class="pal-trail t1" d="M14,208 C38,200 54,190 68,178"/>
+        <path class="pal-trail t2" d="M68,178 C82,166 90,150 98,136"/>
+        <path class="pal-trail t3" d="M98,136 C106,122 114,112 126,106"/>
+      </g>
+      <!-- 旅伴本体：折面纸人 -->
+      <g class="pal-fig">
+        <ellipse class="pal-shadow" cx="124" cy="176" rx="40" ry="6"/>
+        <polygon class="pf-shade" points="124,74 124,168 88,168 110,74"/>
+        <polygon class="pf-body" points="124,74 136,74 160,168 124,168"/>
+        <polygon class="pf-hood" points="124,36 106,72 142,72"/>
+        <polygon class="pf-hood-f" points="124,36 124,72 142,72"/>
+        <circle class="pf-face" cx="121" cy="60" r="5"/>
+        <line class="pf-arm" x1="142" y1="98" x2="176" y2="88"/>
+        <line class="pf-arm" x1="176" y1="88" x2="176" y2="104"/>
+        <g class="pal-lantern">
+          <circle class="pal-glow" cx="176" cy="115" r="30"/>
+          <rect class="pf-lantern" x="168" y="104" width="16" height="22" rx="4"/>
+          <circle class="pf-flame" cx="176" cy="115" r="4"/>
+        </g>
+      </g>
+    </svg>
+  </figure>
+</section>
+
+<!-- 02 来时路：主层是「逐渐成形的来路图」，AI 对谈收在便签里 -->
+<section class="page" id="p2">
+  <p class="kicker">02 · 来时路</p>
+  <h2 class="serif">先搞清楚，你是怎么一步一步走到今天的。</h2>
+  <div class="chat-wrap">
+    <!-- 主层：由来路对谈生成的图形 -->
+    <div class="road-main">
+      <div class="road-scroll">
+        <svg id="roadSvg" viewBox="0 0 800 400" aria-label="你的来路图"></svg>
+        <div class="road-pop" id="roadPop" hidden></div>
+      </div>
+      <p class="road-hint" id="roadHint">随着便签里的对谈，你的来路会在这里逐步成形。</p>
+      <details class="field-details" id="fieldDetails">
+        <summary>AI 听懂的你 · 字段明细（可点击修改）</summary>
+        <div class="field-panel" id="fieldPanel"></div>
+      </details>
+    </div>
+    <!-- 便签：AI 对谈只发生在这里，不打断页面节奏 -->
+    <aside class="roadnote chat-note" id="roadnote" aria-label="来路对谈便签">
+      <header>
+        <span class="note-title serif">来路对谈</span>
+        <span class="note-tag" id="noteTag">未连接</span>
+      </header>
+      <p class="note-status" id="noteStatus" hidden></p>
+      <div class="chat-log" id="chatLog"></div>
+      <div class="chat-hints" id="chatHints" hidden></div>
+      <form class="chat-input" id="chatForm">
+        <input id="chatText" type="text" placeholder="写下你的经历，哪怕只是一句话…" autocomplete="off">
+        <button type="submit" class="send-btn">发送</button>
+      </form>
+      <div class="chat-tools">
+        <button type="button" class="tact" id="recallBtn">🕐 帮我回忆</button>
+        <button type="button" class="tact" id="finishNowBtn">够了，直接看结论 →</button>
+        <button type="button" class="tact" id="restartBtn">重新开始</button>
+      </div>
+      <p class="note-quote" id="quoteLine" hidden></p>
+      <footer class="note-foot">
+        <button type="button" class="tact" id="apiOpen">后端连接设置 →</button>
+        <button type="button" class="tact" id="devOpenP2">调试 API ⚙</button>
+        <button type="button" class="tact" id="exportBtn">导出记录 ⭳</button>
+        <button type="button" class="tact" id="importBtn">导入 ⭱</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+      </footer>
+    </aside>
+    <button class="note-toggle jelly" id="noteToggle">来路对谈</button>
+  </div>
+</section>
+
+<!-- ═══════ 后端连接窗口 ═══════ -->
+<dialog id="apiDialog">
+  <form method="dialog" class="api-box">
+    <h4 class="serif">后端连接</h4>
+    <p class="api-hint">默认连接本机 EchoPath 后端（<code>npm run server</code>，端口 3000）。通过预览服务器打开时自动走同源 /api 代理。所有数据只在你本机流转。</p>
+    <label>后端地址<input id="apiBase" type="text" placeholder="http://localhost:3000/api" autocomplete="off"></label>
+    <p class="api-status" id="apiStatus"></p>
+    <div class="api-actions">
+      <button type="button" class="api-btn" id="apiTest">测试连接</button>
+      <button type="button" class="api-btn primary" id="apiSave">保存并重连</button>
+      <button type="button" class="api-btn" id="apiDemo">用示例处境看决策地形</button>
+      <button type="submit" class="api-btn">关闭</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ═══════ API 调试窗口（对着后端 agent 直接调） ═══════ -->
+<dialog id="devDialog">
+  <form method="dialog" class="api-box dev-box">
+    <h4 class="serif">API 调试台</h4>
+    <p class="api-hint">直接调用后端接口（含访谈 agent）。请求体可改，返回原文在下方。当前后端：<code id="devBase">—</code></p>
+    <label>接口
+      <select id="devEndpoint">
+        <option value="GET /health">GET /health · 存活与 Key 状态</option>
+        <option value="GET /sources">GET /sources · 数据源列表</option>
+        <option value="POST /interview/start">POST /interview/start · 开始访谈</option>
+        <option value="POST /interview/answer" selected>POST /interview/answer · 提交回答</option>
+        <option value="POST /interview/finish">POST /interview/finish · 总结</option>
+        <option value="POST /landscape">POST /landscape · 决策地形</option>
+        <option value="POST /case">POST /case · 案例详情</option>
+      </select>
+    </label>
+    <label>请求体（JSON）<textarea id="devBody" rows="8" spellcheck="false"></textarea></label>
+    <p class="api-status" id="devMeta"></p>
+    <pre class="dev-out" id="devOut">（还没有发过请求）</pre>
+    <div class="api-actions">
+      <button type="button" class="api-btn primary" id="devSend">发送</button>
+      <button type="button" class="api-btn" id="devFill">填回当前会话状态</button>
+      <button type="submit" class="api-btn">关闭</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- 03 理解困境：整页平铺的编辑式排版 -->
+<section class="page" id="p3">
+  <p class="kicker">03 · 深入理解困境</p>
+  <div class="p3-spread">
+    <h2 class="serif">把表面上的问题，往下挖一层。</h2>
+    <div class="summary" id="summaryBlock">
+      <p class="serif" id="summaryText">聊完「来时路」之后，这里会出现 AI 对你处境的理解。</p>
+    </div>
+    <div class="no-dilemma" id="noDilemmaNote" hidden>
+      <p>你现在的状态听起来不是「在选什么」，而是「在确认」。这种时候不需要别人的人生来做参照——如果你之后真遇到岔路，再来。</p>
+    </div>
+    <div class="p3-actions">
+      <button class="link-btn" id="confirmSummaryBtn">这很接近我的真实想法 → 去看决策地形</button>
+      <button class="link-btn ghost" id="correctOpenBtn">有一点不对 → 修改</button>
+    </div>
+    <div class="correct-box" id="correctBox" hidden>
+      <input id="correctText" type="text" placeholder="哪里不对？直接说，比如「第三点不对，我其实……」" autocomplete="off">
+      <button class="link-btn" id="correctSend">发送更正</button>
+    </div>
+  </div>
+</section>
+
+<!-- 04 决策地形：地图是主角（接 /api/sources + /api/landscape） -->
+<section class="page" id="p4">
+  <p class="kicker">04 · 个性化决策地形</p>
+  <h2 class="serif">在与你来时路比较接近的人中，我们看到了这些不同的走法。</h2>
+
+  <div class="source-bar" id="sourceBar" hidden></div>
+
+  <!-- 加载仪式：路径生长的等待画面 -->
+  <div class="load-veil" id="loadVeil" hidden>
+    <svg viewBox="0 0 320 120" class="veil-svg" aria-hidden="true">
+      <path id="veilPath" d="M20,84 C90,84 120,40 180,52 S280,36 300,30" fill="none"/>
+      <circle class="veil-dot" r="4"><animateMotion dur="2.4s" repeatCount="indefinite" path="M20,84 C90,84 120,40 180,52 S280,36 300,30"/></circle>
+    </svg>
+    <p class="veil-text serif" id="veilText">正在检索与你来时路接近的人…</p>
+    <p class="veil-sub" id="veilSub">好的回响值得等几秒</p>
+  </div>
+
+  <p class="honest-note" id="singlePathNote" hidden></p>
+
+  <p class="stale-bar" id="staleBar" hidden>
+    数据源有更新（<span id="staleInfo"></span>）—— 当前地形是基于旧数据生成的。
+    <button class="tact" id="staleRefresh">按新数据重新生成 →</button>
+  </p>
+
+  <!-- 处境说明：默认只留机制解读 + 根因素；约束/在意/编辑收进展开层 -->
+  <div class="profile" id="profileBlock" hidden>
+    <p class="mechanism serif" id="mechanismReading"></p>
+    <div class="profile-row">
+      <span class="profile-label">AI 抽象出的根因素</span>
+      <span class="factor-tags" id="factorTags"></span>
+    </div>
+    <details class="profile-more" id="profileMore">
+      <summary>你的约束、你在意的、修改处境（展开）</summary>
+      <div class="profile-row">
+        <span class="profile-label">你的约束</span>
+        <span class="profile-list" id="constraintList"></span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label">你在意的</span>
+        <span class="profile-list" id="goalList"></span>
+      </div>
+      <div class="profile-row">
+        <span class="profile-label"></span>
+        <span>
+          <button class="tact" id="regenBtn" hidden>改完上面的处境，重新生成地形 →</button>
+          <button class="tact" id="devOpenP4">调试 API ⚙</button>
+        </span>
+      </div>
+    </details>
+  </div>
+
+  <div class="terrain" id="terrainBlock" hidden>
+    <div class="net-stage" id="netStage">
+      <div class="net-scroll" id="netScroll">
+        <svg id="terrainNet" viewBox="0 0 860 480" role="application" aria-label="决策网络图：节点可点击选中查看详情"></svg>
+      </div>
+      <div class="net-tip" id="netTip" hidden></div>
+      <button class="net-reset" id="netReset" type="button" hidden>恢复全图 ⟲</button>
+      <aside class="net-detail" id="netDetail" hidden aria-live="polite"></aside>
+      <p class="net-hint">地图上每条分支 = 和你根因素相近的人实际走过的路（不是你的选项）· 悬停看预览 · 点节点或连线看详情与出处 · 点空白处退出 · Tab 键也能访问节点</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 真实案例 · 沉浸式深阅读（接 /api/case） -->
+<section class="page" id="p5">
+  <div class="read-progress" id="readProgress"></div>
+  <button class="link-btn ghost back-terrain" id="backToTerrain" hidden>← 回到决策地形</button>
+  <div class="case-wrap">
+    <aside class="case-list" id="caseList">
+      <p class="kicker">05 · 真实案例</p>
+      <p class="case-empty" id="caseEmpty">从「决策地形」里选一条路，<br>这里会列出走过它的真实人生。</p>
+    </aside>
+    <article class="story" id="caseStory">
+      <!-- 离线 / 未选案例时的静态示例（陶渊明） -->
+      <p class="kicker">示例</p>
+      <h2 class="serif">41 岁的时候，他已经不是第一次想离开了。</h2>
+      <div class="portrait" aria-hidden="true">陶</div>
+      <p>在这之前，他已经几次进入官场，也几次离开。对他来说，问题已经不再是"能不能做官"——他已经证明自己能够进入这条路。</p>
+      <p>真正的问题逐渐变成：<b>如果继续留在一条能提供稳定生活、却越来越违背自己生活方式的道路上，他愿意付出什么？</b></p>
+      <div class="year serif">405</div>
+      <blockquote class="serif">"他当时并不知道，这会成为后来人定义他一生的选择。"</blockquote>
+      <h4>他当时已经知道什么</h4>
+      <p>家庭需要收入；辞官意味着更不稳定的生活。</p>
+      <h4>他不知道什么</h4>
+      <p>他不知道自己的诗会在一千多年后变成经典。所以那不是一个"放弃官场去成为大诗人"的选择。</p>
+      <h4>他做了什么</h4>
+      <p>任彭泽令八十余日后辞官，此后再未出仕。</p>
+      <h4>后来发生了什么</h4>
+      <p>生活一度贫苦，但他留下的文字，让"归去来兮"成为后世无数次转向时的回响。</p>
+      <p class="evidence">内容依据正史与本人诗文整理；无法确证的心理描写一律不写。</p>
+    </article>
+  </div>
+</section>
+
+<!-- 06 回到自己：逐步形成的个人行动记录 -->
+<section class="page" id="p6">
+  <div class="me-wrap">
+    <svg class="me-line" viewBox="0 0 40 64" aria-hidden="true">
+      <path d="M20,0 C20,24 20,40 20,52" fill="none"/>
+      <circle cx="20" cy="56" r="4"/>
+    </svg>
+    <p class="kicker">06 · 回到自己</p>
+    <h2 class="serif">他们的路走完了。<br>你的还没有。</h2>
+
+    <!-- ① 回看 -->
+    <section class="me-step">
+      <h4 class="me-step-title serif">① 回看</h4>
+      <p class="me-recap" id="meRecapText"></p>
+    </section>
+
+    <!-- ② 取舍 -->
+    <section class="me-step" id="meTrade" hidden>
+      <h4 class="me-step-title serif">② 取舍</h4>
+      <p class="me-q">你最想保住什么？（可多选）</p>
+      <p class="me-src">选项来自真实案例里「被保护的东西」——供参考，勾了才算你的</p>
+      <div class="chips" id="keepChips"></div>
+      <p class="me-q">哪种代价你暂时不能接受？（可多选）</p>
+      <p class="me-src">选项来自真实案例里「别人付出过的代价」——供参考，勾了才算你的</p>
+      <div class="chips" id="costChips"></div>
+      <p class="me-add"><input id="meAddText" type="text" placeholder="上面都没有？自己写一条，回车加入" autocomplete="off"></p>
+    </section>
+
+    <!-- ③ 未知 -->
+    <section class="me-step" id="meUnknown" hidden>
+      <h4 class="me-step-title serif">③ 未知</h4>
+      <p class="me-q">挑一个你最想先验证的未知（单选）：</p>
+      <p class="me-src">看过哪条走法不代表你选了它 —— 这里挑的才算数</p>
+      <div class="chips single" id="unknownChips"></div>
+    </section>
+
+    <!-- ④ 行动记录 -->
+    <section class="me-step" id="meAct" hidden>
+      <h4 class="me-step-title serif">④ 行动记录 <span class="me-draft-badge">建议稿 · 每行都可改，保存前不算定</span></h4>
+      <div class="me-card" id="meCard">
+        <div class="me-field"><span class="me-label">想验证</span><span class="me-val" id="meVerify" contenteditable="true" spellcheck="false"></span></div>
+        <div class="me-field"><span class="me-label">准备做</span><span class="me-val" id="meDo" contenteditable="true" spellcheck="false"></span></div>
+        <div class="me-field"><span class="me-label">预计投入</span><span class="me-val" id="meTime" contenteditable="true" spellcheck="false"></span></div>
+        <div class="me-field"><span class="me-label">观察信号</span><span class="me-val" id="meSignal" contenteditable="true" spellcheck="false"></span></div>
+        <div class="me-field"><span class="me-label">何时回看</span><span class="me-val" id="meWhen" contenteditable="true" spellcheck="false"></span></div>
+      </div>
+      <p class="me-note">这只是一次小范围、可撤回的验证 —— 不是人生决定，也不需要你现在就换方向。所有行都可以点进去改。</p>
+      <div class="actions">
+        <button class="link-btn" id="saveCrossroadBtn">保存这次路口</button>
+      </div>
+    </section>
+
+    <!-- 已保存的路口 -->
+    <section class="me-step" id="meSavedWrap" hidden>
+      <h4 class="me-step-title serif">已保存的路口</h4>
+      <div class="saved-list" id="savedList"></div>
+    </section>
+  </div>
+</section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

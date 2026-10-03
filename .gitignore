@@ -53,3 +53,6 @@ temp/
 
 # 其他 agent 工具的临时目录
 .zcode/
+
+# 上传前检查用的临时工作目录（解压包 + 检查报告，不入库）
+.incoming-echopath/

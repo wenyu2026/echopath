@@ -248,6 +248,11 @@ export interface SupportingCase {
   year: number;
   /** 一句话：他后来怎样了（用于卡片上的「看看他们后来…」） */
   outcome_hint: string;
+  /**
+   * 他这条案例的因素标注（数据工程离线标注，原样透传）。
+   * 前端用来逐人回答「为什么推荐他」：你和他共同卡在哪些因素上。
+   */
+  root_factors?: string[];
 }
 
 /**

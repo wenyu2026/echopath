@@ -25,6 +25,18 @@
 import type { GatewayConfig } from '../shared/gateway.ts';
 import { chatCompletions } from '../shared/gateway.ts';
 import { FIELDS, INTERVIEW_CONFIG, type FieldSpec } from '../../src/types/interview.ts';
+import {
+  PROBE_LIMITS,
+  DEFAULT_HINTS,
+  PROBE_EVENT,
+  PROBE_IMPACT,
+  RESCUE,
+  ASK_GUIDELINES,
+  EXTRACT_GUIDELINES,
+  SIGNALS_DESC,
+  HINTS_GUIDELINES,
+  HINTS_RETRY_NOTE,
+} from './guidelines.ts';
 
 /* ============================================================
    访谈状态
@@ -39,6 +51,22 @@ export interface Turn {
 /** 已采集到的信息（键 → 值） */
 export type Collected = Record<string, string>;
 
+/**
+ * 追问线程（经验 1 / 2 的程序化落地）。
+ *
+ * ⚠️ 光靠提示词拦不住「聊了个感受标签就跳去下一个字段」——
+ *   那是 nextField() 的优先级排序决定的，程序行为。
+ *   所以线程必须存在**状态**里，让「下一问选择逻辑」在程序层被覆盖：
+ *   线程活跃时，下一个问题属于线程，不属于优先级最高的字段。
+ */
+export interface ProbeThread {
+  field: string;
+  /** need_event = 还没聊出具体的事；need_impact = 事聊到了，影响还没聊清 */
+  stage: 'need_event' | 'need_impact';
+  /** 本线程已经追问过几次（用于 PROBE_LIMITS 封顶 → 保留为未知） */
+  count: number;
+}
+
 export interface InterviewState {
   turns: Turn[];
   collected: Collected;
@@ -52,10 +80,16 @@ export interface InterviewState {
    * 挡的是「问不出东西还硬问」，不是「问得多」。
    */
   progressMarks?: number[];
+  /** 当前活跃的追问线程（无 = 没在追问任何一条线） */
+  probeThread?: ProbeThread | null;
+  /** 每个字段已经"救援"过几次（用户说"不知道"后给回忆入口） */
+  rescued?: Record<string, number>;
+  /** 用户明确跳过 / 救援失败后保留为未知的字段 —— 不再追问（经验 4） */
+  skipped?: string[];
 }
 
 export function newInterviewState(): InterviewState {
-  return { turns: [], collected: {}, confidence: {}, asked: [], progressMarks: [] };
+  return { turns: [], collected: {}, confidence: {}, asked: [], progressMarks: [], probeThread: null, rescued: {}, skipped: [] };
 }
 
 /* ============================================================
@@ -81,10 +115,18 @@ export function newInterviewState(): InterviewState {
 export function priorityOf(f: FieldSpec, state: InterviewState): number {
   if (!f.askable) return 0;
 
+  // ⚠️ 用户跳过 / 救援失败保留为未知的字段，不再追问（经验 4：保留为未知）
+  if ((state.skipped ?? []).includes(f.key)) return 0;
+
+  // ⚠️ 已经讲清楚的信息，不要重复询问（经验 5）：
+  //    置信度 ≥ 0.85 视为「讲清楚了」—— 只有低置信度的字段才允许换角度再问。
+  //    （实测踩到：多数字段被跳过后，引擎把 conf 0.95 的 stage 又问了一遍）
+  const conf = state.confidence[f.key] ?? 0;
+  if (conf >= 0.85) return 0;
+
   const askCount = state.asked.filter((k) => k === f.key).length;
   if (askCount >= INTERVIEW_CONFIG.max_asks_per_field) return 0;
 
-  const conf = state.confidence[f.key] ?? 0;
   // 已经问过一次但没抽到东西 → 换个角度重问，但打折
   // 除以 (askCount + 1) 而不是固定 0.6：问第二次 ×0.5，第三次 ×0.33，递减更自然
   const repeatPenalty = askCount === 0 ? 1 : 1 / (askCount + 1);
@@ -208,6 +250,13 @@ export function shouldStop(state: InterviewState): { stop: boolean; reason: stri
     return { stop: false, reason: 'below_min' };
   }
 
+  // ⚠️ 追问线程活跃时不允许"信息够了"截停 ——
+  //    「字段置信度」量的是"这句话抽得准不准"，不量"这件事聊透了没有"。
+  //    线程有 PROBE_LIMITS 封顶，最多多问几轮，不会失控（经验 1 / 2）。
+  if (state.probeThread) {
+    return { stop: false, reason: 'probing_thread' };
+  }
+
   // ① 信息够了
   const avg = averageConfidence(state);
   const top = FIELDS.map((f) => priorityOf(f, state)).reduce((a, b) => Math.max(a, b), 0);
@@ -270,21 +319,161 @@ const ASK_SYSTEM_PROMPT = `你在做一次**人生决策访谈**。你的任务�
    如果对方上一条回答很含糊，可以就着那个含糊点追问，但不要偏离指定方向。
 
 ⚠️ 特别注意：如果对方说「我很迷茫」「不知道怎么办」这类空话，
-   不要接受它当作回答 —— 要追问出**具体**在纠结什么。`;
+   不要接受它当作回答 —— 要追问出**具体**在纠结什么。
+
+` + ASK_GUIDELINES;
+
+/**
+ * 本轮回答的对话信号 —— 由抽取步骤顺带判断（不多花一次调用）。
+ * ⚠️ 与置信度分工：置信度 =「抽得准不准」；signals =「经历聊透了没有」。
+ */
+export interface ExtractSignals {
+  /** 讲了一件具体的经历（有场景/时间/经过），而不只是感受标签 */
+  concrete_event: boolean;
+  /** 事件的影响（怎样改变了想法/计划）是否已经聊清 */
+  impact_clear: boolean;
+  /** 答"不知道 / 想不起来 / 说不清" */
+  stuck: boolean;
+  /** 明确要求跳过这个问题 */
+  skip_request: boolean;
+  /** 在更正之前说过的内容 */
+  correction: boolean;
+  /** stuck 时给用户的回忆入口（2-3 个，来自他的语境，不编造） */
+  hints: string[];
+}
+
+function emptySignals(): ExtractSignals {
+  return { concrete_event: false, impact_clear: true, stuck: false, skip_request: false, correction: false, hints: [] };
+}
+
+export type NextPlanMode = 'normal' | 'probe_event' | 'probe_impact' | 'rescue';
+
+/** 下一轮计划：线程命中时 mode ≠ normal，问题必须服务追问，不许跳话题 */
+export interface NextPlan {
+  field: FieldSpec;
+  mode: NextPlanMode;
+  hints: string[];
+}
+
+function planFor(state: InterviewState, key: string, mode: NextPlanMode, hints: string[]): NextPlan | null {
+  const field = FIELDS.find((f) => f.key === key);
+  if (!field) return null;
+  const hs = hints.length ? hints : (DEFAULT_HINTS[key] ?? []);
+  return { field, mode, hints: hs.slice(0, 3) };
+}
+
+/**
+ * 根据本轮信号规划下一轮 —— **"下一问选择逻辑"的唯一入口**。
+ *
+ * ⚠️ 会改动 state（线程 / 救援计数 / 跳过清单），和 shouldStop 写 progressMarks
+ *    是同一类先例：访谈状态机就是靠"函数推进状态"演进的。
+ *
+ * 调用顺序（见 interview-routes.ts）：extract → planNextTurn → shouldStop → askNextQuestion(plan)。
+ * planNextTurn 必须在 shouldStop 之前 —— 线程的触发/释放要反映进停止判断。
+ */
+export function planNextTurn(
+  state: InterviewState,
+  signals: ExtractSignals | null,
+  lastAskedField: string,
+): NextPlan | null {
+  state.skipped = state.skipped ?? [];
+  state.rescued = state.rescued ?? {};
+
+  /* ① 明确要求跳过 → 保留为未知，立刻放行（经验 3 / 4） */
+  if (signals?.skip_request && lastAskedField && !state.skipped.includes(lastAskedField)) {
+    state.skipped.push(lastAskedField);
+    state.probeThread = null;
+  }
+
+  const thread = state.probeThread ?? null;
+
+  if (thread) {
+    const s = signals;
+    if (s?.concrete_event) {
+      if (thread.stage === 'need_event') {
+        // 事聊到了，影响还不清 → 接一问"这件事怎样改变了你"（经验 2），只问一次
+        if (!s.impact_clear) {
+          state.probeThread = { field: thread.field, stage: 'need_impact', count: 0 };
+          return planFor(state, thread.field, 'probe_impact', []);
+        }
+        state.probeThread = null;          // 事 + 影响都清楚 → 放行主线
+      } else {
+        state.probeThread = null;          // need_impact 已回答 → 放行
+      }
+    } else if (s?.stuck) {
+      // 卡住 → 给回忆入口救援；救过还不行 → 保留为未知（经验 3 / 4）
+      const done = state.rescued[thread.field] ?? 0;
+      if (done < PROBE_LIMITS.rescues_per_field) {
+        state.rescued[thread.field] = done + 1;
+        return planFor(state, thread.field, 'rescue', s.hints ?? []);
+      }
+      state.probeThread = null;
+      if (!state.skipped.includes(thread.field)) state.skipped.push(thread.field);
+    } else {
+      // 还在原地（仍没讲出具体的事）→ 继续追问，封顶后放行（经验 1 / 4）
+      thread.count += 1;
+      if (thread.count > PROBE_LIMITS.event_probes) {
+        state.probeThread = null;          // 追问到顶 → 保留为未知，不反复问
+      } else {
+        return planFor(state, thread.field, thread.stage === 'need_event' ? 'probe_event' : 'probe_impact', s?.hints ?? []);
+      }
+    }
+  } else if (signals && !signals.skip_request && lastAskedField) {
+    /* 没有活跃线程时的两个新线程触发点 */
+    // A. 讲了具体的事但影响不清楚 → 追问影响（经验 2，对任何字段都适用）
+    if (signals.concrete_event && !signals.impact_clear) {
+      state.probeThread = { field: lastAskedField, stage: 'need_impact', count: 1 };
+      return planFor(state, lastAskedField, 'probe_impact', []);
+    }
+    // B. 困境只有感受标签、没有具体经历 → 先追问那件具体的事（经验 1）。
+    //    两种来路都要接住：
+    //      ① 直接问 dilemma 时答得含糊（lastAskedField === 'dilemma'）
+    //      ② 在回答**别的字段**时顺嘴说出了迷茫 —— dilemma 有内容但从未被直接问过
+    //        （实测踩到：问"现在什么状态"，答"我大三，觉得专业不适合自己"，
+    //         只认 ① 的话程序直接跳去问来时路，追问永远不触发）
+    if (
+      !signals.stuck &&
+      (state.confidence['dilemma'] ?? 0) >= 0.5 &&
+      (lastAskedField === 'dilemma' || !state.asked.includes('dilemma'))
+    ) {
+      state.probeThread = { field: 'dilemma', stage: 'need_event', count: 1 };
+      return planFor(state, 'dilemma', 'probe_event', signals.hints ?? []);
+    }
+    // C. 普通字段答"不知道" → 给一次回忆入口救援（经验 3）；救完仍卡 → 保留为未知
+    if (signals.stuck && !state.skipped.includes(lastAskedField)) {
+      const done = state.rescued[lastAskedField] ?? 0;
+      if (done < PROBE_LIMITS.rescues_per_field) {
+        state.rescued[lastAskedField] = done + 1;
+        return planFor(state, lastAskedField, 'rescue', signals.hints ?? []);
+      }
+      state.skipped.push(lastAskedField);  // 不反复追问（经验 4）
+    }
+  }
+
+  /* ② 没有线程命中 → 正常主线（经验 6）：跳过字段已被 priorityOf 归零 */
+  const field = nextField(state);
+  if (!field) return null;
+  return { field, mode: 'normal', hints: [] };
+}
 
 export interface AskResult {
   question: string;
   field: string;
+  mode: NextPlanMode;
+  /** 回忆入口（rescue / probe 时非空）—— 给前端的"帮你回忆"提示，不自动提交 */
+  hints: string[];
   elapsedMs: number;
 }
 
-/** 生成下一个问题 */
+/** 生成下一个问题（plan 由调用方先算好，见 planNextTurn；不传则按无信号处理） */
 export async function askNextQuestion(
   config: GatewayConfig,
   state: InterviewState,
+  plan?: NextPlan | null,
 ): Promise<AskResult | null> {
-  const field = nextField(state);
-  if (field === null) return null;
+  const p = plan ?? planNextTurn(state, null, '');
+  if (!p) return null;
+  const field = p.field;
 
   const history = state.turns
     .slice(-6) // 只带最近 6 条，省 token 也避免模型被早期内容带偏
@@ -300,13 +489,21 @@ export async function askNextQuestion(
     ? `\n⚠️ 这个方向你之前问过一次，但对方没正面回答。\n   这次**必须换一个角度问** —— 从具体的例子、场景或对比切入，不要重复上次的问法。`
     : '';
 
+  /* 追问线程命中时，追问意图**替换**字段默认意图 —— 程序层锁死话题（经验 1 / 2 / 3） */
+  const modeIntent =
+    p.mode === 'probe_event' ? PROBE_EVENT
+    : p.mode === 'probe_impact' ? PROBE_IMPACT
+    : p.mode === 'rescue' ? RESCUE
+    : '';
+
   const userContent = [
     history ? `【刚才的对话】\n${history}` : '【刚才的对话】\n（还没有开始，这是第一个问题）',
     '',
     known ? `【已经了解到的】\n${known}` : '【已经了解到的】\n（还没有）',
     '',
     `【这一轮要问清楚什么】${field.label}`,
-    `【具体的追问意图】${field.intent}${reAskNote}`,
+    `【具体的追问意图】${modeIntent || field.intent}${reAskNote}`,
+    p.mode === 'rescue' && p.hints.length ? `【可用的回忆入口（挑 2-3 个自然地融进问句）】${p.hints.join('；')}` : '',
     '',
     '请输出你的下一句话（只输出这句话本身，不要加引号）。',
   ].join('\n');
@@ -326,7 +523,7 @@ export async function askNextQuestion(
   const question = result.content.trim().replace(/^["「『]|["」』]$/g, '');
   if (!question) return null;
 
-  return { question, field: field.key, elapsedMs: Date.now() - t0 };
+  return { question, field: field.key, mode: p.mode, hints: p.hints, elapsedMs: Date.now() - t0 };
 }
 
 /* ============================================================
@@ -355,8 +552,25 @@ const EXTRACT_SCHEMA = {
       },
       /** 用户这条回答里，有没有值得原样保留的「他本人的话」 */
       memorable_quote: { type: 'string' },
+      /**
+       * 对话信号 —— 判断「经历聊透了没有」，与置信度（抽得准不准）分工。
+       * 定义见 guidelines.ts 的 SIGNALS_DESC。
+       */
+      signals: {
+        type: 'object',
+        properties: {
+          concrete_event: { type: 'boolean', description: SIGNALS_DESC.concrete_event },
+          impact_clear: { type: 'boolean', description: SIGNALS_DESC.impact_clear },
+          stuck: { type: 'boolean', description: SIGNALS_DESC.stuck },
+          skip_request: { type: 'boolean', description: SIGNALS_DESC.skip_request },
+          correction: { type: 'boolean', description: SIGNALS_DESC.correction },
+          hints: { type: 'array', items: { type: 'string' }, description: SIGNALS_DESC.hints },
+        },
+        required: ['concrete_event', 'impact_clear', 'stuck', 'skip_request', 'correction', 'hints'],
+        additionalProperties: false,
+      },
     },
-    required: ['updates', 'memorable_quote'],
+    required: ['updates', 'memorable_quote', 'signals'],
     additionalProperties: false,
   },
 };
@@ -399,52 +613,86 @@ const EXTRACT_SYSTEM_PROMPT = `你在从用户的一段回答里抽取结构化�
 
 ⚠️ memorable_quote：如果他的话里有一句**特别能体现他在意什么**的句子，
    原样摘出来（保留他的措辞）。没有就用空字符串。
-   反问句也可以摘（它体现了他不接受什么前提），但**不能同时填进字段**。`;
+   反问句也可以摘（它体现了他不接受什么前提），但**不能同时填进字段**。
+
+` + EXTRACT_GUIDELINES + `
+
+【对话信号（signals）—— 和字段抽取同样重要】
+每次都要输出全部 6 个信号，定义如下：
+
+- concrete_event：${SIGNALS_DESC.concrete_event}
+- impact_clear：${SIGNALS_DESC.impact_clear}
+- stuck：${SIGNALS_DESC.stuck}
+- skip_request：${SIGNALS_DESC.skip_request}
+- correction：${SIGNALS_DESC.correction}
+- hints：${SIGNALS_DESC.hints}`;
 
 export interface ExtractResult {
   updates: Array<{ field: string; value: string; confidence: number }>;
   memorable_quote: string;
+  /** 对话信号（见 guidelines.ts）：驱动追问线程 / 救援 / 跳过 */
+  signals: ExtractSignals;
   elapsedMs: number;
 }
 
 /** 从用户回答里抽取结构化信息 */
 export async function extractFromAnswer(
   config: GatewayConfig,
-  _state: InterviewState,
+  state: InterviewState,
   answer: string,
   askedField: string,
 ): Promise<ExtractResult> {
   const fieldList = FIELDS.map((f) => `${f.key}（${f.label}）`).join('、');
 
-  const userContent = [
-    `【刚才问的方向】${askedField}`,
+  /**
+   * ⚠️ 抽取必须带语境（经验 5）：
+   *   用户会说「前一个」「就是那次」「其实不是」——
+   *   没有上一个问题的原文和最近几轮对话，这些全都理解不了。
+   *   第一版这里只传 askedField 的 key 和回答本身，指代与纠正全部失灵。
+   */
+  const lastAiTurn = [...state.turns].reverse().find((t) => t.role === 'ai');
+  const recentTurns = state.turns
+    .slice(-6)
+    .map((t) => `${t.role === 'ai' ? 'AI' : '用户'}：${t.text}`)
+    .join('\n');
+  const known = FIELDS.filter((f) => state.collected[f.key])
+    .map((f) => `- ${f.label}：${state.collected[f.key]}`)
+    .join('\n');
+
+  const sections = [
+    `【上一个问题的原文】${lastAiTurn?.text ?? '（无 —— 用户在访谈开始时主动开口）'}`,
+    `【这个方向对应的字段】${askedField || '（无）'}`,
+    recentTurns ? `【最近的对话】\n${recentTurns}` : '',
+    known ? `【已经了解到的】\n${known}` : '',
     `【用户的回答】${answer}`,
-    '',
     `【可用的字段】${fieldList}`,
-  ].join('\n');
+  ].filter(Boolean);
 
   const t0 = Date.now();
   const result = await chatCompletions(config, {
     model: process.env.EXTRACT_MODEL ?? 'deepseek-v4.1-flash',
     reasoning_effort: 'none',
-    max_tokens: 500,
+    max_tokens: 600,
     temperature: 0,
     response_format: { type: 'json_schema', json_schema: EXTRACT_SCHEMA },
     messages: [
       { role: 'system', content: EXTRACT_SYSTEM_PROMPT },
-      { role: 'user', content: userContent },
+      { role: 'user', content: sections.join('\n\n') },
     ],
   });
 
   const parsed = JSON.parse(result.content) as {
     updates: Array<{ field: string; value: string; confidence: number }>;
     memorable_quote: string;
+    signals?: Partial<ExtractSignals>;
   };
 
   const validKeys = new Set(FIELDS.map((f) => f.key));
   return {
     updates: (parsed.updates ?? []).filter((u) => validKeys.has(u.field)),
     memorable_quote: parsed.memorable_quote ?? '',
+    // 抽取器漏信号时兜底成空信号 —— 引擎不能因为一个缺字段而崩
+    signals: { ...emptySignals(), ...(parsed.signals ?? {}), hints: parsed.signals?.hints ?? [] },
     elapsedMs: Date.now() - t0,
   };
 }
@@ -611,4 +859,95 @@ export async function summarize(
   });
 
   return { summary: result.content.trim(), no_dilemma: noDilemma, elapsedMs: Date.now() - t0 };
+}
+
+/* ============================================================
+   「帮我回忆」—— 用户主动求助时，动态生成回忆入口
+   ============================================================
+   ⚠️ 为什么单独一个函数而不是复用 extract 的 signals.hints
+     signals.hints 只在用户已经卡住的回答里生成；这里是用户主动点
+     「帮我回忆」—— 要看的是「当前问题 + 已聊过的 + 还没讲清的」，
+     是一次独立的小调用，**不改访谈状态、不算一轮回答**。
+*/
+
+const HINTS_SCHEMA = {
+  name: 'hints',
+  strict: true,
+  schema: {
+    type: 'object',
+    properties: {
+      hints: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            /** 回忆入口（≤12字）：场景类型，不是预设答案 */
+            entry: { type: 'string' },
+            /** 点进入口后展开的更具体的小问题（≤32字） */
+            followup: { type: 'string' },
+          },
+          required: ['entry', 'followup'],
+          additionalProperties: false,
+        },
+      },
+    },
+    required: ['hints'],
+    additionalProperties: false,
+  },
+};
+
+export interface HintItem {
+  entry: string;
+  followup: string;
+}
+
+export async function generateHints(
+  config: GatewayConfig,
+  state: InterviewState,
+  askedField: string,
+  previousHints: string[] = [],
+): Promise<{ hints: HintItem[]; elapsedMs: number }> {
+  const lastAiTurn = [...state.turns].reverse().find((t) => t.role === 'ai');
+  const recentTurns = state.turns
+    .slice(-6)
+    .map((t) => `${t.role === 'ai' ? 'AI' : '用户'}：${t.text}`)
+    .join('\n');
+  const known = FIELDS.filter((f) => state.collected[f.key])
+    .map((f) => `- ${f.label}：${state.collected[f.key]}`)
+    .join('\n');
+  const missing = FIELDS.filter((f) => !state.collected[f.key] && !(state.skipped ?? []).includes(f.key))
+    .map((f) => f.label)
+    .join('、');
+
+  const sections = [
+    `【当前卡住他的问题】${lastAiTurn?.text ?? '（还没开始问）'}`,
+    `【这个问题对应的字段】${askedField || '（无）'}`,
+    recentTurns ? `【最近的对话】\n${recentTurns}` : '',
+    known ? `【已经了解到的（别让他重复讲）】\n${known}` : '',
+    missing ? `【还没讲清的（入口可以往这些方向引）】${missing}` : '',
+    previousHints.length
+      ? `【上一批给过的入口（他没反应，换切入角度）】${previousHints.join('；')}\n${HINTS_RETRY_NOTE}`
+      : '',
+  ].filter(Boolean);
+
+  const t0 = Date.now();
+  const result = await chatCompletions(config, {
+    model: process.env.EXTRACT_MODEL ?? 'deepseek-v4.1-flash',
+    reasoning_effort: 'none',
+    max_tokens: 400,
+    temperature: 0.5,
+    response_format: { type: 'json_schema', json_schema: HINTS_SCHEMA },
+    messages: [
+      { role: 'system', content: HINTS_GUIDELINES },
+      { role: 'user', content: sections.join('\n\n') },
+    ],
+  });
+
+  const parsed = JSON.parse(result.content) as { hints?: HintItem[] };
+  const hints = (parsed.hints ?? [])
+    .filter((h) => h && typeof h.entry === 'string' && typeof h.followup === 'string')
+    .map((h) => ({ entry: h.entry.trim().slice(0, 20), followup: h.followup.trim().slice(0, 48) }))
+    .filter((h) => h.entry && h.followup)
+    .slice(0, 3);
+  return { hints, elapsedMs: Date.now() - t0 };
 }

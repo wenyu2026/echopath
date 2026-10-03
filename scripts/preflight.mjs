@@ -33,10 +33,14 @@ function check(name, ok, detail = '', fatal = true) {
  *   所以这里一律绕过 .cmd，直接用 node 跑真实脚本。
  */
 function run(cmd, args, opts = {}) {
+  // ⚠️ 裸 'node' 在 PATH 带 POSIX 风格路径的环境（Git Bash / MSYS / Cygwin）里
+  //   CreateProcessW 解析不到 → spawnSync ENOENT，全部检查假阴性。
+  //   process.execPath 是当前真正在跑的 node 的绝对路径，行为与裸 'node' 完全一致。
+  const resolved = cmd === 'node' ? process.execPath : cmd;
   try {
     return {
       ok: true,
-      out: execFileSync(cmd, args, {
+      out: execFileSync(resolved, args, {
         cwd: root,
         encoding: 'utf8',
         stdio: ['ignore', 'pipe', 'pipe'],

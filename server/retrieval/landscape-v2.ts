@@ -874,6 +874,8 @@ function buildSupportingCases(cases: TaggedEpisode[]): SupportingCase[] {
     year: e.time.year,
     // ⚠️ 只给「之后发生了什么」，绝不给「因为选了这个所以成功」
     outcome_hint: (e.outcomes.long_term || e.outcomes.mid_term || '').slice(0, 40),
+    // 透传该案例的离线因素标注 —— 前端逐人显示「为什么推荐他」（不改任何匹配逻辑）
+    root_factors: e.mechanism?.root_factors ?? [],
   }));
 }
 
