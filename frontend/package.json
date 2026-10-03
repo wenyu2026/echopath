@@ -1,0 +1,10 @@
+{
+  "name": "echopath-demo",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "description": "EchoPath · 来路 — 六页 UI Demo（后端对接版）",
+  "scripts": {
+    "dev": "node server.mjs"
+  }
+}

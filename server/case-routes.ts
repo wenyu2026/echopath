@@ -137,9 +137,15 @@ export async function handleCaseRoutes(
         decision_state: ep.decision_state,
         /** 实际做了什么 */
         choice: ep.choice,
-        /** ⚠️ 后来发生了什么 —— 与"当时知道什么"严格分开 */
+        /** 后来发生了什么 —— 与"当时知道什么"严格分开 */
         outcomes: ep.outcomes,
         reflection: ep.reflection,
+        /**
+         * 他这条案例的因素标注（离线标注，原样透传）。
+         * 前端用它逐人回答「为什么推荐他 / 你和他像在哪」——
+         * ⚠️ 透传，不是分析：任何匹配/聚类逻辑都不在这里发生。
+         */
+        mechanism: ep.mechanism ?? null,
       },
       /**
        * ⚠️ 时间边界声明。
