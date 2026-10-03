@@ -1,0 +1,32 @@
+# ============================================
+#  Render Blueprint —— EchoPath 云端部署
+# ============================================
+#  用法：
+#    1. 把仓库推到 GitHub（已完成）
+#    2. 打开 https://dashboard.render.com/blueprints
+#    3. New Blueprint Instance → 选这个仓库 → Apply
+#    4. 在弹窗里填 TOKENDANCE_API_KEY（别写进仓库！）
+#
+#  说明：
+#    - 本项目零运行时依赖，但 Render 默认会跑 npm install；
+#      这里显式跳过以加快部署（--omit=dev 会装 react 等无关包）。
+#    - 单进程单端口：deploy/server.ts 同时托管前端静态文件与 /api。
+# ============================================
+
+services:
+  - type: web
+    name: echopath
+    runtime: node
+    plan: free
+    region: singapore
+    branch: master
+    buildCommand: echo "零运行时依赖，跳过 build"
+    startCommand: node deploy/server.ts
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      # ⚠️ 不要在这里写死 Key！
+      # 用 sync: false 表示「部署时由你在面板里填」，值不会进仓库。
+      - key: TOKENDANCE_API_KEY
+        sync: false

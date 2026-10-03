@@ -250,11 +250,23 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   }
 }
 
-const server = createServer((req, res) => {
-  handle(req, res).catch((e) => {
+/**
+ * 供云端部署入口（deploy/server.ts）复用的请求处理器。
+ *
+ * 为什么单独导出：本地是「前端 7200 + 后端 3100」两个进程，
+ * 而 PaaS 通常只给一个端口，需要把前后端合到一个进程里。
+ * 导出这个函数后，部署入口可以直接挂载 API，无需复制任何业务逻辑。
+ * 本地直接 `node server/api.ts` 的行为完全不变。
+ */
+export default function handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  return handle(req, res).catch((e) => {
     console.error('[api] 未处理异常:', e);
     json(res, 500, { error: { code: 'INTERNAL', message: '服务器内部错误' } });
   });
+}
+
+const server = createServer((req, res) => {
+  void handleRequest(req, res);
 });
 
 server.listen(PORT, () => {
