@@ -113,7 +113,7 @@ gh pr create --title "feat: 实现六页面与人生分叉地图" --body-file .g
 
 ```
 remote: Create a pull request for 'bo200712/notebook-pages' on GitHub by visiting:
-remote:      https://github.com/wenyu2026/xuejun-hackathon/pull/new/bo200712/notebook-pages
+remote:      https://github.com/wenyu2026/echopath/pull/new/bo200712/notebook-pages
 ```
 
 **点它** → 网页会自动加载 PR 模板 → 填完点 Create。

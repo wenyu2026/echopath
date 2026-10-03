@@ -22,7 +22,7 @@
 
 ## 怎么跑真实链路（后端 + 真实模型）
 
-1. 起后端：`cd xuejun-hackathon`，`npm run server`（需要 `.env` 里配好 `TOKENDANCE_API_KEY`；注意本机 3000 被 new-api 占用，用 `set "PORT=3100" && npm run server`）；
+1. 起后端：`cd echopath`，`npm run server`（需要 `.env` 里配好 `TOKENDANCE_API_KEY`；注意本机 3000 被 new-api 占用，用 `set "PORT=3100" && npm run server`）；
 2. 起前端预览：在本目录 `node server.mjs --port 7200`（`ECHOPATH_API=http://localhost:3100` 指到后端）；
 3. 浏览器开 `http://localhost:7200/`，从「02 来时路」开始访谈；
 4. 快速验收：`node smoke-test.mjs`（9 项全链路检查，详见 `04_交接记录_2026-10-03.md`）。

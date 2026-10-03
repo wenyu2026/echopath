@@ -6,7 +6,7 @@
  *
  * 用法:
  *   1. 起后端（注意：本机 3000 被 new-api 占用，必须用别的端口）
- *      cd xuejun-hackathon
+ *      cd echopath
  *      set PORT=3100 && npm run server
  *   2. 跑本脚本
  *      node smoke-test.mjs            （默认打 http://localhost:3100）

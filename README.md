@@ -16,8 +16,8 @@
 ### 第 1 步：克隆仓库
 
 ```bat
-git clone https://github.com/wenyu2026/xuejun-hackathon.git
-cd xuejun-hackathon
+git clone https://github.com/wenyu2026/echopath.git
+cd echopath
 ```
 
 也可以直接点 GitHub 页面右上角 **Code → Download ZIP** 解压。
